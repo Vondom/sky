@@ -53,12 +53,6 @@
 		</dependency>
 	</dependencies>
 
-	<repositories>
-		<repository>
-			<id>quasar-repo</id>
-			<url>http://quasar.wo.tc/nexus/content/repositories/releases/</url>
-		</repository>
-	</repositories>
 
 	<build>
 		<plugins>
