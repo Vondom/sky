@@ -13,6 +13,9 @@
   <title>Sky Engine</title>
   <meta charset="utf-8">
   <script type="text/javascript" src="${pageContext.request.contextPath}/vendor/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript"
+          src='https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1","packages":["corechart","table"]}]}'>
+  </script>
 </head>
 <body>
 <tiles:insertAttribute name="body" defaultValue="" />

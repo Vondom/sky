@@ -5,7 +5,7 @@
   <tiles:putAttribute name="body">
     <div id="method-logs" data-profile-id="${profileId}" class="container">
       <div class="row">
-        <div></div>
+        <div id="scatter"></div>
       </div>
       <div class="row">
         <div></div>

@@ -28,16 +28,16 @@
           var chart = new google.visualization.ScatterChart(document.getElementById('chart_div'));
           chart.draw(data, options);
 
-//          var data = new google.visualization.DataTable();
-//          data.addColumn('string', 'Name');
-//          data.addColumn('number', 'Salary');
-//          data.addColumn('boolean', 'Full Time Employee');
-//          data.addRows([
-//            ['Mike',  {v: 10000, f: '$10,000'}, true],
-//            ['Jim',   {v:8000,   f: '$8,000'},  false],
-//            ['Alice', {v: 12500, f: '$12,500'}, true],
-//            ['Bob',   {v: 7000,  f: '$7,000'},  true]
-//          ]);
+          var data = new google.visualization.DataTable();
+          data.addColumn('string', 'Name');
+          data.addColumn('number', 'Salary');
+          data.addColumn('boolean', 'Full Time Employee');
+          data.addRows([
+            ['Mike',  {v: 10000, f: '$10,000'}, true],
+            ['Jim',   {v:8000,   f: '$8,000'},  false],
+            ['Alice', {v: 12500, f: '$12,500'}, true],
+            ['Bob',   {v: 7000,  f: '$7,000'},  true]
+          ]);
 
           var table = new google.visualization.Table(document.getElementById('table_div'));
           table.draw(data, {showRowNumber: false});
@@ -46,9 +46,5 @@
     </script>
     <div id="chart_div" style="width: 900px; height: 500px;"></div>
     <div id='table_div'></div>
-
-    <script type="text/javascript"
-            src='https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1","packages":["corechart","table"]}]}'>
-    </script>
   </tiles:putAttribute>
 </tiles:insertTemplate>
