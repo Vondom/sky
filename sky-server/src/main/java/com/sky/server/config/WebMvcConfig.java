@@ -1,6 +1,7 @@
 package com.sky.server.config;
 
 import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
+import com.sky.server.social.user.UserInterceptor;
 import com.sky.server.web.interceptor.AttributeInterceptor;
 import org.apache.coyote.http11.Http11NioProtocol;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 
 import javax.servlet.ServletContext;
@@ -24,6 +27,9 @@ import java.util.List;
 public class WebMvcConfig extends WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter {
   @Autowired
   private AttributeInterceptor attributeInterceptor;
+
+  @Autowired
+  private UserInterceptor userInterceptor;
 
   @Bean
   public EmbeddedServletContainerFactory servletContainer() {
@@ -59,7 +65,11 @@ public class WebMvcConfig extends WebMvcAutoConfiguration.WebMvcAutoConfiguratio
 
     registry.addWebRequestInterceptor(attributeInterceptor)
         .addPathPatterns("/**")
-        .excludePathPatterns("/css/**", "/js/**", "/img/**");
+        .excludePathPatterns("/resources/**");
+    registry.addInterceptor(userInterceptor)
+        .addPathPatterns("/**")
+        .excludePathPatterns("/resources/**")
+        .excludePathPatterns("/agent/**");
   }
 
   @Override
@@ -72,5 +82,20 @@ public class WebMvcConfig extends WebMvcAutoConfiguration.WebMvcAutoConfiguratio
       }
     }
 
+  }
+
+  @Override
+  public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    super.addResourceHandlers(registry);
+
+    registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+  }
+
+  @Override
+  public void addViewControllers(ViewControllerRegistry registry) {
+    super.addViewControllers(registry);
+
+    registry.addViewController("/signin").setViewName("/signin");
+    registry.addViewController("/signout");
   }
 }

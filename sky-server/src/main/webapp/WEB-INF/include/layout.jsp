@@ -12,16 +12,16 @@
 <head>
   <title>Sky Engine</title>
   <meta charset="utf-8">
-  <script type="text/javascript" src="${pageContext.request.contextPath}/vendor/jquery/dist/jquery.min.js"></script>
+  <script type="text/javascript" src="${pageContext.request.contextPath}/resources/vendor/jquery/dist/jquery.min.js"></script>
   <script type="text/javascript"
           src='https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1","packages":["corechart","table"]}]}'>
   </script>
 </head>
 <body>
 <tiles:insertAttribute name="body" defaultValue="" />
-<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/css/style.css">
-<script src="${pageContext.request.contextPath}/vendor/lodash/dist/lodash.min.js"></script>
-<script src="${pageContext.request.contextPath}/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/style.css">
+<script src="${pageContext.request.contextPath}/resources/vendor/lodash/dist/lodash.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
 <jsp:include page="scripts.jsp" />
 </body>
 </html>
