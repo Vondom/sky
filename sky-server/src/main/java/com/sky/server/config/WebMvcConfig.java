@@ -1,7 +1,7 @@
 package com.sky.server.config;
 
 import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
-import com.sky.server.social.user.UserInterceptor;
+import com.sky.server.web.interceptor.UserInterceptor;
 import com.sky.server.web.interceptor.AttributeInterceptor;
 import org.apache.coyote.http11.Http11NioProtocol;
 import org.springframework.beans.factory.annotation.Autowired;

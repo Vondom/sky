@@ -24,9 +24,9 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Signs the user in by setting the currentUser property on the {@link SecurityContext}.
  * Remembers the sign-in after the current request completes by storing the user's id in a cookie.
- * This is cookie is read in {@link UserInterceptor#preHandle(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, Object)} on subsequent requests.
+ * This is cookie is read in {@link com.sky.server.web.interceptor.UserInterceptor#preHandle(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, Object)} on subsequent requests.
  * @author Keith Donald
- * @see UserInterceptor
+ * @see com.sky.server.web.interceptor.UserInterceptor
  */
 public final class SimpleSignInAdapter implements SignInAdapter {
 

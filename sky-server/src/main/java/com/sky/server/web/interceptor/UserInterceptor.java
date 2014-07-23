@@ -13,8 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.sky.server.social.user;
+package com.sky.server.web.interceptor;
 
+import com.sky.server.social.user.SecurityContext;
+import com.sky.server.social.user.UserConnection;
+import com.sky.server.social.user.UserCookieGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.social.github.api.GitHub;
@@ -27,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Before a request is handled:
- * 1. sets the current User in the {@link SecurityContext} from a cookie, if present and the user is still connected to Facebook.
+ * 1. sets the current User in the {@link com.sky.server.social.user.SecurityContext} from a cookie, if present and the user is still connected to Facebook.
  * 2. requires that the user sign-in if he or she hasn't already.
  * @author Keith Donald
  */

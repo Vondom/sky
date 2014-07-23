@@ -34,6 +34,9 @@ public class SocialConfig implements SocialConfigurer {
   @Autowired
   private DataSource dataSource;
 
+  @Autowired
+  private SimpleConnectionSignUp simpleConnectionSignUp;
+
 
   @Override
   public void addConnectionFactories(ConnectionFactoryConfigurer connectionFactoryConfigurer, Environment environment) {
@@ -53,7 +56,7 @@ public class SocialConfig implements SocialConfigurer {
   @Override
   public UsersConnectionRepository getUsersConnectionRepository(ConnectionFactoryLocator connectionFactoryLocator) {
     JdbcUsersConnectionRepository repository = new JdbcUsersConnectionRepository(dataSource, connectionFactoryLocator, Encryptors.noOpText());
-    repository.setConnectionSignUp(new SimpleConnectionSignUp());
+    repository.setConnectionSignUp(simpleConnectionSignUp);
     return repository;
   }
 

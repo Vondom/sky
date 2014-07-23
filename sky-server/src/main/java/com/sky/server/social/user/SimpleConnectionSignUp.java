@@ -15,15 +15,20 @@
  */
 package com.sky.server.social.user;
 
+import com.sky.server.mvc.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionSignUp;
+import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
+@Component
 public final class SimpleConnectionSignUp implements ConnectionSignUp {
 
+  @Autowired
+  private UserService userService;
+
 	public String execute(Connection<?> connection) {
-		return UUID.randomUUID().toString();
+		return Long.toString(userService.createNotExists(connection).getId());
 	}
 
 }
