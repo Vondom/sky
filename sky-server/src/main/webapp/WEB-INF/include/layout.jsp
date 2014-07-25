@@ -18,10 +18,9 @@
   </script>
 </head>
 <body>
+<jsp:include page="nav.jsp" />
 <tiles:insertAttribute name="body" defaultValue="" />
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/style.css">
-<script src="${pageContext.request.contextPath}/resources/vendor/lodash/dist/lodash.min.js"></script>
-<script src="${pageContext.request.contextPath}/resources/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
 <jsp:include page="scripts.jsp" />
 </body>
 </html>

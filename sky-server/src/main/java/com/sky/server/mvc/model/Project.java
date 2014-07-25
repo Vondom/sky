@@ -1,9 +1,6 @@
 package com.sky.server.mvc.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 /**
  * Created by jcooky on 2014. 7. 21..
@@ -15,6 +12,8 @@ public class Project {
   private long id;
 
   private String name;
+  private long createTime = System.currentTimeMillis();
+  private byte[] jarFile;
 
   @ManyToOne
   private User owner;
@@ -33,5 +32,29 @@ public class Project {
 
   public void setOwner(User owner) {
     this.owner = owner;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public long getCreateTime() {
+    return createTime;
+  }
+
+  public void setCreateTime(long createTime) {
+    this.createTime = createTime;
+  }
+
+  public byte[] getJarFile() {
+    return jarFile;
+  }
+
+  public void setJarFile(byte[] jarFile) {
+    this.jarFile = jarFile;
   }
 }

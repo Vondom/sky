@@ -2,12 +2,12 @@ package com.sky.server.mvc.controller.api;
 
 import com.sky.server.mvc.model.MethodLog;
 import com.sky.server.mvc.repository.MethodLogRepository;
-import com.sky.server.mvc.repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Collection;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Created by jcooky on 2014. 7. 13..
@@ -18,15 +18,6 @@ public class MethodLogController {
 
   @Autowired
   private MethodLogRepository methodLogRepository;
-
-  @Autowired
-  private ProfileRepository profileRepository;
-
-  @RequestMapping(value = "/byProfile/{id}")
-  @Transactional(readOnly = true)
-  public Collection<? extends MethodLog> getByProfile(@PathVariable Long id) {
-    return profileRepository.findOne(id).getMethodLogs();
-  }
 
   @RequestMapping(method = RequestMethod.PUT)
   @Transactional

@@ -5,7 +5,7 @@
         var $this = $("div#method-logs"),
             profileId = $this.data('profile-id');
         $.ajax({
-          url: sky.REQUEST_CONTEXT_PATH + "/api/methodLog/byProfile/" + profileId,
+          url: sky.REQUEST_CONTEXT_PATH + "/api/profile/" + profileId + "/methodLogs",
           type: "GET",
           success: function (methodLogs) {
             console.debug(methodLogs);
