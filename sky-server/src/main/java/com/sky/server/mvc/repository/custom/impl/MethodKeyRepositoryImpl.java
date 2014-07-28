@@ -1,6 +1,7 @@
 package com.sky.server.mvc.repository.custom.impl;
 
 import com.mysema.query.jpa.impl.JPAQuery;
+import com.sky.server.mvc.model.ClassKey;
 import com.sky.server.mvc.model.MethodKey;
 import com.sky.server.mvc.model.QClassKey;
 import com.sky.server.mvc.model.QMethodKey;
@@ -17,14 +18,14 @@ public class MethodKeyRepositoryImpl implements MethodKeyRepositoryCustom {
   private EntityManager em;
 
   @Override
-  public MethodKey findOne(String signature, String name, String className, String packageName) {
-    QMethodKey methodKey = new QMethodKey("methodKey");
-    QClassKey classKey = new QClassKey("classKey");
+  public MethodKey findOne(String signature, String name, ClassKey classKey) {
+
+    QMethodKey _methodKey = new QMethodKey("methodKey");
+    QClassKey _classKey = new QClassKey("classKey");
 
     JPAQuery query = new JPAQuery(em);
-    return query.from(methodKey, classKey)
-        .where(methodKey.signature.eq(signature), methodKey.name.eq(name), methodKey.classKey.eq(classKey),
-            classKey.name.eq(className), classKey.packageName.eq(packageName))
-        .uniqueResult(methodKey);
+    return query.from(_methodKey, _classKey)
+        .where(_methodKey.signature.eq(signature), _methodKey.name.eq(name), _methodKey.classKey.eq(classKey))
+        .uniqueResult(_methodKey);
   }
 }

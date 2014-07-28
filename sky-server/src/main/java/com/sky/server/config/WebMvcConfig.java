@@ -79,7 +79,8 @@ public class WebMvcConfig extends WebMvcAutoConfiguration.WebMvcAutoConfiguratio
     registry.addInterceptor(userInterceptor)
         .addPathPatterns("/**")
         .excludePathPatterns("/resources/**")
-        .excludePathPatterns("/agent/**");
+        .excludePathPatterns("/agent/**")
+        .excludePathPatterns("/test/**");
   }
 
   @Override

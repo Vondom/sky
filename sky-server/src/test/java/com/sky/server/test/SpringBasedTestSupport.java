@@ -10,6 +10,7 @@ import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -24,7 +25,7 @@ import javax.persistence.EntityManager;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration("sky-server/src/main/webapp")
 @SpringApplicationConfiguration(classes = MainApplication.class)
-//@IntegrationTest({"server.port=0", "management.port=0"})
+@IntegrationTest({"server.port=0", "management.port=0"})
 public abstract class SpringBasedTestSupport {
 
   @Autowired

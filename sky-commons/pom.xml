@@ -13,16 +13,51 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>org.anarres.jrat</groupId>
-			<artifactId>jrat-agent</artifactId>
-			<version>1.0.0</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.swinglabs.swingx</groupId>
-					<artifactId>swingx-all</artifactId>
-				</exclusion>
-			</exclusions>
+			<groupId>org.apache.thrift</groupId>
+			<artifactId>libthrift</artifactId>
+			<version>0.9.1</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
 		</dependency>
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.thrift.tools</groupId>
+				<artifactId>maven-thrift-plugin</artifactId>
+				<version>0.1.10</version>
+				<configuration>
+					<thriftExecutable>thrift</thriftExecutable>
+				</configuration>
+				<executions>
+					<execution>
+						<id>thrift-sources</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>thrift-test-sources</id>
+						<phase>generate-test-sources</phase>
+						<goals>
+							<goal>testCompile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>dtrott</id>
+			<url>http://maven.davidtrott.com/repository</url>
+		</pluginRepository>
+	</pluginRepositories>
 
 </project>

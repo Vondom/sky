@@ -17,6 +17,15 @@ public class ClassKey {
   private String name;
   private String packageName;
 
+  public ClassKey() {
+
+  }
+
+  public ClassKey(String name, String packageName) {
+    this.name = name;
+    this.packageName = packageName;
+  }
+
   public long getId() {
     return id;
   }

@@ -10,7 +10,7 @@ public class MethodKeyRepositoryTest extends SpringBasedTestSupport {
   @Test
   public void testFindOne() throws Exception {
     MethodKey methodKey = methodKeyRepository.findOne(super.mockMethodKey.getSignature(),
-        super.mockMethodKey.getName(), mockClassKey.getName(), mockClassKey.getPackageName());
+        super.mockMethodKey.getName(), mockClassKey);
 
     assertEquals(mockMethodKey, methodKey);
   }

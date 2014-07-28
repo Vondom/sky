@@ -1,6 +1,11 @@
 package com.sky.profiler.jrat.provider;
 
+import com.sky.commons.*;
 import com.sky.profiler.api.SkyAPI;
+import org.apache.thrift.TException;
+import org.apache.thrift.protocol.TCompactProtocol;
+import org.apache.thrift.transport.THttpClient;
+import org.apache.thrift.transport.TTransportException;
 import org.shiftone.jrat.core.MethodKey;
 import org.shiftone.jrat.core.spi.AbstractMethodHandlerFactory;
 import org.shiftone.jrat.core.spi.MethodHandler;
@@ -19,10 +24,17 @@ public class RealTimeMethodHandlerFactory extends AbstractMethodHandlerFactory {
   private ThreadLocal<List<MethodKey>> methodKeys = new ThreadLocal<List<MethodKey>>();
   private ThreadLocal<Long> profileId = new ThreadLocal<Long>();
 
+  private RealtimeMethodProfileCollector.Iface collector;
+
+  public RealTimeMethodHandlerFactory() throws TTransportException {
+    super();
+    collector = new RealtimeMethodProfileCollector.Client(new TCompactProtocol(new THttpClient(SkyAPI.SKY_SERVER_URL)));
+  }
+
   public void startup(RuntimeContext context) throws Exception {
     super.startup(context);
 
-    profileId.set(SkyAPI.create());
+    profileId.set(collector.createProfile());
     methodKeys.set(new LinkedList<MethodKey>());
   }
 
@@ -38,6 +50,48 @@ public class RealTimeMethodHandlerFactory extends AbstractMethodHandlerFactory {
     MethodKey caller = mk.isEmpty() ? null : mk.get(mk.size()-1);
     mk.add(methodKey);
 
-    return new RealTimeMethodHandler(profileId.get(), methodKey, caller, mk.size()-1);
+    final MethodProfile profile = new MethodProfile();
+
+    profile.setCallee(toKMethod(methodKey))
+      .setCaller(caller != null ? toKMethod(caller) : null)
+      .setIndex(mk.size() - 1)
+      .setProfileId(profileId.get());
+
+    return new MethodHandler() {
+
+      @Override
+      public void onMethodStart() {
+        profile.setTimestamp(System.currentTimeMillis());
+      }
+
+      @Override
+      public void onMethodFinish(long durationMillis, Throwable throwable) {
+        profile.setElapsedTime(durationMillis)
+          .setThrowable(throwable != null ? toKThrowable(throwable) : null)
+          .setThreadName(Thread.currentThread().getName());
+
+        try {
+          collector.put(profile);
+        } catch (TException e) {
+          e.printStackTrace();
+        }
+      }
+    };
+
+  }
+
+  private KThrowable toKThrowable(Throwable throwable) {
+    return new KThrowable()
+        .setClassKey(toKClass(throwable.getClass().getPackage().getName(), throwable.getClass().getSimpleName()))
+        .setMessage(throwable.getMessage());
+  }
+
+  private KMethod toKMethod(MethodKey methodKey) {
+    return new KMethod(toKClass(methodKey.getPackageName(), methodKey.getClassName()),
+        methodKey.getMethodName(), methodKey.getSignature());
+  }
+
+  private KClass toKClass(String packageName, String className) {
+    return new KClass(packageName, className);
   }
 }
