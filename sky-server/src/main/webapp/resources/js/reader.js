@@ -28,6 +28,11 @@ sky.Reader.prototype = _.create(Object.prototype, {
 
       return this.fileReader.result;
     }
+  },
+  readAsDataURL: function (file) {
+    this.fileReader.readAsDataURL(file);
+
+    return this.fileReader.result;
   }
 });
 

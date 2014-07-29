@@ -30,29 +30,35 @@
           $(this).submit(function (e) {
             e.preventDefault();
 
-            var $submit = $(this).find('button[type="submit"]');
+            var $this = $(this),
+                $submit = $(this).find('button[type="submit"]'),
+                fileReader = new FileReader();
 
             $submit.button('loading');
-            try {
-              $.ajax({
-                url: sky.API_PROJECT_URL,
-                method: 'POST',
-                data: JSON.stringify(_.defaults($(this).serializeObject(), {
-                  jarFile: new sky.Reader().readAsArrayBuffer($(this).find('input[type="file"]')[0].files[0])
-                })),
-                success: function () {
-//                  location.href="/project";
-                },
+            fileReader.onloadend = function () {
+              console.debug($this.serializeObject());
+              try {
+                $.ajax({
+                  url: sky.API_PROJECT_URL,
+                  method: 'POST',
+                  data: JSON.stringify(_.defaults({
+                    jarFile: fileReader.result.split(",")[1]
+                  }, $this.serializeObject())),
+                  success: function () {
+                    location.href="/project";
+                  },
 
-                error: function (jqAjax) {
-                  alert(jqAjax.responseText);
-                }
-              }).always(function () {
-                $submit.button('reset');
-              });
-            } catch (err) {
-              throw err;
-            }
+                  error: function (jqAjax) {
+                    console.error(jqAjax);
+                  }
+                }).always(function () {
+                  $submit.button('reset');
+                });
+              } catch (err) {
+                throw err;
+              }
+            };
+            fileReader.readAsDataURL($(this).find('input[type="file"]')[0].files[0]);
           });
         });
       });

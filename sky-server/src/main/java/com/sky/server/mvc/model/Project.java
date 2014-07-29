@@ -13,7 +13,10 @@ public class Project {
 
   private String name;
   private long createTime = System.currentTimeMillis();
+
+  @Column(length = Integer.MAX_VALUE)
   private byte[] jarFile;
+
   private String arguments;
 
   @ManyToOne
