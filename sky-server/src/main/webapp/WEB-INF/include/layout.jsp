@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles" %>
 <!DOCTYPE HTML>
-<html lang="${lang}">
+<html lang="${lang}" data-context-path="${pageContext.request.contextPath}">
 <head>
   <title>Sky Engine</title>
   <meta charset="utf-8">

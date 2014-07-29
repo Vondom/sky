@@ -15,6 +15,10 @@
               <label for="inputJarFile">Jar File</label>
               <input name="jarFile" type="file" id="inputJarFile">
             </div>
+            <div class="form-group">
+              <label for="inputArguments">Arguments</label>
+              <textarea name="arguments" id="inputArguments" class="form-control"></textarea>
+            </div>
             <button type="submit" class="btn btn-success" data-loading-text="Creating...">Create</button>
           </form>
         </div>
@@ -31,13 +35,13 @@
             $submit.button('loading');
             try {
               $.ajax({
-                url: "/api/project",
+                url: sky.API_PROJECT_URL,
                 method: 'POST',
-                data: JSON.stringify(_.defaults({
+                data: JSON.stringify(_.defaults($(this).serializeObject(), {
                   jarFile: new sky.Reader().readAsArrayBuffer($(this).find('input[type="file"]')[0].files[0])
-                }, $(this).serializeObject())),
+                })),
                 success: function () {
-                  location.href="/project/list";
+//                  location.href="/project";
                 },
 
                 error: function (jqAjax) {

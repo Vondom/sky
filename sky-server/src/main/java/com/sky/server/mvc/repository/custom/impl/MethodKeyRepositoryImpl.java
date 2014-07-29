@@ -18,7 +18,7 @@ public class MethodKeyRepositoryImpl implements MethodKeyRepositoryCustom {
   private EntityManager em;
 
   @Override
-  public MethodKey findOne(String signature, String name, ClassKey classKey) {
+  public MethodKey findBySignatureAndNameAndClassKey(String signature, String name, ClassKey classKey) {
 
     QMethodKey _methodKey = new QMethodKey("methodKey");
     QClassKey _classKey = new QClassKey("classKey");

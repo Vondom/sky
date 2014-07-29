@@ -12,7 +12,6 @@
 <script src="${pageContext.request.contextPath}/resources/vendor/jquery-serializeObject/jquery.serializeObject.js"></script>
 
 <script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
-<jsp:include page="attributes.jsp" />
 <script src="${pageContext.request.contextPath}/resources/js/profile.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/realtime.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/reader.js"></script>

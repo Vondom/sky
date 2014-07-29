@@ -23,7 +23,7 @@ public class MethodKeyService {
   @Transactional(readOnly = true)
   public MethodKey get(final KMethod methodKey) {
     ClassKey classKey = classKeyService.get(methodKey.getClassKey());
-    MethodKey mk = methodKeyRepository.findOne(methodKey.getSignature(), methodKey.getMethodName(), classKey);
+    MethodKey mk = methodKeyRepository.findBySignatureAndNameAndClassKey(methodKey.getSignature(), methodKey.getMethodName(), classKey);
 
     if (mk == null) {
       mk = create(methodKey.getSignature(), methodKey.getMethodName(), classKey);

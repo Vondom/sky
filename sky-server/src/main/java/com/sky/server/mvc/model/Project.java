@@ -14,6 +14,7 @@ public class Project {
   private String name;
   private long createTime = System.currentTimeMillis();
   private byte[] jarFile;
+  private String arguments;
 
   @ManyToOne
   private User owner;
@@ -56,5 +57,13 @@ public class Project {
 
   public void setJarFile(byte[] jarFile) {
     this.jarFile = jarFile;
+  }
+
+  public String getArguments() {
+    return arguments;
+  }
+
+  public void setArguments(String arguments) {
+    this.arguments = arguments;
   }
 }

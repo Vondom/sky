@@ -2,6 +2,7 @@ package com.sky.server.mvc.service;
 
 import com.sky.server.mvc.model.User;
 import com.sky.server.mvc.repository.UserRepository;
+import com.sky.server.social.user.SecurityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,10 @@ public class UserService {
 
   @Autowired
   private UserRepository userRepository;
+
+  public User getMe() {
+    return userRepository.findOne(Long.parseLong(SecurityContext.getCurrentUser().getId()));
+  }
 
   @Transactional(readOnly = true)
   public User createNotExists(Connection<?> connection) {
@@ -40,4 +45,5 @@ public class UserService {
 
     return userRepository.save(user);
   }
+
 }
