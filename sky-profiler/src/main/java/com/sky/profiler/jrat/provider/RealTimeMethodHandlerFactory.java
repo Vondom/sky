@@ -18,23 +18,24 @@ import java.util.List;
 /**
  * Created by jcooky on 2014. 6. 18..
  */
-public class RealTimeMethodHandlerFactory extends AbstractMethodHandlerFactory {
+public class RealTimeMethodHandlerFactory extends AbstractMethodHandlerFactory implements RealTimeMethodHandlerFactoryMBean {
   private static final Logger logger = Logger.getLogger(RealTimeMethodHandlerFactory.class);
 
   private ThreadLocal<List<MethodKey>> methodKeys = new ThreadLocal<List<MethodKey>>();
   private ThreadLocal<Long> profileId = new ThreadLocal<Long>();
 
-  private RealtimeMethodProfileCollector.Iface collector;
+  private AgentControlService.Iface collector;
+  private Long projectId, workId;
 
   public RealTimeMethodHandlerFactory() throws TTransportException {
     super();
-    collector = new RealtimeMethodProfileCollector.Client(new TCompactProtocol(new THttpClient(SkyAPI.SKY_SERVER_URL)));
+    collector = new AgentControlService.Client(new TCompactProtocol(new THttpClient(SkyAPI.SKY_SERVER_URL)));
   }
 
   public void startup(RuntimeContext context) throws Exception {
     super.startup(context);
 
-    profileId.set(collector.createProfile());
+    profileId.set(collector.createProfile(this.workId));
     methodKeys.set(new LinkedList<MethodKey>());
   }
 
@@ -55,7 +56,8 @@ public class RealTimeMethodHandlerFactory extends AbstractMethodHandlerFactory {
     profile.setCallee(toKMethod(methodKey))
       .setCaller(caller != null ? toKMethod(caller) : null)
       .setIndex(mk.size() - 1)
-      .setProfileId(profileId.get());
+      .setProfileId(profileId.get())
+      .setProjectId(projectId);
 
     return new MethodHandler() {
 
@@ -93,5 +95,25 @@ public class RealTimeMethodHandlerFactory extends AbstractMethodHandlerFactory {
 
   private KClass toKClass(String packageName, String className) {
     return new KClass(packageName, className);
+  }
+
+  @Override
+  public void setProjectId(Long projectId) {
+    this.projectId = projectId;
+  }
+
+  @Override
+  public Long getProjectId() {
+    return projectId;
+  }
+
+  @Override
+  public void setWorkId(Long workId) {
+    this.workId = workId;
+  }
+
+  @Override
+  public Long getWorkId() {
+    return this.workId;
   }
 }

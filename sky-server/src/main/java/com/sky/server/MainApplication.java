@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @EnableAutoConfiguration
-@ComponentScan
+@ComponentScan("com.sky")
 public class MainApplication {
   public static void main(String[] args) {
     SpringApplication.run(MainApplication.class);

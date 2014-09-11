@@ -1,9 +1,6 @@
 package com.sky.server.mvc.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.Set;
 
 /**
@@ -17,6 +14,9 @@ public class Profile {
 
   @OneToMany
   private Set<MethodLog> methodLogs;
+
+  @OneToOne(mappedBy = "profile")
+  private Work work;
 
   public void setId(long id) {
     this.id = id;
@@ -52,5 +52,13 @@ public class Profile {
     int result = (int) (id ^ (id >>> 32));
     result = 31 * result + (methodLogs != null ? methodLogs.hashCode() : 0);
     return result;
+  }
+
+  public Work getWork() {
+    return work;
+  }
+
+  public void setWork(Work work) {
+    this.work = work;
   }
 }

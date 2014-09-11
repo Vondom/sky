@@ -42,7 +42,19 @@
                       text: "Go!",
                       on: {
                         click: function (e) {
-                          location.href = "/project/profiles";
+                          $.ajax({
+                            url: sky.API_WORK_URL,
+                            type: "POST",
+                            data: JSON.stringify({
+                              project: {
+                                id: project.id
+                              }
+                            })
+                          }).done(function (work) {
+                            console.debug(work);
+
+//                            location.href = "/project/profiles";
+                          });
 
                           e.stopPropagation();
                         }

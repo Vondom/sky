@@ -80,7 +80,8 @@ public class WebMvcConfig extends WebMvcAutoConfiguration.WebMvcAutoConfiguratio
         .addPathPatterns("/**")
         .excludePathPatterns("/resources/**")
         .excludePathPatterns("/agent/**")
-        .excludePathPatterns("/test/**");
+        .excludePathPatterns("/test/**")
+        .excludePathPatterns("/download/**");
   }
 
   @Override
@@ -100,6 +101,7 @@ public class WebMvcConfig extends WebMvcAutoConfiguration.WebMvcAutoConfiguratio
     super.addResourceHandlers(registry);
 
     registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+    registry.addResourceHandler("/**").addResourceLocations("/");
   }
 
   @Override

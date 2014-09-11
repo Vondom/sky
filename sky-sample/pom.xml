@@ -10,19 +10,27 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>sky-sample</artifactId>
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.hsqldb</groupId>
-			<artifactId>hsqldb</artifactId>
-		</dependency>
-	</dependencies>
 
+	<build>
+		<plugins>
+			<plugin>
+				<inherited>false</inherited>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.3.2</version>
+
+				<configuration>
+					<archive>
+						<manifest>
+							<!-- public static void main() 함수가 있는 클래스 지정 -->
+							<mainClass>com.sky.sample.Algorithm1</mainClass>
+
+							<!-- jar 파일 META-INF/MANIFEST.MF 에 클래스패스 정보 추가 -->
+							<addClasspath>true</addClasspath>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

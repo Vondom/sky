@@ -1,40 +1,40 @@
 package com.sky.server.mvc.controller.thrift;
 
-import com.sky.commons.RealtimeMethodProfileCollector;
+import com.sky.commons.AgentControlService;
+import com.sky.commons.MethodProfile;
+import com.sky.server.config.annotation.TService;
 import com.sky.server.test.SpringBasedTestSupport;
-import org.apache.thrift.TProcessor;
+import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TCompactProtocol;
-import org.apache.thrift.protocol.TProtocolFactory;
 import org.apache.thrift.transport.THttpClient;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.annotation.PostConstruct;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
+@TService(name = "test", thrift = AgentControlService.class)
+class ThriftTestService implements AgentControlService.Iface {
 
-@Controller
-@RequestMapping("/test/thrift")
-class ThriftTestController extends TController {
-
-  public RealtimeMethodProfileCollector.Iface mockService = mock(RealtimeMethodProfileCollector.Iface.class);
+  public static AgentControlService.Iface mockService;
 
   @Override
-  protected TProcessor getProcessor() {
-    return new RealtimeMethodProfileCollector.Processor<RealtimeMethodProfileCollector.Iface>(mockService);
+  public long createProfile(long workId) throws TException {
+    return mockService.createProfile(workId);
   }
 
   @Override
-  protected TProtocolFactory getInProtocolFactory() {
-    return new TCompactProtocol.Factory();
+  public void put(MethodProfile methodProfile) throws TException {
+    mockService.put(methodProfile);
   }
 
-  @Override
-  protected TProtocolFactory getOutProtocolFactory() {
-    return new TCompactProtocol.Factory();
+  @PostConstruct
+  public void init() {
+    mockService = mock(AgentControlService.Iface.class);
   }
 }
 
@@ -42,20 +42,23 @@ class ThriftTestController extends TController {
 public class TControllerTest extends SpringBasedTestSupport {
 
   @Autowired
-  private ThriftTestController controller;
+  private ThriftTestService service;
 
   @Value("${local.server.port}")
   int serverPort;
 
   @Test
   public void testDoPost() throws Exception {
-    when(controller.mockService.createProfile()).thenReturn(11L);
+    long id = 10L;
 
-    RealtimeMethodProfileCollector.Iface collector = new RealtimeMethodProfileCollector.Client(new TCompactProtocol(new THttpClient("http://localhost:"+serverPort+"/test/thrift")));
+    assertNotNull(ThriftTestService.mockService);
+    doReturn(11L).when(ThriftTestService.mockService).createProfile(anyLong());
 
-    long result = collector.createProfile();
+    AgentControlService.Iface collector = new AgentControlService.Client(new TCompactProtocol(new THttpClient("http://localhost:"+serverPort+"/agent/test")));
+
+    long result = collector.createProfile(id);
 
     assertEquals(11L, result);
-    verify(controller.mockService).createProfile();
+    verify(ThriftTestService.mockService).createProfile(eq(id));
   }
 }

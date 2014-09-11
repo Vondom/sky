@@ -1,6 +1,9 @@
 package com.sky.server.mvc.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by jcooky on 2014. 7. 21..
@@ -17,7 +20,11 @@ public class Project {
   @Column(length = Integer.MAX_VALUE)
   private byte[] jarFile;
 
+  private String jarFileName;
   private String arguments;
+
+  @OneToMany(mappedBy = "project")
+  private List<Work> works = new ArrayList<Work>();
 
   @ManyToOne
   private User owner;
@@ -68,5 +75,34 @@ public class Project {
 
   public void setArguments(String arguments) {
     this.arguments = arguments;
+  }
+
+  public String getJarFileName() {
+    return jarFileName;
+  }
+
+  public void setJarFileName(String jarFileName) {
+    this.jarFileName = jarFileName;
+  }
+
+  @Override
+  public String toString() {
+    return "Project{" +
+        "id=" + id +
+        ", name='" + name + '\'' +
+        ", createTime=" + createTime +
+        ", jarFile=" + Arrays.toString(jarFile) +
+        ", jarFileName='" + jarFileName + '\'' +
+        ", arguments='" + arguments + '\'' +
+        ", owner=" + owner +
+        '}';
+  }
+
+  public List<Work> getWorks() {
+    return works;
+  }
+
+  public void setWorks(List<Work> works) {
+    this.works = works;
   }
 }

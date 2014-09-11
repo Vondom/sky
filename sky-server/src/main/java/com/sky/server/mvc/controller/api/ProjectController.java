@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * Created by jcooky on 2014. 7. 25..
  */
@@ -23,6 +25,16 @@ public class ProjectController {
   @RequestMapping(method = RequestMethod.POST, consumes = {"application/json"})
   public Project create(@RequestBody Project project) {
     return projectService.save(project);
+  }
+
+  @RequestMapping(method = RequestMethod.GET)
+  public List<Project> list() {
+    return projectService.list();
+  }
+
+  @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+  public Project get(@PathVariable long id) {
+    return projectService.get(id);
   }
 
   @ExceptionHandler(UnsupportedOperationException.class)

@@ -13,7 +13,7 @@
 		<handlers>
 
 			<handler factory="com.sky.profiler.jrat.provider.RealTimeMethodHandlerFactory">
-				<!--<property name="outputFile" value="my_code_tree.jrat"/>-->
+				<property name="projectId" value="1" />
 			</handler>
 
 		</handlers>

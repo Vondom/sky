@@ -1,25 +1,25 @@
 package com.sky.server.mvc.service.thrift;
 
+import com.sky.commons.AgentControlService;
 import com.sky.commons.MethodProfile;
-import com.sky.commons.RealtimeMethodProfileCollector;
+import com.sky.server.config.annotation.TService;
 import com.sky.server.mvc.model.MethodLog;
 import com.sky.server.mvc.model.Profile;
 import com.sky.server.mvc.repository.MethodLogRepository;
-import com.sky.server.mvc.repository.ProfileRepository;
 import com.sky.server.mvc.service.MethodKeyService;
-import org.apache.commons.lang3.ObjectUtils;
+import com.sky.server.mvc.service.ProfileService;
+import com.sky.server.mvc.service.WorkService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by jcooky on 2014. 7. 26..
  */
-@Service
-public class RealtimeMethodProfileCollectorService implements RealtimeMethodProfileCollector.Iface {
+@TService(name = "profile", thrift = AgentControlService.class)
+public class RealtimeMethodProfileCollectorService implements AgentControlService.Iface {
 
   @Autowired
-  private ProfileRepository repository;
+  private ProfileService profileService;
 
   @Autowired
   private MethodLogRepository methodLogRepository;
@@ -27,25 +27,31 @@ public class RealtimeMethodProfileCollectorService implements RealtimeMethodProf
   @Autowired
   private MethodKeyService methodKeyService;
 
+  @Autowired
+  private WorkService workService;
+
   @Transactional
   public void put(MethodProfile profile) {
     MethodLog methodLog = new MethodLog();
     methodLog.setMethodKey(methodKeyService.get(profile.getCallee()));
-    methodLog.setCaller(ObjectUtils.defaultIfNull(methodKeyService.get(profile.getCaller()), null));
+    methodLog.setCaller(profile.getCaller() == null ? null : methodKeyService.get(profile.getCaller()));
     methodLog.setElapsedTime(profile.getElapsedTime());
     methodLog.setStartTime(profile.getTimestamp());
     methodLog.setOrdering(profile.getIndex());
     methodLog.setThreadName(profile.getThreadName());
 
     methodLog = methodLogRepository.save(methodLog);
-    Profile profile1 = repository.findOne(profile.getProfileId());
+    Profile profile1 = profileService.get(profile.getProfileId());
 
     profile1.getMethodLogs().add(methodLog);
-    repository.save(profile1);
+    profileService.save(profile1);
   }
 
   @Transactional
-  public long createProfile() {
-    return repository.save(new Profile()).getId();
+  public long createProfile(long workId) {
+    Profile profile = new Profile();
+    profile.setWork(workService.get(workId));
+
+    return profileService.save(profile).getId();
   }
 }

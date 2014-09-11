@@ -56,6 +56,7 @@
 
 
 	<build>
+		<finalName>sky-profiler</finalName>
 		<plugins>
 			<plugin>
 				<inherited>false</inherited>
@@ -81,6 +82,23 @@
 							<goal>shade</goal>
 						</goals>
 						<phase>package</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<phase>package</phase>
+						<configuration>
+							<target>
+								<copyfile src="${basedir}/target/${build.finalName}.jar"
+								          dest="${basedir}/../sky-server/src/main/webapp/${build.finalName}.jar" />
+							</target>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

@@ -3,8 +3,6 @@
 
 <tiles:insertTemplate template="/WEB-INF/include/layout.jsp">
   <tiles:putAttribute name="body">
-    <div id="profiles" class="container">
-
-    </div>
+    <div></div>
   </tiles:putAttribute>
 </tiles:insertTemplate>

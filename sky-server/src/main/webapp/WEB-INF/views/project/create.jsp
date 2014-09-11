@@ -32,7 +32,8 @@
 
             var $this = $(this),
                 $submit = $(this).find('button[type="submit"]'),
-                fileReader = new FileReader();
+                fileReader = new FileReader(),
+                file = $(this).find('input[type="file"]')[0].files[0];
 
             $submit.button('loading');
             fileReader.onloadend = function () {
@@ -42,7 +43,8 @@
                   url: sky.API_PROJECT_URL,
                   method: 'POST',
                   data: JSON.stringify(_.defaults({
-                    jarFile: fileReader.result.split(",")[1]
+                    jarFile: fileReader.result.split(",")[1],
+                    jarFileName: file.name
                   }, $this.serializeObject())),
                   success: function () {
                     location.href="/project";
@@ -58,7 +60,7 @@
                 throw err;
               }
             };
-            fileReader.readAsDataURL($(this).find('input[type="file"]')[0].files[0]);
+            fileReader.readAsDataURL(file);
           });
         });
       });

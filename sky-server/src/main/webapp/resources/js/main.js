@@ -10,6 +10,7 @@ var sky = (function () {
   return {
     REQUEST_CONTEXT_PATH: contextPath,
     API_PROJECT_URL: contextPath + "/api/project",
-    API_USER_URL: contextPath + "/api/user"
+    API_USER_URL: contextPath + "/api/user",
+    API_WORK_URL: contextPath + "/api/work"
   }
 }());

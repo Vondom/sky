@@ -1,8 +1,10 @@
 package com.sky.profiler.jvmti;
 
+import com.sky.profiler.Keys;
 import org.shiftone.jrat.core.Environment;
 import org.shiftone.jrat.core.Mode;
 import org.shiftone.jrat.core.config.Configuration;
+import org.shiftone.jrat.core.config.ConfigurationParser;
 import org.shiftone.jrat.core.criteria.AndMethodCriteria;
 import org.shiftone.jrat.core.criteria.MethodCriteria;
 import org.shiftone.jrat.inject.InjectorOptions;
@@ -13,8 +15,10 @@ import org.shiftone.jrat.jvmti.TryCatchClassFileTransformer;
 import org.shiftone.jrat.util.VersionUtil;
 import org.shiftone.jrat.util.log.Logger;
 
+import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
+import java.net.URL;
 
 /**
  * -javaagent:
@@ -36,6 +40,13 @@ public class Agent {
     }
 
     LOG.info("Installing JRat " + VersionUtil.getVersion() + " ClassFileTransformer...");
+
+    try {
+      URL url = new URL(System.getProperty(Keys.CONFIG_KEY));
+      configuration = ConfigurationParser.parse(url.openStream());
+    } catch (IOException e) {
+      LOG.error(e.getMessage(), e);
+    }
 
     if (configuration == null) {
       // this must happen after the mode is set because it will
