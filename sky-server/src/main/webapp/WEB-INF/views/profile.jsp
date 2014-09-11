@@ -7,52 +7,10 @@
       <div class="row">
         <div id="scatter"></div>
       </div>
-      <div class="row">
-        <div></div>
+      <div class="row" id="table">
+
       </div>
     </div>
-    <script>
-      //      (function ($, sky) {
-      //        $(function () {
-      //          var workId = $("#profile").data('work-id');
-      //          $.ajax({
-      //            url: sky.REQUEST_CONTEXT_PATH + "/api/work/" + workId + "/profile",
-      //            type: 'GET',
-      //            success: function (profiles) {
-      ////          console.debug(profiles);
-      //
-      //              setTimeout(function () {
-      //                var $profiles = $("#profiles"),
-      //                    $table = $("<table />", {
-      //                      "class": "table"
-      //                    }).append(
-      //                        $("<tr/>").append($("<th/>", {
-      //                          text: "#"
-      //                        })).append($("<th/>", {
-      //                          text: "Action"
-      //                        })).wrap("<thead></thead>")
-      //                    ).append("<tbody />");
-      //
-      //                _.forEach(profiles, function (profile) {
-      //                  $("<tr />").append($("<td />", {
-      //                    text: profile.id
-      //                  })).append($("<td />", {
-      //                    html: $("<a />", {
-      //                      role: "button",
-      //                      "class": "btn btn-primary",
-      //                      text: "Go!",
-      //                      href: sky.REQUEST_CONTEXT_PATH + "/methodLogs/" + profile.id
-      //                    })
-      //                  })).appendTo($table.find('tbody'));
-      //                });
-      //
-      //                $profiles.html($table);
-      //              }, 100);
-      //            }
-      //          });
-      //        });
-      //      }(jQuery, sky, _));
-    </script>
     <script>
       $(function () {
         google.setOnLoadCallback(function () {
@@ -65,25 +23,59 @@
               url: sky.REQUEST_CONTEXT_PATH + "/api/work/" + workId + "/profile",
               type: "GET"
             }).done(function (profile) {
-              console.debug(profile);
-              var methodLogs = profile.methodLogs;
-              console.debug(methodLogs);
+              var methodLogs = profile.methodLogs,
+                  threadNames = [],
+                  data = _(methodLogs).sortBy(function (methodLog) {
+                    return methodLog.startTime;
+                  }).pluck(function (methodLog, index) {
+                    var index = threadNames.indexOf(methodLog.threadName),
+                        result = [];
+                    if (index < 0) {
+                      index = threadNames.length;
+                      threadNames.push(methodLog.threadName);
+                    }
 
-              var data = _(methodLogs).sortBy(function (methodLog) {
-                return methodLog.startTime;
-              }).pluck(function (methodLog, index) {
-                return [new Date(methodLog.startTime), methodLog.elapsedTime];
-              }).value();
+                    result.push(new Date(methodLog.startTime));
+                    for (var i = 0; i < index; ++i) result.push(null);
+                    result.push(methodLog.elapsedTime);
 
-              data.unshift(["Time", "ElapsedTime"]);
+                    return result;
+                  }).value();
+
+              data.unshift(_.flatten(["Time", threadNames]));
 
               var chart = new google.visualization.ScatterChart($this.find('#scatter')[0]);
               chart.draw(google.visualization.arrayToDataTable(data), {
-                title: 'Age vs. Weight comparison',
+                title: 'Work Results',
                 hAxis: {title: 'Time', gridlines: {
                   count: 5
                 }},
                 vAxis: {title: 'Elapsed Time'}
+              });
+
+              var $target = $("#profile").find('#table').html(''),
+                  $table = $("<table />", {
+                    "class": "table"
+                  }).append(
+                      $("<tr/>").append($("<th/>", {
+                        text: "#"
+                      })).append($("<th/>", {
+                        text: "Action"
+                      }))
+                  ).appendTo($target);
+
+              _.forEach(profile.methodLogs, function (methodLog) {
+
+                $("<tr />").append($("<td />", {
+                  text: methodLog.id
+                })).append($("<td />", {
+                  html: $("<a />", {
+                    role: "button",
+                    "class": "btn btn-primary",
+                    text: "Go!",
+                    href: sky.REQUEST_CONTEXT_PATH + "/methodLogs/" + methodLog.id
+                  })
+                })).appendTo($table);
               });
             }).error(function (status, text) {
               console.error(text);
