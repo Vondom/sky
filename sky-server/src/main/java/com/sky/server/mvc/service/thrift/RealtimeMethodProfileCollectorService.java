@@ -49,9 +49,6 @@ public class RealtimeMethodProfileCollectorService implements AgentControlServic
 
   @Transactional
   public long createProfile(long workId) {
-    Profile profile = new Profile();
-    profile.setWork(workService.get(workId));
-
-    return profileService.save(profile).getId();
+    return workService.get(workId).getProfile().getId();
   }
 }

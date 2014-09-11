@@ -1,5 +1,6 @@
 package com.sky.server.mvc.controller.api;
 
+import com.sky.server.mvc.model.Profile;
 import com.sky.server.mvc.model.Work;
 import com.sky.server.mvc.service.WorkService;
 import org.apache.thrift.TException;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
  * Created by jcooky on 2014. 8. 6..
  */
 @RestController
-@RequestMapping("/api/work")
+@RequestMapping(value = "/api/work")
 public class WorkController {
 
   private final static Logger logger = LoggerFactory.getLogger(WorkController.class);
@@ -21,9 +22,17 @@ public class WorkController {
   @Autowired
   private WorkService workService;
 
-  @RequestMapping(method = RequestMethod.POST, consumes = "application/json")
+  @RequestMapping(method = RequestMethod.POST)
   public Work create(@RequestBody Work work) throws TException {
     return workService.create(work);
+  }
+
+  @RequestMapping(value = "/{id}/profile", method = RequestMethod.GET)
+  public Profile getProfile(@PathVariable long id) {
+    Profile profile = workService.get(id).getProfile();
+    logger.debug("profile: {}", profile);
+
+    return profile;
   }
 
   @ExceptionHandler({TException.class})

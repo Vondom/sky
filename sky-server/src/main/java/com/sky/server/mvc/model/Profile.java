@@ -1,5 +1,7 @@
 package com.sky.server.mvc.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -16,6 +18,7 @@ public class Profile {
   private Set<MethodLog> methodLogs;
 
   @OneToOne(mappedBy = "profile")
+  @JsonIgnore
   private Work work;
 
   public void setId(long id) {

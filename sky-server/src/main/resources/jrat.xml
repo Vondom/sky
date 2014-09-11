@@ -14,7 +14,7 @@
 
 			<handler factory="com.sky.profiler.jrat.provider.RealTimeMethodHandlerFactory">
 				<property name="projectId" value="${projectId}" />
-				<property name="workId" value="${workId}"
+				<property name="workId" value="${workId}" />
 			</handler>
 
 		</handlers>

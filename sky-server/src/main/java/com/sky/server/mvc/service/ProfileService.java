@@ -23,4 +23,9 @@ public class ProfileService {
   public Profile save(Profile profile) {
     return profileRepository.save(profile);
   }
+
+  @Transactional
+  public Profile create() {
+    return profileRepository.save(new Profile());
+  }
 }

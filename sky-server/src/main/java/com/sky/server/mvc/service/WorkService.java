@@ -6,6 +6,8 @@ import com.sky.server.mvc.repository.ProjectRepository;
 import com.sky.server.mvc.repository.WorkRepository;
 import com.sky.server.mvc.repository.WorkerRepository;
 import org.apache.thrift.TException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,12 +18,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class WorkService {
   public static final int TIME_OUT = 1000 * 60 * 5;
+  private static final Logger logger = LoggerFactory.getLogger(WorkService.class);
 
   @Autowired
   private WorkRepository workRepository;
 
   @Autowired
   private WorkerRepository workerRepository;
+
+  @Autowired
+  private ProfileService profileService;
 
   @Autowired
   private com.sky.commons.Worker.Iface worker;
@@ -33,6 +39,7 @@ public class WorkService {
   public Work create(Work work) throws TException {
     work.setProject(projectRepository.findOne(work.getProject().getId()));
     work.setOrdering(workRepository.count());
+    work.setProfile(profileService.create());
     work = workRepository.save(work);
 
     worker.doWork(toWork(work));
@@ -51,7 +58,7 @@ public class WorkService {
   }
 
   public void done(com.sky.commons.Work work) {
-
+    logger.debug("DONE workId: {}", work.getId());
   }
 
   public Work get(long id) {

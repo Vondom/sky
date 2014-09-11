@@ -14,10 +14,13 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 @Service
 public class Worker implements com.sky.commons.Worker.Iface {
   private static final Logger logger = LoggerFactory.getLogger(Worker.class);
+
+  public static final String PROFILER_PATH = FileUtils.getTempDirectoryPath() + "sky-profiler.jar";
 
   @Autowired
   private Processor processor;
@@ -28,11 +31,15 @@ public class Worker implements com.sky.commons.Worker.Iface {
   @Autowired
   private WorkService workService;
 
+  private String profilerPath = "/sky-profiler.jar";
+
   @Override
   @Async
   public String doWork(Work work) throws TException {
+
     File file = null;
     try {
+
       file = setup(work.getJar());
       status.setState(State.WORKING);
 
@@ -62,6 +69,12 @@ public class Worker implements com.sky.commons.Worker.Iface {
   }
 
   private File setup(Jar jar) throws IOException {
+    File profilerFile = new File(PROFILER_PATH);
+    if (!profilerFile.exists()) {
+      FileUtils.copyURLToFile(new URL("http://localhost:8080/" + profilerPath), profilerFile);
+      logger.debug("FINISH Donload profiler: {}", profilerFile.getAbsolutePath());
+    }
+
     File jarfile = new File(FileUtils.getTempDirectoryPath() + "/" + jar.getName());
     FileUtils.writeByteArrayToFile(jarfile, jar.getFile());
 

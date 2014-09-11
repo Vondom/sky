@@ -51,7 +51,10 @@ public class Agent {
     if (configuration == null) {
       // this must happen after the mode is set because it will
       // GET the mode locking it.
-      configuration = Environment.getConfiguration();
+//      configuration = Environment.getConfiguration();
+      LOG.error("configuration is null");
+    } else {
+      Environment.setConfiguration(configuration);
     }
 
     InjectorOptions injectorOptions = new InjectorOptions();

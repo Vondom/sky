@@ -1,7 +1,7 @@
 $.ajaxSetup({
   dataType: 'json',
   contentType: 'application/json',
-  processData: false,
+  processData: false
 });
 
 var sky = (function () {

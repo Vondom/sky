@@ -53,7 +53,7 @@
                           }).done(function (work) {
                             console.debug(work);
 
-//                            location.href = "/project/profiles";
+                            location.href = "/work/profile/"+work.id;
                           });
 
                           e.stopPropagation();

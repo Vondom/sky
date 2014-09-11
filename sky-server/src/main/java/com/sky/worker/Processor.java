@@ -16,7 +16,7 @@ public class Processor {
     ProcessBuilder processBuilder = new ProcessBuilder(
         "java",
         String.format("-Dsky.profiler.config=http://localhost:%d/download/config/%d/%d", port, projectId, workId),
-        "-javaagent:/Users/jcooky/IdeaProjects/sky/sky-profiler/target/sky-profiler.jar",
+        "-javaagent:"+Worker.PROFILER_PATH,
         "-jar",
         path
     );

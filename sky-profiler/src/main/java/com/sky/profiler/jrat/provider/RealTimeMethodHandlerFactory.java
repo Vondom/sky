@@ -29,7 +29,10 @@ public class RealTimeMethodHandlerFactory extends AbstractMethodHandlerFactory i
 
   public RealTimeMethodHandlerFactory() throws TTransportException {
     super();
-    collector = new AgentControlService.Client(new TCompactProtocol(new THttpClient(SkyAPI.SKY_SERVER_URL)));
+    THttpClient httpClient = new THttpClient(SkyAPI.SKY_SERVER_URL);
+    httpClient.setConnectTimeout(Integer.MAX_VALUE);
+    httpClient.setReadTimeout(Integer.MAX_VALUE);
+    collector = new AgentControlService.Client(new TCompactProtocol(httpClient));
   }
 
   public void startup(RuntimeContext context) throws Exception {
