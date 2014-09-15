@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static org.junit.Assert.assertNotNull;
+
 public class ProjectRepositoryTest extends SpringBasedTestSupport {
 
   @Autowired
@@ -33,9 +35,9 @@ public class ProjectRepositoryTest extends SpringBasedTestSupport {
   @Test
   public void testSave() {
 
-    User user = new User();
-    user.setId(11L);
-    System.out.println(userRepository.findOne(11L));
+    User user = userRepository.findOne(11L);
+
+    assertNotNull(user);
 
     Project project = new Project();
     project.setId(2L);
@@ -46,6 +48,6 @@ public class ProjectRepositoryTest extends SpringBasedTestSupport {
 
     project = projectRepository.findOne(2L);
 
-    System.out.println(project);
+    assertNotNull(project);
   }
 }

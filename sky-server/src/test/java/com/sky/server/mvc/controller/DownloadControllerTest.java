@@ -27,7 +27,7 @@ public class DownloadControllerTest extends SpringBasedTestSupport {
   public void testDownloadConfig() throws Exception {
     String xmlStr = MockMvcBuilders.standaloneSetup(controller)
         .build().perform(MockMvcRequestBuilders
-          .get("/download/config/4")
+          .get("/download/config/4/1")
           .accept(MediaType.TEXT_XML)).andReturn().getResponse().getContentAsString();
 
     assertThat(xmlStr, not(""));

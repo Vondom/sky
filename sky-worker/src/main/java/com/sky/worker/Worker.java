@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 @Component
@@ -25,6 +26,9 @@ public class Worker implements com.sky.commons.Worker.Iface {
 
   @Autowired
   private Processor processor;
+
+  @Autowired
+  private Options options;
 
   private long id;
 
@@ -74,9 +78,10 @@ public class Worker implements com.sky.commons.Worker.Iface {
   }
 
   private File setup(Jar jar) throws IOException {
+    String host = options.get(Options.Key.HOST);
     File profilerFile = new File(PROFILER_PATH);
     if (!profilerFile.exists()) {
-      FileUtils.copyURLToFile(new URL("http://localhost:8080" + profilerPath), profilerFile);
+      FileUtils.copyURLToFile(getProfilerUrl(host), profilerFile);
       logger.debug("FINISH Download profiler: {}", profilerFile.getAbsolutePath());
     }
 
@@ -84,6 +89,10 @@ public class Worker implements com.sky.commons.Worker.Iface {
     FileUtils.writeByteArrayToFile(jarfile, jar.getFile());
 
     return jarfile;
+  }
+
+  public URL getProfilerUrl(String host) throws MalformedURLException {
+    return new URL("http://" + host + profilerPath);
   }
 
   @Override
