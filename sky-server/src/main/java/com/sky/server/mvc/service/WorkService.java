@@ -1,6 +1,5 @@
 package com.sky.server.mvc.service;
 
-import com.sky.commons.Jar;
 import com.sky.server.mvc.model.Work;
 import com.sky.server.mvc.repository.ProjectRepository;
 import com.sky.server.mvc.repository.WorkRepository;
@@ -41,20 +40,6 @@ public class WorkService {
     workerService.doWork(work);
 
     return work;
-  }
-
-  public com.sky.commons.Work toWork(Work work) {
-    com.sky.commons.Work work1 = new com.sky.commons.Work()
-        .setId(work.getId())
-        .setJar(new Jar()
-            .setFile(work.getProject().getJarFile())
-            .setName(work.getProject().getJarFileName()))
-        .setArguments(work.getProject().getArguments())
-        .setProjectId(work.getProject().getId());
-
-    logger.debug("Return Work: {}", work1);
-
-    return work1;
   }
 
   public Work get(long id) {

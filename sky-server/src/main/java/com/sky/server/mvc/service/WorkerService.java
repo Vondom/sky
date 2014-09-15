@@ -1,5 +1,6 @@
 package com.sky.server.mvc.service;
 
+import com.sky.commons.Jar;
 import com.sky.server.mvc.model.Work;
 import com.sky.server.mvc.model.Worker;
 import com.sky.server.mvc.repository.WorkerRepository;
@@ -7,6 +8,8 @@ import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.transport.TFramedTransport;
 import org.apache.thrift.transport.TSocket;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -21,11 +24,24 @@ import java.util.concurrent.Future;
  */
 @Service
 public class WorkerService {
-  @Autowired
-  private WorkService workService;
+  private static final Logger logger = LoggerFactory.getLogger(WorkerService.class);
 
   @Autowired
   private WorkerRepository workerRepository;
+
+  public com.sky.commons.Work toWork(Work work) {
+    com.sky.commons.Work work1 = new com.sky.commons.Work()
+        .setId(work.getId())
+        .setJar(new Jar()
+            .setFile(work.getProject().getJarFile())
+            .setName(work.getProject().getJarFileName()))
+        .setArguments(work.getProject().getArguments())
+        .setProjectId(work.getProject().getId());
+
+    logger.debug("Return Work: {}", work1);
+
+    return work1;
+  }
 
   @Async
   @Transactional(readOnly = true)
@@ -46,7 +62,7 @@ public class WorkerService {
     connect(worker, new WorkerClientTemplateHandler() {
       @Override
       public void handle(com.sky.commons.Worker.Client worker) throws TException {
-        worker.doWork(workService.toWork(work));
+        worker.doWork(toWork(work));
       }
     });
   }
