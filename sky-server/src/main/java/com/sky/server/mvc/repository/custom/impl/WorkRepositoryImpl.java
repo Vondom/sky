@@ -17,7 +17,7 @@ public class WorkRepositoryImpl implements WorkRepositoryCustom {
   private EntityManager em;
 
   @Override
-  public Work findWork() {
+  public Work findReadyWork() {
 
     QWork work = new QWork("work");
 

@@ -74,7 +74,19 @@ public class Worker {
 
   public static enum State {
     IDLE,
-    WORKING
+    WORKING,
+    QUIT
+  }
+
+  @Override
+  public String toString() {
+    return "Worker{" +
+        "state=" + state +
+        ", updateTime=" + updateTime +
+        ", port=" + port +
+        ", address='" + address + '\'' +
+        ", id=" + id +
+        '}';
   }
 
   @Override

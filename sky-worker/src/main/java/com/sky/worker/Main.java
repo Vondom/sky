@@ -1,63 +1,81 @@
 package com.sky.worker;
 
-import com.sky.commons.Worker;
-import com.sky.worker.config.WorkerConfig;
+import com.sky.commons.WorkerControlService;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.io.FileUtils;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.server.THsHaServer;
 import org.apache.thrift.server.TNonblockingServer;
+import org.apache.thrift.transport.THttpClient;
 import org.apache.thrift.transport.TNonblockingServerSocket;
 import org.apache.thrift.transport.TNonblockingServerTransport;
+import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.URL;
 
 /**
  * Created by jcooky on 2014. 7. 30..
  */
-public class Main {
+@Configuration
+@EnableAutoConfiguration
+@ComponentScan
+public class Main implements CommandLineRunner {
   private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
+  @Autowired
   private com.sky.worker.Options options;
 
-  private String profilerPath = "/sky-profiler.jar";
-
-  public Main() throws IOException {
-    options = new Options();
-  }
+  @Autowired
+  private Worker worker;
 
   public void run(String[] args) throws ParseException, IOException, TException {
-    WorkerConfig workerConfig = new WorkerConfig();
 
     options.init(args);
     if (!options.has(Options.Key.HELP)) {
-      setUp();
-
-      Worker.Iface worker = workerConfig.worker(options);
-
       int port = Integer.parseInt(options.get(Options.Key.PORT));
+      String host = options.get(Options.Key.HOST);
 
-      TNonblockingServerTransport transport = new TNonblockingServerSocket(new InetSocketAddress(options.get(Options.Key.HOST), port));
+      WorkerControlService.Iface workerControlService = init(host);
+      worker.setId(workerControlService.add("0.0.0.0", port));
+
+      TNonblockingServerTransport transport = new TNonblockingServerSocket(new InetSocketAddress("0.0.0.0", port));
       TNonblockingServer server = new TNonblockingServer(new THsHaServer.Args(transport)
           .protocolFactory(new TCompactProtocol.Factory())
-          .processor(new Worker.Processor<Worker.Iface>(worker)));
+          .processor(new com.sky.commons.Worker.Processor<Worker>(worker)));
       server.serve();
+
+      workerControlService.remove(worker.getId());
     } else {
-      System.out.println(options.toString());
+      System.out.println();
+      options.printHelp();
+      System.out.println();
     }
   }
 
-  public void setUp() throws IOException, TException {
-    FileUtils.copyURLToFile(new URL(options.get(Options.Key.HOST) + profilerPath), new File(WorkerConfig.SKY_PROFILER_JAR_PATH));
+  private WorkerControlService.Iface init(String host) throws TTransportException {
+    if (!host.startsWith("http://"))
+      host = "http://" + host;
+
+    THttpClient httpClient = new THttpClient(host + "/agent/worker-control");
+    WorkerControlService.Iface workerControlService = new WorkerControlService.Client(new TCompactProtocol(httpClient));
+
+    return workerControlService;
   }
 
   public static void main(String[] args) throws Exception {
-    new Main().run(args);
+    new SpringApplicationBuilder()
+        .showBanner(false)
+        .addCommandLineProperties(false)
+        .sources(Main.class)
+        .run(args);
   }
 }

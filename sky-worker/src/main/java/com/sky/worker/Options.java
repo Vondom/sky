@@ -1,8 +1,10 @@
 package com.sky.worker;
 
+import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.PosixParser;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.EnumMap;
@@ -12,28 +14,20 @@ import java.util.Properties;
 /**
  * Created by jcooky on 2014. 7. 31..
  */
+@Component
 public class Options {
 
   private Map<Key, String> options = new EnumMap<Key, String>(Key.class);
-  private String helpMessage = null;
+  private org.apache.commons.cli.Options cliOptions;
+  private CommandLine cl;
 
-  public String toString() {
-    return helpMessage;
+  public void printHelp() {
+    new HelpFormatter().printHelp("java -jar sky-worker.jar [OPTIONS]", cliOptions);
   }
 
-  public void build(String []args) throws ParseException {
-    org.apache.commons.cli.Options cliOptions = buildOptions();
-    CommandLine cl = new PosixParser().parse(cliOptions, args);
-    this.helpMessage = cliOptions.toString();
-
-    for (Key key : Key.values()) {
-      String val = cl.getOptionValue(key.longOpt);
-      if (val != null) {
-        this.options.put(key, val);
-      } else if (!this.options.containsKey(key) && key.defaultValue != null) {
-        this.options.put(key, key.defaultValue);
-      }
-    }
+  private void build(String []args) throws ParseException {
+    cliOptions = buildOptions();
+    cl = new BasicParser().parse(cliOptions, args);
   }
 
   private org.apache.commons.cli.Options buildOptions() {
@@ -46,11 +40,11 @@ public class Options {
   }
 
   public String get(Key key) {
-    return this.options.get(key);
+    return cl.getOptionValue(key.longOpt, this.options.get(key));
   }
 
   public boolean has(Key key) {
-    return this.options.containsKey(key);
+    return cl.hasOption(key.longOpt) || this.options.containsKey(key);
   }
 
   public void init(String []args) throws ParseException, IOException {
@@ -71,18 +65,12 @@ public class Options {
     HELP("h", false, "Print Help Messages"),
     HOST("o", true, "Sky Server Host URL"),
     NAME("n", true, "Worker name"),
-    PORT("p", true, "Worker port", "9200");
+    PORT("p", true, "Worker port");
 
     private final String longOpt;
     private final String shortOpt;
     private final boolean hasArg;
     private final String description;
-    private String defaultValue = null;
-
-    private Key(String shortOpt, boolean hasArg, String description, String defaultValue) {
-      this(shortOpt, hasArg, description);
-      this.defaultValue = defaultValue;
-    }
 
     private Key(String shortOpt, boolean hasArg, String description) {
       this.shortOpt = shortOpt;

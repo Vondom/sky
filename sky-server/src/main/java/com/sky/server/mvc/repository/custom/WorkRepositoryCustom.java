@@ -6,6 +6,6 @@ import com.sky.server.mvc.model.Work;
  * Created by jcooky on 2014. 8. 4..
  */
 public interface WorkRepositoryCustom {
-  Work findWork();
+  Work findReadyWork();
   Work findLastWork();
 }

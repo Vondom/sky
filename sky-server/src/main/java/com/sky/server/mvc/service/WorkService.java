@@ -4,7 +4,6 @@ import com.sky.commons.Jar;
 import com.sky.server.mvc.model.Work;
 import com.sky.server.mvc.repository.ProjectRepository;
 import com.sky.server.mvc.repository.WorkRepository;
-import com.sky.server.mvc.repository.WorkerRepository;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +23,10 @@ public class WorkService {
   private WorkRepository workRepository;
 
   @Autowired
-  private WorkerRepository workerRepository;
+  private WorkerService workerService;
 
   @Autowired
   private ProfileService profileService;
-
-  @Autowired
-  private com.sky.commons.Worker.Iface worker;
 
   @Autowired
   private ProjectRepository projectRepository;
@@ -42,23 +38,23 @@ public class WorkService {
     work.setProfile(profileService.create());
     work = workRepository.save(work);
 
-    worker.doWork(toWork(work));
+    workerService.doWork(work);
 
     return work;
   }
 
-  private com.sky.commons.Work toWork(Work work) {
-    return new com.sky.commons.Work()
+  public com.sky.commons.Work toWork(Work work) {
+    com.sky.commons.Work work1 = new com.sky.commons.Work()
         .setId(work.getId())
         .setJar(new Jar()
             .setFile(work.getProject().getJarFile())
             .setName(work.getProject().getJarFileName()))
         .setArguments(work.getProject().getArguments())
         .setProjectId(work.getProject().getId());
-  }
 
-  public void done(com.sky.commons.Work work) {
-    logger.debug("DONE workId: {}", work.getId());
+    logger.debug("Return Work: {}", work1);
+
+    return work1;
   }
 
   public Work get(long id) {
