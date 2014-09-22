@@ -1,0 +1,19 @@
+<assembly>
+	<id>assembly</id>
+	<formats>
+		<format>tar.gz</format>
+		<format>zip</format>
+	</formats>
+	<fileSets>
+		<fileSet>
+			<directory>${build.outputDirectory}</directory>
+			<outputDirectory></outputDirectory>
+			<includes>
+				<include>**</include>
+			</includes>
+			<excludes>
+				<exclude>**/META-INF/**</exclude>
+			</excludes>
+		</fileSet>
+	</fileSets>
+</assembly>
