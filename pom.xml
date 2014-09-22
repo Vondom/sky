@@ -9,11 +9,12 @@
 		<module>sky-sample</module>
 		<module>sky-worker</module>
 		<module>sky-server</module>
+		<module>sky-distribution</module>
 	</modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.1.5.RELEASE</version>
+		<version>1.1.6.RELEASE</version>
 	</parent>
 	<groupId>sky</groupId>
 	<artifactId>sky</artifactId>

@@ -1,6 +1,7 @@
 package com.sky.server.mvc.service;
 
 import com.sky.commons.Jar;
+import com.sky.commons.Status;
 import com.sky.server.mvc.model.Work;
 import com.sky.server.mvc.model.Worker;
 import com.sky.server.mvc.repository.WorkerRepository;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +30,42 @@ public class WorkerService {
 
   @Autowired
   private WorkerRepository workerRepository;
+
+  @Scheduled(fixedRate = 10 * 60 * 1000)
+  @Transactional(readOnly = true)
+  public void checkWorkers() throws TException {
+    for (Worker worker : workerRepository.findAll()) {
+      final ThreadLocal<Worker.State> state = new ThreadLocal<Worker.State>();
+      state.set(worker.getState());
+
+      if (!Worker.State.QUIT.equals(state.get())) {
+        try {
+          connect(worker, new WorkerClientTemplateHandler() {
+            @Override
+            public void handle(com.sky.commons.Worker.Client worker) throws TException {
+
+              Status status = worker.status();
+              switch (status.getState()) {
+                case IDLE:
+                  state.set(Worker.State.IDLE);
+                  break;
+                case WORKING:
+                  state.set(Worker.State.WORKING);
+                  break;
+              }
+            }
+          });
+        } catch (TException e) {
+          state.set(Worker.State.QUIT);
+        }
+
+        if (!state.get().equals(worker.getState())) {
+          worker.setState(state.get());
+          this.save(worker);
+        }
+      }
+    }
+  }
 
   public com.sky.commons.Work toWork(Work work) {
     com.sky.commons.Work work1 = new com.sky.commons.Work()
@@ -69,7 +107,7 @@ public class WorkerService {
 
   @Transactional
   private void connect(Worker worker, WorkerClientTemplateHandler handler) throws TException {
-    if (worker.getState() == Worker.State.IDLE) {
+    if (Worker.State.IDLE.equals(worker.getState())) {
       worker.setState(Worker.State.WORKING);
       workerRepository.save(worker);
     }

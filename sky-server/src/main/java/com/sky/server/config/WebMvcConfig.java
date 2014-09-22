@@ -4,11 +4,11 @@ import com.fasterxml.jackson.datatype.hibernate4.Hibernate4Module;
 import com.sky.server.web.interceptor.AttributeInterceptor;
 import com.sky.server.web.interceptor.UserInterceptor;
 import org.apache.catalina.connector.Connector;
-import org.apache.coyote.ajp.AjpNioProtocol;
 import org.apache.coyote.http11.Http11NioProtocol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
+import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
+import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.context.embedded.tomcat.TomcatConnectorCustomizer;
 import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
 import org.springframework.context.annotation.Bean;
@@ -35,23 +35,26 @@ public class WebMvcConfig extends WebMvcAutoConfiguration.WebMvcAutoConfiguratio
   private UserInterceptor userInterceptor;
 
   @Bean
-  public EmbeddedServletContainerFactory servletContainer() {
-    TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory(8080);
-    tomcat.setProtocol(Http11NioProtocol.class.getName());
+  public EmbeddedServletContainerCustomizer containerCustomizer() {
+    return new EmbeddedServletContainerCustomizer() {
 
-    Connector connector = new Connector(AjpNioProtocol.class.getName());
-    connector.setScheme("ajp");
-    connector.setPort(8009);
-    tomcat.addAdditionalTomcatConnectors(connector);
-
-    tomcat.getTomcatConnectorCustomizers().add(new TomcatConnectorCustomizer() {
       @Override
-      public void customize(Connector connector) {
-        connector.setMaxPostSize(Integer.MAX_VALUE);
+      public void customize(ConfigurableEmbeddedServletContainer factory) {
+        if(factory instanceof TomcatEmbeddedServletContainerFactory) {
+          customizeTomcat((TomcatEmbeddedServletContainerFactory) factory);
+        }
       }
-    });
 
-    return tomcat;
+      public void customizeTomcat(TomcatEmbeddedServletContainerFactory factory) {
+        factory.addConnectorCustomizers(new TomcatConnectorCustomizer() {
+          @Override
+          public void customize(Connector connector) {
+            connector.setMaxPostSize(Integer.MAX_VALUE);
+            connector.setProtocol(Http11NioProtocol.class.getName());
+          }
+        });
+      }
+    };
   }
 
   @Bean

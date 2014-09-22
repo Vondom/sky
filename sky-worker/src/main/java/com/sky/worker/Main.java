@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.actuate.system.ApplicationPidListener;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.ComponentScan;
@@ -72,10 +73,14 @@ public class Main implements CommandLineRunner {
   }
 
   public static void main(String[] args) throws Exception {
+    String location = System.getProperty("spring.config.location");
     new SpringApplicationBuilder()
         .showBanner(false)
+        .web(false)
         .addCommandLineProperties(false)
         .sources(Main.class)
+        .properties("spring.config.location=" + location)
+        .listeners(new ApplicationPidListener("sky-worker.pid"))
         .run(args);
   }
 }

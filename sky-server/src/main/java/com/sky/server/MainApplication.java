@@ -1,7 +1,8 @@
 package com.sky.server;
 
-import org.springframework.boot.SpringApplication;
+import org.springframework.boot.actuate.system.ApplicationPidListener;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,6 +14,12 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan("com.sky")
 public class MainApplication {
   public static void main(String[] args) {
-    SpringApplication.run(MainApplication.class);
+    new SpringApplicationBuilder()
+        .sources(MainApplication.class)
+        .showBanner(false)
+        .addCommandLineProperties(true)
+        .listeners(new ApplicationPidListener("sky-server.pid"))
+        .run(args);
+
   }
 }
