@@ -1,0 +1,4 @@
+[submodule "thrift"]
+	path = tools/thrift
+	url = https://github.com/apache/thrift.git
+	branch = 0.9.x
