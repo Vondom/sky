@@ -17,3 +17,4 @@ script: mvn test
 notifications:
   email:
     - bak723@gmail.com
+
