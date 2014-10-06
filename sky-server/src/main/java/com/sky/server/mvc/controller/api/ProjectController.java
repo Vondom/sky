@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -42,5 +43,10 @@ public class ProjectController {
   @ResponseBody
   public String handleException(UnsupportedOperationException e) {
     return ObjectUtils.defaultIfNull(e.getLocalizedMessage(), e.getMessage());
+  }
+
+  @RequestMapping(value = "/github", method = RequestMethod.GET)
+  public List<?> getFromGitHub() throws IOException {
+    return projectService.getFromGitHub();
   }
 }

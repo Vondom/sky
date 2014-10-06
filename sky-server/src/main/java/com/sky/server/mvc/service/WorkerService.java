@@ -142,6 +142,10 @@ public class WorkerService {
     return workerRepository.findByAddressAndPort(address, port);
   }
 
+  public List<Worker> list() {
+    return workerRepository.findAll();
+  }
+
   private static interface WorkerClientTemplateHandler {
     void handle(com.sky.commons.Worker.Client worker) throws TException;
   }

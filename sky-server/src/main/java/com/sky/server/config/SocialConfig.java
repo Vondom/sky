@@ -3,7 +3,7 @@ package com.sky.server.config;
 import com.sky.server.social.user.SecurityContext;
 import com.sky.server.social.user.SimpleConnectionSignUp;
 import com.sky.server.social.user.SimpleSignInAdapter;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.eclipse.egit.github.core.client.GitHubClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -13,7 +13,7 @@ import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.social.UserIdSource;
 import org.springframework.social.config.annotation.ConnectionFactoryConfigurer;
 import org.springframework.social.config.annotation.EnableSocial;
-import org.springframework.social.config.annotation.SocialConfigurer;
+import org.springframework.social.config.annotation.SocialConfigurerAdapter;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionFactoryLocator;
 import org.springframework.social.connect.ConnectionRepository;
@@ -26,21 +26,18 @@ import org.springframework.social.github.connect.GitHubConnectionFactory;
 import javax.sql.DataSource;
 
 /**
- * Created by jcooky on 2014. 7. 20..
+ * Created by jcooky on 2014. 9. 25..
  */
 @Configuration
 @EnableSocial
-public class SocialConfig implements SocialConfigurer {
-  @Autowired
-  private DataSource dataSource;
+public class SocialConfig extends SocialConfigurerAdapter {
+  private String propertiesPrefix = "spring.social.github.";
 
-  @Autowired
-  private SimpleConnectionSignUp simpleConnectionSignUp;
-
-
-  @Override
-  public void addConnectionFactories(ConnectionFactoryConfigurer connectionFactoryConfigurer, Environment environment) {
-    connectionFactoryConfigurer.addConnectionFactory(new GitHubConnectionFactory(environment.getProperty("github.clientId"), environment.getProperty("github.clientSecret")));
+  public void addConnectionFactories(ConnectionFactoryConfigurer configurer,
+                                     Environment environment) {
+    configurer.addConnectionFactory(new GitHubConnectionFactory(
+        environment.getRequiredProperty(propertiesPrefix + "appId"),
+        environment.getRequiredProperty(propertiesPrefix + "appSecret")));
   }
 
   @Override
@@ -53,8 +50,11 @@ public class SocialConfig implements SocialConfigurer {
     };
   }
 
-  @Override
-  public UsersConnectionRepository getUsersConnectionRepository(ConnectionFactoryLocator connectionFactoryLocator) {
+
+  @Bean
+  public UsersConnectionRepository usersConnectionRepository(DataSource dataSource,
+                                                                ConnectionFactoryLocator connectionFactoryLocator,
+                                                                SimpleConnectionSignUp simpleConnectionSignUp) {
     JdbcUsersConnectionRepository repository = new JdbcUsersConnectionRepository(dataSource, connectionFactoryLocator, Encryptors.noOpText());
     repository.setConnectionSignUp(simpleConnectionSignUp);
     return repository;
@@ -67,9 +67,21 @@ public class SocialConfig implements SocialConfigurer {
 
   @Bean
   @Scope(value = "request", proxyMode = ScopedProxyMode.INTERFACES)
-  public GitHub github(ConnectionRepository connectionRepository) {
-    Connection<GitHub> connection = connectionRepository.findPrimaryConnection(GitHub.class);
+  public Connection<?>  connection(ConnectionRepository repository) {
+    Connection<GitHub> connection = repository
+        .findPrimaryConnection(GitHub.class);
+    return connection != null ? connection : null;
+  }
 
-    return connection != null ? connection.getApi() : null;
+  @Bean
+  @Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)
+  public GitHubClient gitHubClient(Connection<?> connection) {
+    if (connection == null)
+      return null;
+
+    GitHubClient github = new GitHubClient();
+    github.setOAuth2Token(connection.createData().getAccessToken());
+
+    return github;
   }
 }

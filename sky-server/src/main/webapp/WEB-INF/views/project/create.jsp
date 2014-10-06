@@ -47,7 +47,7 @@
                     jarFileName: file.name
                   }, $this.serializeObject())),
                   success: function () {
-                    location.href="/project";
+//                    location.href="/project";
                   },
 
                   error: function (jqAjax) {

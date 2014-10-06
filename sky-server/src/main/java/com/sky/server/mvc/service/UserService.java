@@ -2,12 +2,12 @@ package com.sky.server.mvc.service;
 
 import com.sky.server.mvc.model.User;
 import com.sky.server.mvc.repository.UserRepository;
-import com.sky.server.social.user.SecurityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.UserProfile;
+import org.springframework.social.github.api.GitHub;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,8 +21,11 @@ public class UserService {
   @Autowired
   private UserRepository userRepository;
 
+  @Autowired
+  private Connection<?> connection;
+
   public User getMe() {
-    return userRepository.findOne(Long.parseLong(SecurityContext.getCurrentUser().getId()));
+    return userRepository.findByEmail(connection.fetchUserProfile().getEmail());
   }
 
   @Transactional(readOnly = true)

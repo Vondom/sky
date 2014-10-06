@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @EnableAutoConfiguration
-@ComponentScan("com.sky")
+@ComponentScan
 public class MainApplication {
   public static void main(String[] args) {
     new SpringApplicationBuilder()

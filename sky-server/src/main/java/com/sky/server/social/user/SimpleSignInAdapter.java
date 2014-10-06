@@ -17,17 +17,12 @@ package com.sky.server.social.user;
 
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.web.SignInAdapter;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.NativeWebRequest;
 
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Signs the user in by setting the currentUser property on the {@link SecurityContext}.
- * Remembers the sign-in after the current request completes by storing the user's id in a cookie.
- * This is cookie is read in {@link com.sky.server.web.interceptor.UserInterceptor#preHandle(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, Object)} on subsequent requests.
- * @author Keith Donald
- * @see com.sky.server.web.interceptor.UserInterceptor
- */
+@Component
 public final class SimpleSignInAdapter implements SignInAdapter {
 
 	private final UserCookieGenerator userCookieGenerator = new UserCookieGenerator();

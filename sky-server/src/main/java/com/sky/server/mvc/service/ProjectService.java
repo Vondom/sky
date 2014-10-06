@@ -2,9 +2,13 @@ package com.sky.server.mvc.service;
 
 import com.sky.server.mvc.model.Project;
 import com.sky.server.mvc.repository.ProjectRepository;
+import org.eclipse.egit.github.core.client.GitHubClient;
+import org.eclipse.egit.github.core.service.RepositoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.social.connect.Connection;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -18,6 +22,9 @@ public class ProjectService {
   @Autowired
   private ProjectRepository projectRepository;
 
+  @Autowired
+  private GitHubClient gitHubClient;
+
   public Project save(Project project) {
     project.setOwner(userService.getMe());
 
@@ -30,5 +37,10 @@ public class ProjectService {
 
   public Project get(long id) {
     return projectRepository.findOne(id);
+  }
+
+  public List<?> getFromGitHub() throws IOException {
+    RepositoryService repositoryService = new RepositoryService(gitHubClient);
+    return repositoryService.getRepositories();
   }
 }

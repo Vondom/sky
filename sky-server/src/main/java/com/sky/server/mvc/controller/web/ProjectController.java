@@ -1,6 +1,7 @@
 package com.sky.server.mvc.controller.web;
 
-import com.sky.server.social.user.SecurityContext;
+import com.sky.server.mvc.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,20 +14,24 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller("webProjectController")
 @RequestMapping(value = "/project", method = RequestMethod.GET)
 public class ProjectController {
+  @Autowired
+  private UserService userService;
+
   @RequestMapping("/{userId}")
   public ModelAndView all(@PathVariable String userId) {
-    return new ModelAndView("/project/list")
+    return new ModelAndView("project/list")
         .addObject("userId", userId);
   }
 
   @RequestMapping("")
   public ModelAndView all() {
-    return all(SecurityContext.getCurrentUser().getId());
+    return all(Long.toString(userService.getMe().getId()));
   }
 
   @RequestMapping("/create")
   public ModelAndView create() {
-    return new ModelAndView("/project/create")
-        .addObject(SecurityContext.getCurrentUser().getId());
+    return new ModelAndView("project/create")
+        .addObject(userService.getMe().getId());
   }
+
 }
