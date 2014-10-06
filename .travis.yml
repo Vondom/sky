@@ -1,18 +1,20 @@
 language: java
-before_script:
-  - "export PATH=`pwd`/tools/travis:$PATH"
-
 jdk:
   - oraclejdk7
   
 os:
   - linux
   
+install: /bin/true
+  
+before_script:
+  - "export PATH=`pwd`/tools/travis:$PATH"
+
+script: mvn test
+
 branch:
   only:
     - master
-
-script: mvn test
 
 notifications:
   email:
