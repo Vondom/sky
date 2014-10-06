@@ -1,0 +1,19 @@
+language: java
+before_script:
+  - "export PATH=`pwd`/tools/travis:$PATH"
+
+jdk:
+  - oraclejdk7
+  
+os:
+  - linux
+  
+branch:
+  only:
+    - master
+
+script: mvn test
+
+notifications:
+  email:
+    - bak723@gmail.com
