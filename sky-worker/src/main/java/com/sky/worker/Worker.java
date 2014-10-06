@@ -22,7 +22,7 @@ import java.net.URL;
 public class Worker implements com.sky.commons.Worker.Iface {
   private static final Logger logger = LoggerFactory.getLogger(Worker.class);
 
-  public static final String PROFILER_PATH = FileUtils.getTempDirectoryPath() + "sky-profiler.jar";
+  public static final String PROFILER_PATH = FileUtils.getTempDirectoryPath() + "/sky-profiler.jar";
 
   @Autowired
   private Processor processor;
