@@ -24,8 +24,7 @@ struct MethodProfile {
   5: i64 profileId,
   6: i64 timestamp,
   7: i64 index,
-  8: string threadName,
-  9: i64 projectId
+  8: string threadName
 }
 
 service AgentControlService {

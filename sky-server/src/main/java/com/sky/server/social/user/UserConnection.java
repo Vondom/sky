@@ -22,14 +22,19 @@ package com.sky.server.social.user;
  */
 public final class UserConnection {
 	
-	private final String id;
+	private final String id, accessToken;
 	
-	public UserConnection(String id) {
+	public UserConnection(String id, String accessToken) {
 		this.id = id;
-	}
+    this.accessToken = accessToken;
+  }
 	
 	public String getId() {
 		return id;
 	}
-	
+
+
+  public String getAccessToken() {
+    return accessToken;
+  }
 }

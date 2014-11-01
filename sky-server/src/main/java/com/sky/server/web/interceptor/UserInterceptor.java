@@ -19,6 +19,7 @@ import com.sky.server.social.user.SecurityContext;
 import com.sky.server.social.user.UserConnection;
 import com.sky.server.social.user.UserCookieGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.social.github.api.GitHub;
 import org.springframework.stereotype.Component;
@@ -43,9 +44,12 @@ public final class UserInterceptor extends HandlerInterceptorAdapter {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		rememberUser(request, response);
 		handleSignOut(request, response);
-		if (SecurityContext.userSignedIn() || requestForSignIn(request)) {
+		if (SecurityContext.userSignedIn()) {
+      request.setAttribute("accessToken", SecurityContext.getCurrentUser().getAccessToken());
 			return true;
-		} else {
+		} else if (requestForSignIn(request)) {
+      return true;
+    } else {
 			return requireSignIn(request, response);
 		}
 	}
@@ -61,11 +65,12 @@ public final class UserInterceptor extends HandlerInterceptorAdapter {
 		if (userId == null) {
 			return;
 		}
-		if (!userNotFound(userId)) {
+    Connection<?> connection = userNotFound(userId);
+		if (connection == null) {
 			userCookieGenerator.removeCookie(response);
 			return;
 		}
-		SecurityContext.setCurrentUser(new UserConnection(userId));
+		SecurityContext.setCurrentUser(new UserConnection(userId, connection.createData().getAccessToken()));
 	}
 
 	private void handleSignOut(HttpServletRequest request, HttpServletResponse response) {
@@ -85,9 +90,9 @@ public final class UserInterceptor extends HandlerInterceptorAdapter {
 		return false;
 	}
 
-	private boolean userNotFound(String userId) {
+	private Connection<?> userNotFound(String userId) {
 		// doesn't bother checking a local user database: simply checks if the userId is connected to Facebook
-		return connectionRepository.createConnectionRepository(userId).findPrimaryConnection(GitHub.class) != null;
+		return connectionRepository.createConnectionRepository(userId).findPrimaryConnection(GitHub.class);
 	}
 
 }

@@ -1,6 +1,6 @@
 package com.sky.server.mvc.controller.api;
 
-import com.sky.server.mvc.model.Profile;
+import com.sky.server.mvc.model.MethodLog;
 import com.sky.server.mvc.model.Work;
 import com.sky.server.mvc.service.WorkService;
 import org.apache.thrift.TException;
@@ -8,7 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collection;
 
 /**
  * Created by jcooky on 2014. 8. 6..
@@ -27,12 +30,16 @@ public class WorkController {
     return workService.create(work);
   }
 
-  @RequestMapping(value = "/{id}/profile", method = RequestMethod.GET)
-  public Profile getProfile(@PathVariable long id) {
-    Profile profile = workService.get(id).getProfile();
-    logger.debug("profile: {}", profile);
 
-    return profile;
+  @RequestMapping(value = "/{id}/methodLogs", method = RequestMethod.GET)
+  @Transactional(readOnly = true)
+  public Collection<MethodLog> getMethodLogs(@PathVariable long id) {
+    return get(id).getMethodLogs();
+  }
+
+  @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+  public Work get(@PathVariable long id) {
+    return workService.get(id);
   }
 
   @ExceptionHandler({TException.class})

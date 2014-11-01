@@ -1,6 +1,7 @@
 package com.sky.server;
 
 import com.sky.commons.WorkerControlService;
+import com.sky.server.mvc.model.ExecutionUnit;
 import com.sky.server.mvc.model.Project;
 import com.sky.server.mvc.model.Work;
 import com.sky.server.mvc.repository.WorkRepository;
@@ -18,9 +19,7 @@ import java.util.concurrent.Future;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by jcooky on 2014. 9. 15..
@@ -69,14 +68,17 @@ public class WorkerModuleTest extends SpringBasedTestSupport {
       Project project = new Project();
       project.setId(10L);
       project.setName("test");
-      project.setJarFile(new byte[]{1,1,1,1});
-      project.setJarFileName("test.jar");
-      project.setArguments("test1");
+
+      ExecutionUnit eu = new ExecutionUnit();
+      eu.setJarFile(new byte[]{1,1,1,1});
+      eu.setJarFileName("test.jar");
+      eu.setArguments("test1");
+      eu.setProject(project);
 
       Work work = new Work();
       work.setId(11L);
       work.setOrdering(1L);
-      work.setProject(project);
+      work.setExecutionUnit(eu);
 
       workerControlService.add("localhost", 9090);
       Future<Boolean> future = workerService.doWork(work);

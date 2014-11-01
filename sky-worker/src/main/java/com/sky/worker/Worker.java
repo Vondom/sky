@@ -54,7 +54,7 @@ public class Worker implements com.sky.commons.Worker.Iface {
       file = setup(work.getJar());
       status.setState(State.WORKING);
 
-      Process process = processor.process(work.projectId, work.id, file.getAbsolutePath());
+      Process process = processor.process(work.id, file.getAbsolutePath());
       int exitCode = process.waitFor();
       logger.debug("exitCode: {}", exitCode);
       logger.error(IOUtils.toString(process.getErrorStream()));

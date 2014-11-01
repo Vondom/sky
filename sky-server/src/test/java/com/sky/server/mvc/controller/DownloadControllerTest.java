@@ -27,7 +27,7 @@ public class DownloadControllerTest extends SpringBasedTestSupport {
   public void testDownloadConfig() throws Exception {
     String xmlStr = MockMvcBuilders.standaloneSetup(controller)
         .build().perform(MockMvcRequestBuilders
-          .get("/download/config/4/1")
+          .get("/download/config/4")
           .accept(MediaType.TEXT_XML)).andReturn().getResponse().getContentAsString();
 
     assertThat(xmlStr, not(""));
@@ -36,7 +36,7 @@ public class DownloadControllerTest extends SpringBasedTestSupport {
     Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(is);
 
     XPath xpath = XPathFactory.newInstance().newXPath();
-    String str = (String) xpath.evaluate("//handler/property[@name='projectId']/@value", document, XPathConstants.STRING);
+    String str = (String) xpath.evaluate("//handler/property[@name='workId']/@value", document, XPathConstants.STRING);
 
     assertThat(str, is("4"));
   }

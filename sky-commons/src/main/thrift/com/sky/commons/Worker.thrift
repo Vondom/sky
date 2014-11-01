@@ -17,13 +17,12 @@ struct Jar {
 struct Work {
   1: Jar jar,
   2: string arguments,
-  3: i64 projectId,
-  4: i64 id
+  3: i64 id
 }
 
 struct Status {
-  3: State state,
-  4: i64 workerId
+  1: State state,
+  2: i64 workerId
 }
 
 service Worker {

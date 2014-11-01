@@ -7,7 +7,7 @@
       <button type="submit" class="btn btn-social btn-lg btn-github">
         <i class="fa fa-github"></i>Sign in with GitHub
       </button>
-      <input type="hidden" name="scope" value="user:email" />
+      <input type="hidden" name="scope" value="user,read:org,repo" />
     </form>
   </tiles:putAttribute>
 </tiles:insertTemplate>

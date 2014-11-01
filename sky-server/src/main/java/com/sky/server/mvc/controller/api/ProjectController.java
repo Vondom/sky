@@ -1,6 +1,8 @@
 package com.sky.server.mvc.controller.api;
 
+import com.sky.server.mvc.model.ExecutionUnit;
 import com.sky.server.mvc.model.Project;
+import com.sky.server.mvc.service.ExecutionUnitService;
 import com.sky.server.mvc.service.ProjectService;
 import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
@@ -22,15 +24,28 @@ public class ProjectController {
 
   @Autowired
   private ProjectService projectService;
+  @Autowired
+  private ExecutionUnitService executionUnitService;
 
   @RequestMapping(method = RequestMethod.POST, consumes = {"application/json"})
   public Project create(@RequestBody Project project) {
     return projectService.save(project);
   }
 
+  @RequestMapping(value = "/{id}/execution-units", method = RequestMethod.PUT, consumes = {"application/json"})
+  public ExecutionUnit create(@PathVariable long id, @RequestBody ExecutionUnit executionUnit) {
+    executionUnit.setProject(get(id));
+    return executionUnitService.create(executionUnit);
+  }
+
   @RequestMapping(method = RequestMethod.GET)
   public List<Project> list() {
     return projectService.list();
+  }
+
+  @RequestMapping(value = "/{id}/execution-units", method = RequestMethod.GET)
+  public List<ExecutionUnit> getExecutionUnits(@PathVariable long id) {
+    return get(id).getExecutionUnits();
   }
 
   @RequestMapping(value = "/{id}", method = RequestMethod.GET)

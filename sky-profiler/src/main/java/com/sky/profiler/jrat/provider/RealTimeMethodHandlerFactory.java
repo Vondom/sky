@@ -25,7 +25,7 @@ public class RealTimeMethodHandlerFactory extends AbstractMethodHandlerFactory i
   private ThreadLocal<Long> profileId = new ThreadLocal<Long>();
 
   private AgentControlService.Iface collector;
-  private Long projectId, workId;
+  private Long workId;
 
   public RealTimeMethodHandlerFactory() throws TTransportException {
     super();
@@ -59,8 +59,7 @@ public class RealTimeMethodHandlerFactory extends AbstractMethodHandlerFactory i
     profile.setCallee(toKMethod(methodKey))
       .setCaller(caller != null ? toKMethod(caller) : null)
       .setIndex(mk.size() - 1)
-      .setProfileId(profileId.get())
-      .setProjectId(projectId);
+      .setProfileId(profileId.get());
 
     return new MethodHandler() {
 
@@ -98,16 +97,6 @@ public class RealTimeMethodHandlerFactory extends AbstractMethodHandlerFactory i
 
   private KClass toKClass(String packageName, String className) {
     return new KClass(packageName, className);
-  }
-
-  @Override
-  public void setProjectId(Long projectId) {
-    this.projectId = projectId;
-  }
-
-  @Override
-  public Long getProjectId() {
-    return projectId;
   }
 
   @Override

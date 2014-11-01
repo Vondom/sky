@@ -1,8 +1,9 @@
 package com.sky.server.mvc.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -17,14 +18,9 @@ public class Project {
   private String name;
   private long createTime = System.currentTimeMillis();
 
-  @Column(length = Integer.MAX_VALUE)
-  private byte[] jarFile;
-
-  private String jarFileName;
-  private String arguments;
-
   @OneToMany(mappedBy = "project")
-  private List<Work> works = new ArrayList<Work>();
+  @JsonIgnore
+  private List<ExecutionUnit> executionUnits = new ArrayList<ExecutionUnit>();
 
   @ManyToOne
   private User owner;
@@ -61,29 +57,6 @@ public class Project {
     this.createTime = createTime;
   }
 
-  public byte[] getJarFile() {
-    return jarFile;
-  }
-
-  public void setJarFile(byte[] jarFile) {
-    this.jarFile = jarFile;
-  }
-
-  public String getArguments() {
-    return arguments;
-  }
-
-  public void setArguments(String arguments) {
-    this.arguments = arguments;
-  }
-
-  public String getJarFileName() {
-    return jarFileName;
-  }
-
-  public void setJarFileName(String jarFileName) {
-    this.jarFileName = jarFileName;
-  }
 
   @Override
   public String toString() {
@@ -91,18 +64,16 @@ public class Project {
         "id=" + id +
         ", name='" + name + '\'' +
         ", createTime=" + createTime +
-        ", jarFile=" + Arrays.toString(jarFile) +
-        ", jarFileName='" + jarFileName + '\'' +
-        ", arguments='" + arguments + '\'' +
         ", owner=" + owner +
         '}';
   }
 
-  public List<Work> getWorks() {
-    return works;
+
+  public List<ExecutionUnit> getExecutionUnits() {
+    return executionUnits;
   }
 
-  public void setWorks(List<Work> works) {
-    this.works = works;
+  public void setExecutionUnits(List<ExecutionUnit> executionUnits) {
+    this.executionUnits = executionUnits;
   }
 }

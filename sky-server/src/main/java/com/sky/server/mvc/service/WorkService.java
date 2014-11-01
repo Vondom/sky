@@ -1,7 +1,7 @@
 package com.sky.server.mvc.service;
 
 import com.sky.server.mvc.model.Work;
-import com.sky.server.mvc.repository.ProjectRepository;
+import com.sky.server.mvc.repository.ExecutionUnitRepository;
 import com.sky.server.mvc.repository.WorkRepository;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class WorkService {
-  public static final int TIME_OUT = 1000 * 60 * 5;
   private static final Logger logger = LoggerFactory.getLogger(WorkService.class);
 
   @Autowired
@@ -25,16 +24,12 @@ public class WorkService {
   private WorkerService workerService;
 
   @Autowired
-  private ProfileService profileService;
-
-  @Autowired
-  private ProjectRepository projectRepository;
+  private ExecutionUnitRepository executionUnitRepository;
 
   @Transactional
   public Work create(Work work) throws TException {
-    work.setProject(projectRepository.findOne(work.getProject().getId()));
+    work.setExecutionUnit(executionUnitRepository.findOne(work.getExecutionUnit().getId()));
     work.setOrdering(workRepository.count());
-    work.setProfile(profileService.create());
     work = workRepository.save(work);
 
     workerService.doWork(work);
@@ -44,5 +39,9 @@ public class WorkService {
 
   public Work get(long id) {
     return workRepository.findOne(id);
+  }
+
+  public Work save(Work work) {
+    return workRepository.save(work);
   }
 }

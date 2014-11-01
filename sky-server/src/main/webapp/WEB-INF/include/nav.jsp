@@ -1,11 +1,5 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: jcooky
-  Date: 2014. 7. 26.
-  Time: 오전 12:02
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <nav class="navbar navbar-default" role="navigation">
   <div class="container-fluid">
     <div class="navbar-header">
@@ -27,6 +21,16 @@
           </ul>
         </li>
       </ul>
+      <ul id="nav-signout" class="nav navbar-nav navbar-right">
+        <li><a href="${pageContext.request.contextPath}/signout">signout</a></li>
+      </ul>
     </div>
   </div>
 </nav>
+<script>
+  $(function () {
+    if (sky.ACCESS_TOKEN == "") {
+      $("#nav-signout").hide();
+    }
+  });
+</script>

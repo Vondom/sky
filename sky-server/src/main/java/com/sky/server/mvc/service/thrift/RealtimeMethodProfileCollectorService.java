@@ -4,11 +4,11 @@ import com.sky.commons.AgentControlService;
 import com.sky.commons.MethodProfile;
 import com.sky.server.config.annotation.TService;
 import com.sky.server.mvc.model.MethodLog;
-import com.sky.server.mvc.model.Profile;
+import com.sky.server.mvc.model.Work;
 import com.sky.server.mvc.repository.MethodLogRepository;
 import com.sky.server.mvc.service.MethodKeyService;
-import com.sky.server.mvc.service.ProfileService;
 import com.sky.server.mvc.service.WorkService;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,9 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @TService(name = "profile", thrift = AgentControlService.class)
 public class RealtimeMethodProfileCollectorService implements AgentControlService.Iface {
-
-  @Autowired
-  private ProfileService profileService;
+  private static final org.slf4j.Logger logger = LoggerFactory.getLogger(RealtimeMethodProfileCollectorService.class);
 
   @Autowired
   private MethodLogRepository methodLogRepository;
@@ -29,6 +27,7 @@ public class RealtimeMethodProfileCollectorService implements AgentControlServic
 
   @Autowired
   private WorkService workService;
+
 
   @Transactional
   public void put(MethodProfile profile) {
@@ -41,14 +40,23 @@ public class RealtimeMethodProfileCollectorService implements AgentControlServic
     methodLog.setThreadName(profile.getThreadName());
 
     methodLog = methodLogRepository.save(methodLog);
-    Profile profile1 = profileService.get(profile.getProfileId());
+    Work work = workService.get(profile.getProfileId());
 
-    profile1.getMethodLogs().add(methodLog);
-    profileService.save(profile1);
+    work.getMethodLogs().add(methodLog);
+    workService.save(work);
   }
 
   @Transactional
   public long createProfile(long workId) {
-    return workService.get(workId).getProfile().getId();
+//    Profile profile = new Profile();
+////    Work work = ;
+//
+//    profile.setWork(workService.get(workId));
+//
+//    profile = profileService.create(profile);
+//
+//    logger.trace("profileId: {}", profile);
+
+    return workId;
   }
 }

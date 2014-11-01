@@ -71,10 +71,9 @@ public class WorkerService {
     com.sky.commons.Work work1 = new com.sky.commons.Work()
         .setId(work.getId())
         .setJar(new Jar()
-            .setFile(work.getProject().getJarFile())
-            .setName(work.getProject().getJarFileName()))
-        .setArguments(work.getProject().getArguments())
-        .setProjectId(work.getProject().getId());
+            .setFile(work.getExecutionUnit().getJarFile())
+            .setName(work.getExecutionUnit().getJarFileName()))
+        .setArguments(work.getExecutionUnit().getArguments());
 
     logger.debug("Return Work: {}", work1);
 

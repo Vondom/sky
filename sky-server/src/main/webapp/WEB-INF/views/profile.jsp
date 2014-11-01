@@ -3,7 +3,7 @@
 
 <tiles:insertTemplate template="/WEB-INF/include/layout.jsp">
   <tiles:putAttribute name="body">
-    <div id="profile" data-profile-id="${profileId}" data-work-id="${workId}" class="container">
+    <div id="profile" data-work-id="${id}" class="container">
       <div class="row">
         <div id="scatter"></div>
       </div>
@@ -15,15 +15,18 @@
       $(function () {
         google.setOnLoadCallback(function () {
           var $this = $("div#profile"),
-              workId = $this.data('work-id');
+              id = $this.data('work-id');
 
-          setInterval(function () {
+//          setInterval(function () {
 
             $.ajax({
-              url: sky.REQUEST_CONTEXT_PATH + "/api/work/" + workId + "/profile",
+              url: sky.API_WORK_URL + "/" + id + "/methodLogs",
               type: "GET"
-            }).done(function (profile) {
-              var methodLogs = profile.methodLogs,
+            }).error(function (message, status) {
+              console.error("message: " + message + "status: " + status);
+            }).done(function (methodLogs) {
+//              console.debug(JSON.stringify(profile));
+              var
                   threadNames = [],
                   data = _(methodLogs).sortBy(function (methodLog) {
                     return methodLog.startTime;
@@ -81,7 +84,7 @@
               console.error(text);
               console.error(status);
             });
-          }, 100);
+//          }, 100);
         });
       });
     </script>

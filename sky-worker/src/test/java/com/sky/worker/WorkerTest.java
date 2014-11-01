@@ -66,7 +66,6 @@ public class WorkerTest {
 
     Work work = new Work()
         .setId(10L)
-        .setProjectId(11L)
         .setArguments("test_arguments")
         .setJar(new Jar()
             .setName("test.jar")
@@ -74,14 +73,14 @@ public class WorkerTest {
     Process process = mock(Process.class);
 
     doReturn("localhost:18080").when(options).get(Options.Key.HOST);
-    doReturn(process).when(processor).process(eq(11L), eq(10L), anyString());
+    doReturn(process).when(processor).process(eq(10L), anyString());
     doReturn(0).when(process).waitFor();
     doReturn(new ByteArrayInputStream(error.getBytes())).when(process).getErrorStream();
     doReturn(new ByteArrayInputStream(stdout.getBytes())).when(process).getInputStream();
 
     worker.doWork(work);
 
-    verify(processor).process(eq(work.projectId), eq(work.id), anyString());
+    verify(processor).process(eq(work.id), anyString());
     verify(process).getErrorStream();
     verify(process).getInputStream();
 

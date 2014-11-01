@@ -19,11 +19,11 @@ public class DownloadController {
   @Autowired
   private ServletContext servletContext;
 
-  @RequestMapping(value = "/config/{projectId}/{workId}", produces = "text/xml")
-  public String downloadConfig(@PathVariable long projectId, @PathVariable long workId) throws IOException {
+  @RequestMapping(value = "/config//{workId}", produces = "text/xml")
+  public String downloadConfig(@PathVariable long workId) throws IOException {
 
     String str = IOUtils.toString(ClassLoader.getSystemResourceAsStream("jrat.xml"));
-    return StringUtils.replaceEach(str, new String [] {"${projectId}", "${workId}"},
-        new String[] {Long.toString(projectId), Long.toString(workId)});
+    return StringUtils.replaceEach(str, new String [] {"${workId}"},
+        new String[] {Long.toString(workId)});
   }
 }

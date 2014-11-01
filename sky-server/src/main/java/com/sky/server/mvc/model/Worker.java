@@ -21,7 +21,7 @@ public class Worker {
   @Enumerated
   private State state = State.IDLE;
 
-  @OneToMany(mappedBy = "worker")
+  @OneToMany(mappedBy = "worker", cascade = CascadeType.ALL)
   private Set<Work> works = new HashSet<Work>();
 
   public long getId() {

@@ -2,6 +2,7 @@ package com.sky.server.mvc.service;
 
 import com.sky.server.mvc.model.User;
 import com.sky.server.mvc.repository.UserRepository;
+import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +34,9 @@ public class UserService {
     UserProfile userProfile = connection.fetchUserProfile();
     String email = userProfile.getEmail();
 
-    if (userRepository.findByEmail(email) != null) {
-      logger.debug("Test !!!");
-    }
-
-    return create(userProfile);
+    User user = userRepository.findByEmail(email);
+    logger.debug("findByEmail: {}", user);
+    return user != null ? user : this.create(userProfile);
   }
 
   @Transactional

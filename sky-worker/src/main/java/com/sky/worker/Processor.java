@@ -14,10 +14,10 @@ public class Processor {
   @Autowired
   private Options options;
 
-  public Process process(long projectId, long workId, String path) throws IOException {
+  public Process process(long workId, String path) throws IOException {
     ProcessBuilder processBuilder = new ProcessBuilder(
         "java",
-        String.format("-Dsky.profiler.config=http://%s/download/config/%d/%d", options.get(Options.Key.HOST), projectId, workId),
+        String.format("-Dsky.profiler.config=http://%s/download/config/%d", options.get(Options.Key.HOST), workId),
         "-javaagent:"+Worker.PROFILER_PATH,
         "-jar",
         path

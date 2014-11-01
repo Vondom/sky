@@ -2,6 +2,8 @@ package com.sky.server.mvc.model;
 
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by jcooky on 2014. 8. 3..
@@ -16,13 +18,13 @@ public class Work {
   private Long ordering;
 
   @ManyToOne
-  private Project project;
+  private ExecutionUnit executionUnit;
 
   @ManyToOne
   private Worker worker;
 
-  @OneToOne
-  private Profile profile;
+  @OneToMany
+  private Set<MethodLog> methodLogs = new HashSet<MethodLog>();
 
   public Worker getWorker() {
     return worker;
@@ -32,12 +34,12 @@ public class Work {
     this.worker = worker;
   }
 
-  public Project getProject() {
-    return project;
+  public ExecutionUnit getExecutionUnit() {
+    return executionUnit;
   }
 
-  public void setProject(Project project) {
-    this.project = project;
+  public void setExecutionUnit(ExecutionUnit project) {
+    this.executionUnit = project;
   }
 
   public long getId() {
@@ -76,11 +78,11 @@ public class Work {
     return result;
   }
 
-  public Profile getProfile() {
-    return profile;
+  public Set<MethodLog> getMethodLogs() {
+    return methodLogs;
   }
 
-  public void setProfile(Profile profile) {
-    this.profile = profile;
+  public void setMethodLogs(Set<MethodLog> methodLogs) {
+    this.methodLogs = methodLogs;
   }
 }

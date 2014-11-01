@@ -36,8 +36,6 @@ public class ProjectRepositoryTest extends SpringBasedTestSupport {
     Project project = new Project();
     project.setId(2L);
     project.setOwner(user);
-    project.setJarFile(null);
-    project.setJarFileName("test");
     project = projectRepository.save(project);
 
     assertNotNull(project);
