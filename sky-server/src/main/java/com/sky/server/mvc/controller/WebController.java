@@ -22,7 +22,7 @@ public class WebController {
 
   @RequestMapping(value = "/test")
   public String test() {
-    return "/test";
+    return "/github/project";
   }
 
   @RequestMapping("/worker")

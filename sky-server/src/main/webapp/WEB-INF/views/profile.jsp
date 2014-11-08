@@ -3,7 +3,7 @@
 
 <tiles:insertTemplate template="/WEB-INF/include/layout.jsp">
   <tiles:putAttribute name="body">
-    <div id="profile" data-work-id="${id}" class="container">
+    <div id="profile" data-work-id="${id}" class="container" ng-controller="ProfileCtrl">
       <div class="row">
         <div id="scatter"></div>
       </div>

@@ -21,14 +21,14 @@ struct MethodProfile {
   2: KMethod caller,
   3: KThrowable throwable,
   4: i64 elapsedTime,
-  5: i64 profileId,
+  5: i64 workId,
   6: i64 timestamp,
   7: i64 index,
-  8: string threadName
+  8: string threadName,
+  9: i64 totalElapsedTime
 }
 
 service AgentControlService {
-  i64 createProfile(1: i64 workId),
   oneway void put(1:MethodProfile methodProfile)
 }
 

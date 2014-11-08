@@ -83,12 +83,17 @@ public class WorkerService {
   @Async
   @Transactional(readOnly = true)
   public Future<Boolean> doWork(Work work) throws TException {
+    logger.trace(".doWork(work={})", work);
     List<Worker> workers = workerRepository.findByState(Worker.State.IDLE);
 
     if (workers.isEmpty())
       return new AsyncResult<Boolean>(false);
-
-    doWork(workers.get(0), work);
+    try {
+      doWork(workers.get(0), work);
+    } catch (TException e) {
+      logger.error(e.getMessage(), e);
+      throw e;
+    }
 
     return new AsyncResult<Boolean>(true);
   }
@@ -99,7 +104,9 @@ public class WorkerService {
     connect(worker, new WorkerClientTemplateHandler() {
       @Override
       public void handle(com.sky.commons.Worker.Client worker) throws TException {
+        logger.trace(".handle(worker={}) - START", worker);
         worker.doWork(toWork(work));
+        logger.trace("END");
       }
     });
   }

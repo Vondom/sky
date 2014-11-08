@@ -22,6 +22,7 @@ public class MethodLog {
 
   @ManyToOne
   private MethodKey caller;
+  private long totalElapsedTime;
 
   public Long getId() {
     return id;
@@ -77,5 +78,13 @@ public class MethodLog {
 
   public void setThreadName(String threadName) {
     this.threadName = threadName;
+  }
+
+  public void setTotalElapsedTime(long totalElapsedTime) {
+    this.totalElapsedTime = totalElapsedTime;
+  }
+
+  public long getTotalElapsedTime() {
+    return totalElapsedTime;
   }
 }

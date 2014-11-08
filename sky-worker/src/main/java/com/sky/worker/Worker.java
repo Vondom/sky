@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -32,10 +33,12 @@ public class Worker implements com.sky.commons.Worker.Iface {
 
   private long id;
 
-  private Status status = new Status()
+  private final Status status = new Status()
       .setState(State.IDLE);
 
   private final String profilerPath = "/sky-profiler.jar";
+
+  private WorkerControlService.Iface workerControlService;
 
   public void setId(long id) {
     this.id = id;
@@ -54,12 +57,11 @@ public class Worker implements com.sky.commons.Worker.Iface {
       file = setup(work.getJar());
       status.setState(State.WORKING);
 
-      Process process = processor.process(work.id, file.getAbsolutePath());
+      Process process = processor.process(work.id, file.getAbsolutePath(), work.getArguments());
+//      IOUtils.copy(process.getErrorStream(), System.err);
+      IOUtils.copy(process.getInputStream(), System.out);
       int exitCode = process.waitFor();
       logger.debug("exitCode: {}", exitCode);
-      logger.error(IOUtils.toString(process.getErrorStream()));
-      InputStream is = process.getInputStream();
-      IOUtils.copy(is, System.out);
 
       return "";
     } catch (IOException e) {
@@ -74,6 +76,8 @@ public class Worker implements com.sky.commons.Worker.Iface {
         logger.error("FAILED file deletion: {}", path);
       }
       status.setState(State.IDLE);
+
+      workerControlService.done(id);
     }
   }
 
@@ -100,5 +104,9 @@ public class Worker implements com.sky.commons.Worker.Iface {
     synchronized (status) {
       return status;
     }
+  }
+
+  public void setWorkerControlService(WorkerControlService.Iface workerControlService) {
+    this.workerControlService = workerControlService;
   }
 }

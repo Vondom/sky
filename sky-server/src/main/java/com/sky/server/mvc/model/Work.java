@@ -17,6 +17,10 @@ public class Work {
   @Column(updatable = false, unique = true)
   private Long ordering;
 
+  private long startTime = System.currentTimeMillis();
+  private double averageTime;
+  private long mostLongTime;
+
   @ManyToOne
   private ExecutionUnit executionUnit;
 
@@ -24,6 +28,7 @@ public class Work {
   private Worker worker;
 
   @OneToMany
+  @OrderBy("ordering ASC")
   private Set<MethodLog> methodLogs = new HashSet<MethodLog>();
 
   public Worker getWorker() {
@@ -78,11 +83,45 @@ public class Work {
     return result;
   }
 
+  @Override
+  public String toString() {
+    return "Work{" +
+        "mostLongTime=" + mostLongTime +
+        ", averageTime=" + averageTime +
+        ", ordering=" + ordering +
+        ", id=" + id +
+        '}';
+  }
+
   public Set<MethodLog> getMethodLogs() {
     return methodLogs;
   }
 
   public void setMethodLogs(Set<MethodLog> methodLogs) {
     this.methodLogs = methodLogs;
+  }
+
+  public double getAverageTime() {
+    return averageTime;
+  }
+
+  public void setAverageTime(double averageTime) {
+    this.averageTime = averageTime;
+  }
+
+  public long getMostLongTime() {
+    return mostLongTime;
+  }
+
+  public void setMostLongTime(long mostLongTime) {
+    this.mostLongTime = mostLongTime;
+  }
+
+  public long getStartTime() {
+    return startTime;
+  }
+
+  public void setStartTime(long startTime) {
+    this.startTime = startTime;
   }
 }

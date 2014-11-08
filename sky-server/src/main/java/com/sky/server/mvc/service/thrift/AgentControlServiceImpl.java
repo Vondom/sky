@@ -16,8 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
  * Created by jcooky on 2014. 7. 26..
  */
 @TService(name = "profile", thrift = AgentControlService.class)
-public class RealtimeMethodProfileCollectorService implements AgentControlService.Iface {
-  private static final org.slf4j.Logger logger = LoggerFactory.getLogger(RealtimeMethodProfileCollectorService.class);
+public class AgentControlServiceImpl implements AgentControlService.Iface {
+  private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AgentControlServiceImpl.class);
 
   @Autowired
   private MethodLogRepository methodLogRepository;
@@ -35,28 +35,18 @@ public class RealtimeMethodProfileCollectorService implements AgentControlServic
     methodLog.setMethodKey(methodKeyService.get(profile.getCallee()));
     methodLog.setCaller(profile.getCaller() == null ? null : methodKeyService.get(profile.getCaller()));
     methodLog.setElapsedTime(profile.getElapsedTime());
+    methodLog.setTotalElapsedTime(profile.getTotalElapsedTime());
     methodLog.setStartTime(profile.getTimestamp());
     methodLog.setOrdering(profile.getIndex());
     methodLog.setThreadName(profile.getThreadName());
 
     methodLog = methodLogRepository.save(methodLog);
-    Work work = workService.get(profile.getProfileId());
+    Work work = workService.get(profile.getWorkId());
 
     work.getMethodLogs().add(methodLog);
+    work.setAverageTime((double)(profile.getElapsedTime())/(double)(work.getMethodLogs().size()));
+    work.setMostLongTime(work.getMostLongTime() < methodLog.getElapsedTime() ? methodLog.getElapsedTime() : work.getMostLongTime());
+
     workService.save(work);
-  }
-
-  @Transactional
-  public long createProfile(long workId) {
-//    Profile profile = new Profile();
-////    Work work = ;
-//
-//    profile.setWork(workService.get(workId));
-//
-//    profile = profileService.create(profile);
-//
-//    logger.trace("profileId: {}", profile);
-
-    return workId;
   }
 }

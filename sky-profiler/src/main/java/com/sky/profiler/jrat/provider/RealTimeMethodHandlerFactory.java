@@ -21,8 +21,7 @@ import java.util.List;
 public class RealTimeMethodHandlerFactory extends AbstractMethodHandlerFactory implements RealTimeMethodHandlerFactoryMBean {
   private static final Logger logger = Logger.getLogger(RealTimeMethodHandlerFactory.class);
 
-  private ThreadLocal<List<MethodKey>> methodKeys = new ThreadLocal<List<MethodKey>>();
-  private ThreadLocal<Long> profileId = new ThreadLocal<Long>();
+  private ThreadLocal<List<MethodTreeNode>> methodKeys = new ThreadLocal<List<MethodTreeNode>>();
 
   private AgentControlService.Iface collector;
   private Long workId;
@@ -38,8 +37,7 @@ public class RealTimeMethodHandlerFactory extends AbstractMethodHandlerFactory i
   public void startup(RuntimeContext context) throws Exception {
     super.startup(context);
 
-    profileId.set(collector.createProfile(this.workId));
-    methodKeys.set(new LinkedList<MethodKey>());
+    methodKeys.set(new LinkedList<MethodTreeNode>());
   }
 
   @Override
@@ -49,19 +47,21 @@ public class RealTimeMethodHandlerFactory extends AbstractMethodHandlerFactory i
 
   @Override
   public synchronized MethodHandler createMethodHandler(MethodKey methodKey) {
-    List<MethodKey> mk = methodKeys.get();
+    final List<MethodTreeNode> mk = methodKeys.get();
 
-    MethodKey caller = mk.isEmpty() ? null : mk.get(mk.size()-1);
-    mk.add(methodKey);
+    final MethodTreeNode node = new MethodTreeNode(mk.size(), methodKey, new MethodProfile()),
+        parentNode = mk.isEmpty() ? null : mk.get(mk.size() - 1);
 
-    final MethodProfile profile = new MethodProfile();
+    mk.add(node);
 
-    profile.setCallee(toKMethod(methodKey))
-      .setCaller(caller != null ? toKMethod(caller) : null)
-      .setIndex(mk.size() - 1)
-      .setProfileId(profileId.get());
+    node.getProfile().setCallee(toKMethod(methodKey))
+      .setCaller(parentNode != null ? toKMethod(parentNode.getMethodKey()) : null)
+      .setIndex(node.getIndex())
+      .setWorkId(workId)
+      .setElapsedTime(0L);
 
     return new MethodHandler() {
+      private MethodProfile profile = node.getProfile();
 
       @Override
       public void onMethodStart() {
@@ -70,14 +70,19 @@ public class RealTimeMethodHandlerFactory extends AbstractMethodHandlerFactory i
 
       @Override
       public void onMethodFinish(long durationMillis, Throwable throwable) {
-        profile.setElapsedTime(durationMillis)
-          .setThrowable(throwable != null ? toKThrowable(throwable) : null)
-          .setThreadName(Thread.currentThread().getName());
+        if (parentNode != null) {
+          parentNode.getProfile().setElapsedTime(parentNode.getProfile().getElapsedTime() + durationMillis);
+        }
 
         try {
-          collector.put(profile);
+          collector.put(profile.setElapsedTime(durationMillis - profile.getElapsedTime())
+              .setTotalElapsedTime(durationMillis)
+              .setThrowable(throwable != null ? toKThrowable(throwable) : null)
+              .setThreadName(Thread.currentThread().getName()));
         } catch (TException e) {
           e.printStackTrace();
+        } finally {
+          mk.remove(node.getIndex());
         }
       }
     };
@@ -107,5 +112,30 @@ public class RealTimeMethodHandlerFactory extends AbstractMethodHandlerFactory i
   @Override
   public Long getWorkId() {
     return this.workId;
+  }
+
+  public static class MethodTreeNode {
+    private int index;
+    private MethodKey methodKey;
+    private MethodProfile profile;
+
+    public MethodTreeNode(int index, MethodKey methodKey, MethodProfile profile) {
+      this.index = index;
+      this.methodKey = methodKey;
+      this.profile = profile;
+    }
+
+    public MethodKey getMethodKey() {
+      return methodKey;
+    }
+
+    public MethodProfile getProfile() {
+      return profile;
+    }
+
+    public int getIndex() {
+      return index;
+    }
+
   }
 }

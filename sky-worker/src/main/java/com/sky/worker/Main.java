@@ -47,6 +47,7 @@ public class Main implements CommandLineRunner {
 
       WorkerControlService.Iface workerControlService = init(host);
       worker.setId(workerControlService.add("0.0.0.0", port));
+      worker.setWorkerControlService(workerControlService);
 
       TNonblockingServerTransport transport = new TNonblockingServerSocket(new InetSocketAddress("0.0.0.0", port));
       TNonblockingServer server = new TNonblockingServer(new THsHaServer.Args(transport)
@@ -67,9 +68,8 @@ public class Main implements CommandLineRunner {
       host = "http://" + host;
 
     THttpClient httpClient = new THttpClient(host + "/agent/worker-control");
-    WorkerControlService.Iface workerControlService = new WorkerControlService.Client(new TCompactProtocol(httpClient));
 
-    return workerControlService;
+    return new WorkerControlService.Client(new TCompactProtocol(httpClient));
   }
 
   public static void main(String[] args) throws Exception {

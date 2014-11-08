@@ -83,7 +83,7 @@ public class WebMvcConfig extends WebMvcAutoConfiguration.WebMvcAutoConfiguratio
         .addPathPatterns("/**")
         .excludePathPatterns("/resources/**")
         .excludePathPatterns("/agent/**")
-        .excludePathPatterns("/test/**")
+//        .excludePathPatterns("/test/**")
         .excludePathPatterns("/download/**");
   }
 

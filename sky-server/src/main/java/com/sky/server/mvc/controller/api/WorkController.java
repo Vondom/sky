@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by jcooky on 2014. 8. 6..
@@ -26,7 +27,7 @@ public class WorkController {
   private WorkService workService;
 
   @RequestMapping(method = RequestMethod.POST)
-  public Work create(@RequestBody Work work) throws TException {
+  public Work create(@RequestBody Work work) throws TException, ExecutionException, InterruptedException {
     return workService.create(work);
   }
 

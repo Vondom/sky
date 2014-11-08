@@ -13,12 +13,11 @@
     </div>
     <div class="collapse navbar-collapse" id="navbar-collapse">
       <ul class="nav navbar-nav">
-        <li class='dropdown'>
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Project <span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-            <li><a href="${pageContext.request.contextPath}/project">All Projects</a></li>
-            <li><a href="${pageContext.request.contextPath}/project/create">Create</a></li>
-          </ul>
+        <li>
+          <a href="${pageContext.request.contextPath}/project">Project</a>
+        </li>
+        <li>
+          <a href="${pageContext.request.contextPath}/worker">Worker</a>
         </li>
       </ul>
       <ul id="nav-signout" class="nav navbar-nav navbar-right">

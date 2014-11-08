@@ -9,6 +9,7 @@ import org.junit.Rule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -69,7 +70,5 @@ public abstract class SpringBasedTestSupport {
       mockClassKey = null;
       mockMethodKey = null;
     }
-
-
   };
 }

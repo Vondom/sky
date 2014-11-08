@@ -12,7 +12,9 @@
 <script src="${pageContext.request.contextPath}/resources/vendor/jquery-serializeObject/jquery.serializeObject.js"></script>
 <script src="${pageContext.request.contextPath}/resources/vendor/github/github.js"></script>
 <script src="${pageContext.request.contextPath}/resources/vendor/angularjs/angular.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/vendor/octokit/octokit.js"></script>
 
 <script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/reader.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/project/controllers.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/profile/controllers.js"></script>

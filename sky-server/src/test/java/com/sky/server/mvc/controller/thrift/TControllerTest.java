@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 
 import javax.annotation.PostConstruct;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
@@ -21,11 +20,6 @@ import static org.mockito.Mockito.*;
 class ThriftTestService implements AgentControlService.Iface {
 
   public static AgentControlService.Iface mockService;
-
-  @Override
-  public long createProfile(long workId) throws TException {
-    return mockService.createProfile(workId);
-  }
 
   @Override
   public void put(MethodProfile methodProfile) throws TException {
@@ -52,13 +46,13 @@ public class TControllerTest extends SpringBasedTestSupport {
     long id = 10L;
 
     assertNotNull(ThriftTestService.mockService);
-    doReturn(11L).when(ThriftTestService.mockService).createProfile(anyLong());
+    doReturn(11L).when(ThriftTestService.mockService).put(any(MethodProfile.class));
 
     AgentControlService.Iface collector = new AgentControlService.Client(new TCompactProtocol(new THttpClient("http://localhost:"+serverPort+"/agent/test")));
 
-    long result = collector.createProfile(id);
+    collector.put(new MethodProfile());
 
-    assertEquals(11L, result);
-    verify(ThriftTestService.mockService).createProfile(eq(id));
+//    assertEquals(11L, result);
+    verify(ThriftTestService.mockService).put(any(MethodProfile.class));
   }
 }

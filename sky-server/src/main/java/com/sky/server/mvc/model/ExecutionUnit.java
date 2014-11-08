@@ -3,6 +3,7 @@ package com.sky.server.mvc.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,11 +16,16 @@ public class ExecutionUnit {
   @GeneratedValue
   private long id;
 
+  private String name;
+
   @Column(length = Integer.MAX_VALUE)
   private byte[] jarFile;
   private String jarFileName;
 
   private String arguments;
+
+  @NotNull(message = "Main class name must be not null")
+  private String mainClassName;
 
   @ManyToOne
   private Project project;
@@ -75,5 +81,21 @@ public class ExecutionUnit {
 
   public void setProject(Project project) {
     this.project = project;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getMainClassName() {
+    return mainClassName;
+  }
+
+  public void setMainClassName(String mainClassName) {
+    this.mainClassName = mainClassName;
   }
 }

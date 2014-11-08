@@ -18,7 +18,7 @@ public class User {
   @Column(unique = true)
   private String email;
 
-  @OneToMany(mappedBy = "owner")
+  @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
   @JsonIgnore
   private Set<Project> projects = new HashSet<Project>();
 
@@ -41,4 +41,6 @@ public class User {
   public Set<Project> getProjects() {
     return projects;
   }
+
+  public void setProjects(Set<Project> projects) { this.projects = projects; }
 }

@@ -16,6 +16,7 @@ public class Project {
   private long id;
 
   private String name;
+  private String description;
   private long createTime = System.currentTimeMillis();
 
   @OneToMany(mappedBy = "project")
@@ -76,4 +77,13 @@ public class Project {
   public void setExecutionUnits(List<ExecutionUnit> executionUnits) {
     this.executionUnits = executionUnits;
   }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
 }

@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.concurrent.ExecutionException;
+
 /**
  * Created by jcooky on 2014. 8. 7..
  */
@@ -27,8 +29,10 @@ public class WorkService {
   private ExecutionUnitRepository executionUnitRepository;
 
   @Transactional
-  public Work create(Work work) throws TException {
-    work.setExecutionUnit(executionUnitRepository.findOne(work.getExecutionUnit().getId()));
+  public Work create(Work work) throws TException, ExecutionException, InterruptedException {
+    logger.trace(".create(work={})", work);
+    if (work.getExecutionUnit() != null)
+      work.setExecutionUnit(executionUnitRepository.findOne(work.getExecutionUnit().getId()));
     work.setOrdering(workRepository.count());
     work = workRepository.save(work);
 
