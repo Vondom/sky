@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jrat>
 	<settings>
-		<property name="httpServerEnabled" value="true"/>
+		<property name="httpServerEnabled" value="false"/>
 	</settings>
 
 	<profile name="my code">
@@ -12,7 +12,7 @@
 
 		<handlers>
 
-			<handler factory="com.sky.profiler.jrat.provider.RealTimeMethodHandlerFactory">
+			<handler factory="com.sky.profiler.jrat.provider.TreeMethodHandlerFactory">
 				<property name="workId" value="${workId}" />
 			</handler>
 

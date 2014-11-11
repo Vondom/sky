@@ -3,7 +3,6 @@ package com.sky.server.mvc.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class ExecutionUnit {
 
   private String arguments;
 
-  @NotNull(message = "Main class name must be not null")
+  //@NotNull(message = "Main class name must be not null")
   private String mainClassName;
 
   @ManyToOne

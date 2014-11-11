@@ -2,8 +2,8 @@ package com.sky.server.mvc.model;
 
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jcooky on 2014. 8. 3..
@@ -17,6 +17,7 @@ public class Work {
   @Column(updatable = false, unique = true)
   private Long ordering;
 
+  private boolean finished = false;
   private long startTime = System.currentTimeMillis();
   private double averageTime;
   private long mostLongTime;
@@ -29,7 +30,7 @@ public class Work {
 
   @OneToMany
   @OrderBy("ordering ASC")
-  private Set<MethodLog> methodLogs = new HashSet<MethodLog>();
+  private List<MethodLog> methodLogs = new ArrayList<MethodLog>();
 
   public Worker getWorker() {
     return worker;
@@ -93,11 +94,11 @@ public class Work {
         '}';
   }
 
-  public Set<MethodLog> getMethodLogs() {
+  public List<MethodLog> getMethodLogs() {
     return methodLogs;
   }
 
-  public void setMethodLogs(Set<MethodLog> methodLogs) {
+  public void setMethodLogs(List<MethodLog> methodLogs) {
     this.methodLogs = methodLogs;
   }
 
@@ -123,5 +124,13 @@ public class Work {
 
   public void setStartTime(long startTime) {
     this.startTime = startTime;
+  }
+
+  public boolean isFinished() {
+    return finished;
+  }
+
+  public void setFinished(boolean finished) {
+    this.finished = finished;
   }
 }

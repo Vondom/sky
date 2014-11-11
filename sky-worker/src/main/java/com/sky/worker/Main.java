@@ -2,14 +2,12 @@ package com.sky.worker;
 
 import com.sky.commons.WorkerControlService;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.io.FileUtils;
 import org.apache.thrift.TException;
+import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.server.THsHaServer;
-import org.apache.thrift.server.TNonblockingServer;
-import org.apache.thrift.transport.THttpClient;
-import org.apache.thrift.transport.TNonblockingServerSocket;
-import org.apache.thrift.transport.TNonblockingServerTransport;
-import org.apache.thrift.transport.TTransportException;
+import org.apache.thrift.transport.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +18,11 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Created by jcooky on 2014. 7. 30..
@@ -31,6 +32,8 @@ import java.net.InetSocketAddress;
 @ComponentScan
 public class Main implements CommandLineRunner {
   private static final Logger logger = LoggerFactory.getLogger(Main.class);
+  public static final String PROFILER_PATH = FileUtils.getTempDirectoryPath() + "/sky-profiler.jar";
+  private static final String PROFILER_URL = "/sky-profiler.jar";
 
   @Autowired
   private com.sky.worker.Options options;
@@ -45,12 +48,14 @@ public class Main implements CommandLineRunner {
       int port = Integer.parseInt(options.get(Options.Key.PORT));
       String host = options.get(Options.Key.HOST);
 
+      this.downloadProfiler(host);
+
       WorkerControlService.Iface workerControlService = init(host);
       worker.setId(workerControlService.add("0.0.0.0", port));
       worker.setWorkerControlService(workerControlService);
 
       TNonblockingServerTransport transport = new TNonblockingServerSocket(new InetSocketAddress("0.0.0.0", port));
-      TNonblockingServer server = new TNonblockingServer(new THsHaServer.Args(transport)
+      THsHaServer server = new THsHaServer(new THsHaServer.Args(transport)
           .protocolFactory(new TCompactProtocol.Factory())
           .processor(new com.sky.commons.Worker.Processor<Worker>(worker)));
       server.serve();
@@ -63,13 +68,23 @@ public class Main implements CommandLineRunner {
     }
   }
 
+  public void downloadProfiler(String host) throws IOException {
+    File profilerFile = new File(PROFILER_PATH);
+    FileUtils.copyURLToFile(getProfilerUrl(host), profilerFile);
+    logger.debug("FINISH Download profiler: {}", profilerFile.getAbsolutePath());
+  }
+
   private WorkerControlService.Iface init(String host) throws TTransportException {
     if (!host.startsWith("http://"))
       host = "http://" + host;
 
     THttpClient httpClient = new THttpClient(host + "/agent/worker-control");
 
-    return new WorkerControlService.Client(new TCompactProtocol(httpClient));
+    return new WorkerControlService.Client(new TBinaryProtocol(httpClient));
+  }
+
+  public URL getProfilerUrl(String host) throws MalformedURLException {
+    return new URL("http://" + host + PROFILER_URL);
   }
 
   public static void main(String[] args) throws Exception {

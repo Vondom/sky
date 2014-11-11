@@ -13,30 +13,19 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 @Component
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class Worker implements com.sky.commons.Worker.Iface {
   private static final Logger logger = LoggerFactory.getLogger(Worker.class);
 
-  public static final String PROFILER_PATH = FileUtils.getTempDirectoryPath() + "/sky-profiler.jar";
-
   @Autowired
   private Processor processor;
-
-  @Autowired
-  private Options options;
 
   private long id;
 
   private final Status status = new Status()
       .setState(State.IDLE);
-
-  private final String profilerPath = "/sky-profiler.jar";
 
   private WorkerControlService.Iface workerControlService;
 
@@ -58,8 +47,8 @@ public class Worker implements com.sky.commons.Worker.Iface {
       status.setState(State.WORKING);
 
       Process process = processor.process(work.id, file.getAbsolutePath(), work.getArguments());
-//      IOUtils.copy(process.getErrorStream(), System.err);
       IOUtils.copy(process.getInputStream(), System.out);
+      IOUtils.copy(process.getErrorStream(), System.err);
       int exitCode = process.waitFor();
       logger.debug("exitCode: {}", exitCode);
 
@@ -77,26 +66,15 @@ public class Worker implements com.sky.commons.Worker.Iface {
       }
       status.setState(State.IDLE);
 
-      workerControlService.done(id);
+      workerControlService.done(id, work.id);
     }
   }
 
   private File setup(Jar jar) throws IOException {
-    String host = options.get(Options.Key.HOST);
-    File profilerFile = new File(PROFILER_PATH);
-    if (!profilerFile.exists()) {
-      FileUtils.copyURLToFile(getProfilerUrl(host), profilerFile);
-      logger.debug("FINISH Download profiler: {}", profilerFile.getAbsolutePath());
-    }
-
     File jarfile = new File(FileUtils.getTempDirectoryPath() + "/" + jar.getName());
     FileUtils.writeByteArrayToFile(jarfile, jar.getFile());
 
     return jarfile;
-  }
-
-  public URL getProfilerUrl(String host) throws MalformedURLException {
-    return new URL("http://" + host + profilerPath);
   }
 
   @Override

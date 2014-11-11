@@ -46,7 +46,7 @@ public class TControllerTest extends SpringBasedTestSupport {
     long id = 10L;
 
     assertNotNull(ThriftTestService.mockService);
-    doReturn(11L).when(ThriftTestService.mockService).put(any(MethodProfile.class));
+//    doReturn(11L).when(ThriftTestService.mockService).put(any(MethodProfile.class));
 
     AgentControlService.Iface collector = new AgentControlService.Client(new TCompactProtocol(new THttpClient("http://localhost:"+serverPort+"/agent/test")));
 

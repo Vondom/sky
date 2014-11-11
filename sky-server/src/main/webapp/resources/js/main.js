@@ -11,7 +11,7 @@ var sky = (function () {
 
   return {
     utils: {},
-    app: angular.module("skyApp", []),
+    app: angular.module("skyApp", ['googlechart']),
 
     // Constant Variables
     ACCESS_TOKEN: accessToken,
@@ -45,6 +45,8 @@ sky.app.directive("fileread", [function () {
               data: targetResult.split(',')[1]
             };
 //            scope.fileread = loadEvent.target.result;
+
+            element.parent().find('button').text(scope.fileread.name);
           });
         };
         reader.readAsDataURL(changeEvent.target.files[0]);

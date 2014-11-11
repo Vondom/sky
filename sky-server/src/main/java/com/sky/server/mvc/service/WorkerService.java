@@ -4,6 +4,7 @@ import com.sky.commons.Jar;
 import com.sky.commons.Status;
 import com.sky.server.mvc.model.Work;
 import com.sky.server.mvc.model.Worker;
+import com.sky.server.mvc.repository.WorkRepository;
 import com.sky.server.mvc.repository.WorkerRepository;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TCompactProtocol;
@@ -30,6 +31,8 @@ public class WorkerService {
 
   @Autowired
   private WorkerRepository workerRepository;
+  @Autowired
+  private WorkRepository workRepository;
 
   @Scheduled(fixedRate = 10 * 60 * 1000)
   @Transactional(readOnly = true)
@@ -80,6 +83,7 @@ public class WorkerService {
     return work1;
   }
 
+
   @Async
   @Transactional(readOnly = true)
   public Future<Boolean> doWork(Work work) throws TException {
@@ -88,6 +92,7 @@ public class WorkerService {
 
     if (workers.isEmpty())
       return new AsyncResult<Boolean>(false);
+
     try {
       doWork(workers.get(0), work);
     } catch (TException e) {
@@ -99,13 +104,21 @@ public class WorkerService {
   }
 
   @Transactional(readOnly = true)
-  public void doWork(Worker worker, final Work work) throws TException {
+  public void doWork(final Worker worker, final Work work) throws TException {
 
     connect(worker, new WorkerClientTemplateHandler() {
       @Override
-      public void handle(com.sky.commons.Worker.Client worker) throws TException {
+      public void handle(com.sky.commons.Worker.Client workerClient) throws TException {
+
+        if (Worker.State.IDLE.equals(worker.getState())) {
+          worker.setState(Worker.State.WORKING);
+          worker.getWorks().add(work);
+          Worker worker0 = workerRepository.save(worker);
+          logger.trace("worker0={}", worker0);
+        }
+
         logger.trace(".handle(worker={}) - START", worker);
-        worker.doWork(toWork(work));
+        workerClient.doWork(toWork(work));
         logger.trace("END");
       }
     });
@@ -113,10 +126,6 @@ public class WorkerService {
 
   @Transactional
   private void connect(Worker worker, WorkerClientTemplateHandler handler) throws TException {
-    if (Worker.State.IDLE.equals(worker.getState())) {
-      worker.setState(Worker.State.WORKING);
-      workerRepository.save(worker);
-    }
     TSocket socket = null;
     try {
       socket = new TSocket(worker.getAddress(), worker.getPort());

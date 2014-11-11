@@ -55,7 +55,7 @@ public class WorkerTest {
     if (file.exists())
       assertTrue(file.delete());
 
-    file = new File(Worker.PROFILER_PATH);
+    file = new File(Main.PROFILER_PATH);
     if (file.exists())
       assertTrue(file.delete());
   }

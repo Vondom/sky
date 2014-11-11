@@ -35,7 +35,7 @@ public class AgentControlServiceImpl implements AgentControlService.Iface {
     methodLog.setMethodKey(methodKeyService.get(profile.getCallee()));
     methodLog.setCaller(profile.getCaller() == null ? null : methodKeyService.get(profile.getCaller()));
     methodLog.setElapsedTime(profile.getElapsedTime());
-    methodLog.setTotalElapsedTime(profile.getTotalElapsedTime());
+//    methodLog.setTotalElapsedTime(profile.getTotalElapsedTime());
     methodLog.setStartTime(profile.getTimestamp());
     methodLog.setOrdering(profile.getIndex());
     methodLog.setThreadName(profile.getThreadName());
@@ -44,7 +44,7 @@ public class AgentControlServiceImpl implements AgentControlService.Iface {
     Work work = workService.get(profile.getWorkId());
 
     work.getMethodLogs().add(methodLog);
-    work.setAverageTime((double)(profile.getElapsedTime())/(double)(work.getMethodLogs().size()));
+    work.setAverageTime(work.getAverageTime() + methodLog.getElapsedTime());
     work.setMostLongTime(work.getMostLongTime() < methodLog.getElapsedTime() ? methodLog.getElapsedTime() : work.getMostLongTime());
 
     workService.save(work);

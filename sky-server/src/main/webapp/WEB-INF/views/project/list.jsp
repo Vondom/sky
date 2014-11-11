@@ -4,8 +4,8 @@
 <tiles:insertTemplate template="/WEB-INF/include/layout.jsp">
   <tiles:putAttribute name="body">
     <div id="projects" data-user-id="${userId}" ng-controller="ProjectCtrl">
-      <div class="container-fluid">
-        <div class="row pull-right">
+      <div class="container">
+        <div class="row pull-right" style="padding-bottom: 10px;">
           <button data-toggle="modal" data-target="#create-project.modal" class="btn btn-md btn-success">
             Create
           </button>
@@ -29,7 +29,7 @@
                   <div class="col-md-8">{{project.description}}</div>
                   <div class="col-md-2">
                     <%--<button id="project-{{project.id}}-open" class="btn btn-xs btn-info" ng-click="openProject(project)"><span class="fa fa-chevron-down"></span></button>--%>
-                    <button class="btn btn-info" ng-click="deleteProject(projects, $index)"><span
+                    <button class="btn btn-danger" ng-click="deleteProject(projects, $index)"><span
                         class="fa fa-times"></span></button>
                   </div>
                 </div>
@@ -42,8 +42,9 @@
                       </div>
                       <div class="form-group col-md-3">
                         <label class="sr-only" for="inputJarFile">JarFile</label>
+                        <button class="form-control btn btn-warning" onclick="javascript:$(this).parent().find('input').click()">{{project.tempExecutionUnit.jarFileName||"File Upload"}}</button>
                         <input filename="project.tempExecutionUnit.jarFileName"
-                               fileread="project.tempExecutionUnit.jarFile" id="inputJarFile" type="file">
+                               fileread="project.tempExecutionUnit.jarFile" id="inputJarFile" type="file" class="hidden">
                       </div>
                       <div class="form-group col-md-2">
                         <label class="sr-only" for="inputMainClassName">Main Class Name</label>
@@ -81,16 +82,14 @@
                         <div id="works-{{executionUnit.id}}" class="works hidden">
                           <div class="header row">
                               <%--<h5 class="col-md-5">Id</h5>--%>
-                            <h5 class="col-md-1">Order</h5>
-                            <h5 class="col-md-2">Start Time</h5>
+                            <h5 class="col-md-3">Start Time</h5>
                             <h5 class="col-md-3">Average Time(ms)</h5>
                             <h5 class="col-md-3">Most Long Time(ms)</h5>
                             <h5 class="col-md-3"></h5>
                           </div>
                           <div class="contents row" ng-repeat="work in executionUnit.works">
                               <%--<span class="col-md-5">{{work.id}}</span>--%>
-                            <div class="col-md-1">{{work.ordering}}</div>
-                            <div class="col-md-2">{{toDate(work.startTime)}}</div>
+                            <div class="col-md-3">{{toDate(work.startTime)}}</div>
                             <div class="col-md-3">{{work.averageTime}} ms</div>
                             <div class="col-md-3">{{work.mostLongTime}} ms</div>
                             <div class="col-md-3">

@@ -9,16 +9,16 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="${pageContext.request.contextPath}/">Sky</a>
+      <a class="navbar-brand" href="${pageContext.request.contextPath}/">Sky Engine</a>
     </div>
     <div class="collapse navbar-collapse" id="navbar-collapse">
       <ul class="nav navbar-nav">
-        <li>
-          <a href="${pageContext.request.contextPath}/project">Project</a>
-        </li>
-        <li>
-          <a href="${pageContext.request.contextPath}/worker">Worker</a>
-        </li>
+        <%--<li>--%>
+          <%--<a href="${pageContext.request.contextPath}/project">Project</a>--%>
+        <%--</li>--%>
+        <%--<li>--%>
+          <%--<a href="${pageContext.request.contextPath}/worker">Worker</a>--%>
+        <%--</li>--%>
       </ul>
       <ul id="nav-signout" class="nav navbar-nav navbar-right">
         <li><a href="${pageContext.request.contextPath}/signout">signout</a></li>

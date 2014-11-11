@@ -30,6 +30,9 @@ public class WorkService {
 
   @Transactional
   public Work create(Work work) throws TException, ExecutionException, InterruptedException {
+    // TODO 시간당 한번씩 하고 싶은데... Debugging을 위해
+    workerService.checkWorkers();
+
     logger.trace(".create(work={})", work);
     if (work.getExecutionUnit() != null)
       work.setExecutionUnit(executionUnitRepository.findOne(work.getExecutionUnit().getId()));

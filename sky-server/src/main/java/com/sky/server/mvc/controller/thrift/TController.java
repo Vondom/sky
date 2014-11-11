@@ -4,7 +4,7 @@ import com.sky.server.config.annotation.TService;
 import com.sky.server.exception.WebNotFoundException;
 import org.apache.thrift.TException;
 import org.apache.thrift.TProcessor;
-import org.apache.thrift.protocol.TCompactProtocol;
+import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
 import org.apache.thrift.protocol.TProtocolFactory;
 import org.apache.thrift.transport.TIOStreamTransport;
@@ -39,7 +39,7 @@ public class TController {
   private static final long serialVersionUID = 1L;
   private static final Logger logger = LoggerFactory.getLogger(TController.class);
 
-  private TProtocolFactory inFactory = new TCompactProtocol.Factory(), outFactory = new TCompactProtocol.Factory();
+  private TProtocolFactory inFactory = new TBinaryProtocol.Factory(), outFactory = new TBinaryProtocol.Factory();
 
   private Collection<Map.Entry<String, String>> customHeaders;
   private Map<String, TProcessor> processors = new HashMap<String, TProcessor>();
@@ -103,7 +103,7 @@ public class TController {
       outTransport = transport;
 
       TProtocol inProtocol = inFactory.getProtocol(inTransport);
-      TProtocol outProtocol = inFactory.getProtocol(outTransport);
+      TProtocol outProtocol = outFactory.getProtocol(outTransport);
 
       TProcessor processor = getProcessor(serviceName);
 

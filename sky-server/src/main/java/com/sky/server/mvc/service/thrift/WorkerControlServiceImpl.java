@@ -44,14 +44,21 @@ public class WorkerControlServiceImpl implements WorkerControlService.Iface {
   }
 
   @Override
-  @Transactional(readOnly = true)
-  public void done(long id) throws TException {
+  @Transactional
+  public void done(long workerId, long workId) throws TException {
+    Work work = workRepository.findOne(workId);
+    work.setFinished(true);
+    work.setAverageTime(work.getAverageTime()/(double)(work.getMethodLogs().size()));
+    workRepository.save(work);
 
-    Work work = workRepository.findReadyWork();
+    work = workRepository.findReadyWork();
     if (work != null) {
-      Worker worker = workerService.get(id);
+      Worker worker = workerService.get(workerId);
 
       workerService.doWork(worker, work);
+    } else {
+      Worker worker = workerService.get(workerId);
+      worker.setState(Worker.State.IDLE);
     }
   }
 

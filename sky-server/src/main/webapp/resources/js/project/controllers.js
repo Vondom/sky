@@ -210,7 +210,7 @@ sky.app.controller("ProjectCtrl", function ($scope, $http, $element) {
 
   $scope.deleteWork = function (executionUnit, $index) {
     var work = executionUnit.works[$index];
-    $http.delete(sky.API_WORK_URL, work)
+    $http.delete(sky.API_WORK_URL + "/" + work.id)
         .success(function () {
           executionUnit.works.splice($index, 1);
         })

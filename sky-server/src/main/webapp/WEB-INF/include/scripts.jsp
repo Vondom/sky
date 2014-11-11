@@ -13,6 +13,7 @@
 <script src="${pageContext.request.contextPath}/resources/vendor/github/github.js"></script>
 <script src="${pageContext.request.contextPath}/resources/vendor/angularjs/angular.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/vendor/octokit/octokit.js"></script>
+<script src="${pageContext.request.contextPath}/resources/vendor/angular-google-chart/ng-google-chart.js"></script>
 
 <script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/reader.js"></script>
