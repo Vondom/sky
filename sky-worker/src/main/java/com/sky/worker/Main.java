@@ -70,7 +70,9 @@ public class Main implements CommandLineRunner {
 
   public void downloadProfiler(String host) throws IOException {
     File profilerFile = new File(PROFILER_PATH);
-    FileUtils.copyURLToFile(getProfilerUrl(host), profilerFile);
+    URL profilerUrl = getProfilerUrl(host);
+    logger.trace("profilerUrl={}", profilerUrl);
+    FileUtils.copyURLToFile(profilerUrl, profilerFile);
     logger.debug("FINISH Download profiler: {}", profilerFile.getAbsolutePath());
   }
 

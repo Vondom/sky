@@ -37,7 +37,7 @@ public class Processor {
         "-cp",
         path,
         mainClassName);
-    if (arguments != null || !arguments.isEmpty())
+    if (arguments != null && !arguments.isEmpty())
       processes.add(arguments);
 
     ProcessBuilder processBuilder = new ProcessBuilder(processes.toArray(new String[processes.size()]));

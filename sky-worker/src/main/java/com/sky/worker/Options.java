@@ -4,18 +4,22 @@ import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.ParseException;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * Created by jcooky on 2014. 7. 31..
  */
 @Component
 public class Options {
+
+  @Resource
+  private Environment env;
 
   private Map<Key, String> options = new EnumMap<Key, String>(Key.class);
   private org.apache.commons.cli.Options cliOptions;
@@ -48,12 +52,10 @@ public class Options {
   }
 
   public void init(String []args) throws ParseException, IOException {
-    Properties env = new Properties();
-    env.load(ClassLoader.getSystemResourceAsStream("application.properties"));
 
     for (Key key : Key.values()) {
       String k = "worker.options." + key.name().toLowerCase();
-      if (env.containsKey(k)) {
+      if (env.containsProperty(k)) {
         this.options.put(key, env.getProperty(k));
       }
     }
