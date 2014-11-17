@@ -22,6 +22,12 @@
 			<version>${version}</version>
 		</dependency>
 		<dependency>
+			<groupId>sky</groupId>
+			<artifactId>sky-sample</artifactId>
+			<version>${version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.anarres.jrat</groupId>
 			<artifactId>jrat-agent</artifactId>
 			<version>1.0.0</version>
@@ -36,6 +42,12 @@
 			<groupId>com.squareup.okhttp</groupId>
 			<artifactId>mockwebserver</artifactId>
 			<version>2.0.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -82,8 +94,8 @@
 						<configuration>
 							<target>
 								<copyfile src="${basedir}/target/${build.finalName}.jar"
-                          dest="${basedir}/../sky-server/src/main/webapp/${build.finalName}.jar"
-                          forceoverwrite="true" />
+								          dest="${basedir}/../sky-server/src/main/webapp/${build.finalName}.jar"
+								          forceoverwrite="true"/>
 							</target>
 						</configuration>
 					</execution>

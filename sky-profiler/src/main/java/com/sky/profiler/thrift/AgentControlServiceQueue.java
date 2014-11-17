@@ -10,7 +10,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 /**
  * Created by jcooky on 14. 11. 11..
  */
-public class AgentControlServiceQueue implements Runnable {
+public class AgentControlServiceQueue implements Runnable, AgentControlService.Iface {
   private AgentControlService.Iface iface;
 
   private Thread thread = new Thread(this, "sender-thread");

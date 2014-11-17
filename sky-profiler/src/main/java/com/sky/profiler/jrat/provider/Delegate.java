@@ -1,6 +1,5 @@
 package com.sky.profiler.jrat.provider;
 
-import com.sky.commons.MethodProfile;
 import org.apache.thrift.TException;
 import org.shiftone.jrat.core.MethodKey;
 import org.shiftone.jrat.util.Assert;
@@ -29,22 +28,11 @@ public class Delegate {
   public final void onMethodStart(MethodKey methodKey) {
     currentNode = currentNode.getChild(factory, methodKey);
     currentNode.getAccumulator().onMethodStart();
-
-
   }
 
   public final void onMethodFinish(MethodKey methodKey, long duration, boolean success) {
     try {
-      synchronized(factory.getCollector()) {
-        factory.getCollector().put(new MethodProfile().setWorkId(factory.getWorkId())
-            .setIndex(factory.getTreeNodes().indexOf(currentNode))
-            .setCaller(currentNode.getParentNode().getMethodKey() == null ? null : factory.createKMethod(currentNode.getParentNode().getMethodKey()))
-            .setCallee(factory.createKMethod(methodKey))
-            .setElapsedTime(duration)
-            .setThreadName(Thread.currentThread().getName())
-            .setThrowable(null)
-            .setTimestamp(System.currentTimeMillis()));
-      }
+      factory.getCollector().put(factory.createMethodProfile(currentNode, duration, Thread.currentThread().getName(), System.currentTimeMillis()));
     } catch (TException e) {
       e.printStackTrace();
     }

@@ -38,12 +38,4 @@
 		</dependency>
 	</dependencies>
 
-	<repositories>
-		<repository>
-			<id>dev</id>
-			<name>dev-releases</name>
-			<url>http://artifactory.jcooky.wo.tc/artifactory/libs-release-local</url>
-		</repository>
-	</repositories>
-
 </project>

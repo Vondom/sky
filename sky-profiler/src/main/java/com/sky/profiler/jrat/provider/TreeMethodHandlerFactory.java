@@ -1,10 +1,8 @@
 package com.sky.profiler.jrat.provider;
 
-import com.sky.commons.AgentControlService;
-import com.sky.commons.KClass;
-import com.sky.commons.KMethod;
-import com.sky.commons.KThrowable;
+import com.sky.commons.*;
 import com.sky.profiler.api.SkyAPI;
+import com.sky.profiler.thrift.AgentControlServiceQueue;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.transport.THttpClient;
 import org.apache.thrift.transport.TTransportException;
@@ -14,6 +12,7 @@ import org.shiftone.jrat.core.spi.MethodHandler;
 import org.shiftone.jrat.core.spi.RuntimeContext;
 import org.shiftone.jrat.util.log.Logger;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -32,16 +31,16 @@ public class TreeMethodHandlerFactory extends AbstractMethodHandlerFactory imple
   private final DelegateThreadLocal delegateThreadLocal = new DelegateThreadLocal(this);
   private final List<TreeNode> treeNodes = new ArrayList<TreeNode>();
 
-  private AgentControlService.Iface collector;
+  private AgentControlServiceQueue collector;
   private long workId;
 
-  public TreeMethodHandlerFactory() throws TTransportException {
+  public TreeMethodHandlerFactory() throws TTransportException, IOException {
     super();
 
     THttpClient httpClient = new THttpClient(SkyAPI.SKY_SERVER_URL);
     httpClient.setConnectTimeout(Integer.MAX_VALUE);
     httpClient.setReadTimeout(Integer.MAX_VALUE);
-    collector = new AgentControlService.Client(new TBinaryProtocol(httpClient));
+    collector = new AgentControlServiceQueue(new AgentControlService.Client(new TBinaryProtocol(httpClient)));
   }
 
   @Override
@@ -49,12 +48,12 @@ public class TreeMethodHandlerFactory extends AbstractMethodHandlerFactory imple
     LOG.info("new");
     super.startup(context);
 
-//    collector.start();
+    collector.start();
   }
 
   @Override
   public void shutdown() {
-//    collector.finish();
+    collector.finish();
   }
 
   @Override
@@ -126,5 +125,16 @@ public class TreeMethodHandlerFactory extends AbstractMethodHandlerFactory imple
 
   public AgentControlService.Iface getCollector() {
     return collector;
+  }
+
+  public synchronized MethodProfile createMethodProfile(TreeNode currentNode, long duration, String threadName, long time) {
+    return new MethodProfile().setWorkId(this.getWorkId())
+        .setIndex(this.getTreeNodes().indexOf(currentNode))
+        .setCaller(currentNode.getParentNode().getMethodKey() == null ? null : this.createKMethod(currentNode.getParentNode().getMethodKey()))
+        .setCallee(this.createKMethod(currentNode.getMethodKey()))
+        .setElapsedTime(duration)
+        .setThreadName(threadName)
+        .setThrowable(null)
+        .setTimestamp(time);
   }
 }
