@@ -8,6 +8,7 @@ os:
 install: /bin/true
   
 before_script:
+  - "cd tools/jrat; ./gradlew install"
   - "export PATH=`pwd`/tools/travis:$PATH"
 
 script: mvn test
