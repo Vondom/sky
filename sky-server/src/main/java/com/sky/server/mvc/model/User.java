@@ -3,8 +3,8 @@ package com.sky.server.mvc.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jcooky on 2014. 7. 21..
@@ -20,7 +20,7 @@ public class User {
 
   @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
   @JsonIgnore
-  private Set<Project> projects = new HashSet<Project>();
+  private List<Project> projects = new ArrayList<Project>();
 
   public long getId() {
     return id;
@@ -38,9 +38,9 @@ public class User {
     this.email = email;
   }
 
-  public Set<Project> getProjects() {
+  public List<Project> getProjects() {
     return projects;
   }
 
-  public void setProjects(Set<Project> projects) { this.projects = projects; }
+  public void setProjects(List<Project> projects) { this.projects = projects; }
 }

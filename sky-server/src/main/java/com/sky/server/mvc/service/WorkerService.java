@@ -104,17 +104,21 @@ public class WorkerService {
   }
 
   @Transactional(readOnly = true)
-  public void doWork(final Worker worker, final Work work) throws TException {
+  public void doWork(final Worker worker_, final Work work) throws TException {
 
-    connect(worker, new WorkerClientTemplateHandler() {
+    connect(worker_, new WorkerClientTemplateHandler() {
+      private Worker worker = worker_;
+
       @Override
       public void handle(com.sky.commons.Worker.Client workerClient) throws TException {
 
         if (Worker.State.IDLE.equals(worker.getState())) {
           worker.setState(Worker.State.WORKING);
           worker.getWorks().add(work);
-          Worker worker0 = workerRepository.save(worker);
-          logger.trace("worker0={}", worker0);
+
+          worker = workerRepository.save(worker);
+
+          logger.trace("worker0={}", worker);
         }
 
         logger.trace(".handle(worker={}) - START", worker);

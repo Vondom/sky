@@ -21,7 +21,11 @@
 		<dependency>
 			<groupId>sky</groupId>
 			<artifactId>sky-commons</artifactId>
-			<version>${version}</version>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.jayway.jsonpath</groupId>
+			<artifactId>json-path</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>

@@ -43,7 +43,7 @@ public class UserControllerTest extends SpringBasedTestSupport {
 
   @Test
   public void testGetProjects() throws Exception {
-    Set<Project> projects = new HashSet<Project>();
+    List<Project> projects = new ArrayList<Project>();
     Project prj = new Project();
     prj.setId(2);
     projects.add(prj);
@@ -59,7 +59,7 @@ public class UserControllerTest extends SpringBasedTestSupport {
     user.setEmail("bak723@gmail.com");
     user.setProjects(projects);
 
-    when(userService.get(eq(1))).thenReturn(user);
+    when(userService.get(eq(1L))).thenReturn(user);
 
     MockMvcBuilders.standaloneSetup(userController)
         .build()
@@ -71,7 +71,7 @@ public class UserControllerTest extends SpringBasedTestSupport {
         .andExpect(jsonPath("$[2].id", is(4)))
         .andDo(print());
 
-    verify(userController).getProjects(eq(1L));
+    verify(userService).get(eq(1L));
   }
 
   @Test
@@ -88,9 +88,12 @@ public class UserControllerTest extends SpringBasedTestSupport {
         .build()
         .perform(MockMvcRequestBuilders.get("/api/user/{id}/github/repositories", 1L))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$", hasSize(3)))
+        .andExpect(jsonPath("$.test", hasSize(3)))
         .andExpect(jsonPath("$.test[0].id", is(1)))
-        .andExpect(jsonPath("$.test[0].id", is(2)))
-        .andExpect(jsonPath("$.test[0].id", is(3)));
+        .andExpect(jsonPath("$.test[1].id", is(2)))
+        .andExpect(jsonPath("$.test[2].id", is(3)))
+        .andDo(print());
+
+    verify(userService).getRepositories();
   }
 }

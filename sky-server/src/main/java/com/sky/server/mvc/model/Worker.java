@@ -1,9 +1,9 @@
 package com.sky.server.mvc.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 /**
  * Created by jcooky on 2014. 7. 30..
@@ -22,7 +22,7 @@ public class Worker {
   private State state = State.IDLE;
 
   @OneToMany(mappedBy = "worker", cascade = CascadeType.ALL)
-  private Set<Work> works = new HashSet<Work>();
+  private List<Work> works = new ArrayList<Work>();
 
   public long getId() {
     return id;
@@ -48,11 +48,11 @@ public class Worker {
     this.state = state;
   }
 
-  public Set<Work> getWorks() {
+  public List<Work> getWorks() {
     return works;
   }
 
-  public void setWorks(Set<Work> works) {
+  public void setWorks(List<Work> works) {
     this.works = works;
   }
 

@@ -27,7 +27,6 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
@@ -57,9 +56,9 @@ public class WorkerServiceTest {
 
     TServerSocket serverSocket = new TServerSocket(PORT);
     server = new TSimpleServer(new TServer.Args(serverSocket)
-    .protocolFactory(new TCompactProtocol.Factory())
-    .processor(new com.sky.commons.Worker.Processor(mockWorker))
-    .transportFactory(new TFramedTransport.Factory()));
+                  .protocolFactory(new TCompactProtocol.Factory())
+                  .processor(new com.sky.commons.Worker.Processor(mockWorker))
+                  .transportFactory(new TFramedTransport.Factory()));
     new Thread() {
       public void run() {
         server.serve();
@@ -71,7 +70,7 @@ public class WorkerServiceTest {
 
   @After
   public void tearDown() throws Exception {
-    assertTrue(server.isServing());
+    assertThat(server.isServing(), is(true));
     server.stop();
   }
 
@@ -102,7 +101,7 @@ public class WorkerServiceTest {
     when(workRepository.save(eq(work))).thenReturn(work);
 
     assertThat(workerService.doWork(work).get(), is(true));
-    assertThat(work.getWorker(), is(worker));
+    assertThat(worker.getWorks().get(0), is(work));
 
     verify(mockWorker).doWork(eq(workerService.toWork(work)));
 
@@ -162,9 +161,9 @@ public class WorkerServiceTest {
     doReturn(work1).when(workRepository).save(eq(work1));
 
     assertThat(workerService.doWork(work0).get(), is(true));
-    assertThat(work0.getWorker(), is(worker0));
+    assertThat(worker0.getWorks().get(0), is(work0));
     assertThat(workerService.doWork(work1).get(), is(true));
-    assertThat(work1.getWorker(), is(worker1));
+    assertThat(worker1.getWorks().get(0), is(work1));
 
     verify(mockWorker).doWork(eq(workerService.toWork(work1)));
     verify(mockWorker).doWork(eq(workerService.toWork(work0)));

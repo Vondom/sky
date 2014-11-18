@@ -3,6 +3,10 @@ package com.sky.worker;
 import org.apache.commons.cli.ParseException;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.mock.env.MockEnvironment;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -10,13 +14,25 @@ import java.util.Properties;
 import static org.junit.Assert.assertEquals;
 
 public class OptionsTest {
-  private Properties env;
+  @InjectMocks
   private Options options = new Options();
+
+  @Mock
+  private MockEnvironment env = new MockEnvironment();
 
   @Before
   public void setUp() throws IOException {
-    env = new Properties();
-    env.load(ClassLoader.getSystemResourceAsStream("application.properties"));
+    MockitoAnnotations.initMocks(this);
+
+    Properties props = new Properties();
+    props.load(ClassLoader.getSystemResourceAsStream("application.properties"));
+
+    for (Object key_ : props.keySet()) {
+      String key = key_.toString();
+      String value = props.getProperty(key);
+
+      env.withProperty(key, value);
+    }
   }
 
   @Test

@@ -18,12 +18,12 @@ public class WebController {
   @RequestMapping(value = "/", method = RequestMethod.GET)
   public String index() {
     // TODO change view name for forwarding
-    return "forward:/project";
+    return "forward:project";
   }
 
   @RequestMapping(value = "/test")
   public String test() {
-    return "/github/project";
+    return "github/project";
   }
 
   @RequestMapping("/worker")

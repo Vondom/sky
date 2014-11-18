@@ -6,8 +6,12 @@ import org.apache.commons.io.FileUtils;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TCompactProtocol;
+import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.server.THsHaServer;
-import org.apache.thrift.transport.*;
+import org.apache.thrift.transport.THttpClient;
+import org.apache.thrift.transport.TNonblockingServerSocket;
+import org.apache.thrift.transport.TNonblockingServerTransport;
+import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,9 +84,9 @@ public class Main implements CommandLineRunner {
     if (!host.startsWith("http://"))
       host = "http://" + host;
 
-    THttpClient httpClient = new THttpClient(host + "/agent/worker-control");
+    THttpClient httpClient = new THttpClient(host + "/api/thrift");
 
-    return new WorkerControlService.Client(new TBinaryProtocol(httpClient));
+    return new WorkerControlService.Client(new TMultiplexedProtocol(new TBinaryProtocol(httpClient), "worker-control"));
   }
 
   public URL getProfilerUrl(String host) throws MalformedURLException {

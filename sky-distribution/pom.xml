@@ -52,7 +52,7 @@
 						</goals>
 						<configuration>
 							<target>
-								<chmod dir="${build.outputDirectory}" perm="755" includes="**/*.sh" />
+								<chmod dir="${project.build.outputDirectory}" perm="755" includes="**/*.sh" />
 							</target>
 						</configuration>
 					</execution>
@@ -72,14 +72,14 @@
 									<groupId>${project.groupId}</groupId>
 									<artifactId>sky-server</artifactId>
 									<type>war</type>
-									<outputDirectory>${build.outputDirectory}/bin</outputDirectory>
+									<outputDirectory>${project.build.outputDirectory}/bin</outputDirectory>
 									<destFileName>sky-server.war</destFileName>
 								</artifactItem>
 								<artifactItem>
 									<groupId>${project.groupId}</groupId>
 									<artifactId>sky-worker</artifactId>
 									<type>jar</type>
-									<outputDirectory>${build.outputDirectory}/bin</outputDirectory>
+									<outputDirectory>${project.build.outputDirectory}/bin</outputDirectory>
 									<destFileName>sky-worker.jar</destFileName>
 								</artifactItem>
 							</artifactItems>

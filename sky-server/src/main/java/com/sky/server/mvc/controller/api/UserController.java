@@ -24,7 +24,7 @@ public class UserController {
   private UserService userService;
 
   @RequestMapping("/{id}/projects")
-  public Collection<Project> getProjects(@PathVariable Long id) {
+  public Collection<Project> getProjects(@PathVariable long id) {
     return userService.get(id).getProjects();
   }
 

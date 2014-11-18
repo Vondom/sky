@@ -17,14 +17,14 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>sky</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>sky-commons</artifactId>
-			<version>${version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>sky</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>sky-sample</artifactId>
-			<version>${version}</version>
+			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -93,8 +93,8 @@
 						<phase>package</phase>
 						<configuration>
 							<target>
-								<copyfile src="${basedir}/target/${build.finalName}.jar"
-								          dest="${basedir}/../sky-server/src/main/webapp/${build.finalName}.jar"
+								<copyfile src="${basedir}/target/${project.build.finalName}.jar"
+								          dest="${basedir}/../sky-server/src/main/webapp/${project.build.finalName}.jar"
 								          forceoverwrite="true"/>
 							</target>
 						</configuration>

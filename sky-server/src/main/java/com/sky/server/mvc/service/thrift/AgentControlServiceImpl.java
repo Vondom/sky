@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Created by jcooky on 2014. 7. 26..
  */
-@TService(name = "profile", thrift = AgentControlService.class)
+@TService(name = "agent-control", thrift = AgentControlService.class)
 public class AgentControlServiceImpl implements AgentControlService.Iface {
   private static final org.slf4j.Logger logger = LoggerFactory.getLogger(AgentControlServiceImpl.class);
 

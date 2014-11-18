@@ -3,6 +3,7 @@ package com.sky.server.mvc.controller.thrift;
 import com.sky.server.config.annotation.TService;
 import com.sky.server.exception.WebNotFoundException;
 import org.apache.thrift.TException;
+import org.apache.thrift.TMultiplexedProcessor;
 import org.apache.thrift.TProcessor;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
@@ -14,9 +15,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletException;
@@ -28,7 +29,6 @@ import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -42,13 +42,13 @@ public class TController {
   private TProtocolFactory inFactory = new TBinaryProtocol.Factory(), outFactory = new TBinaryProtocol.Factory();
 
   private Collection<Map.Entry<String, String>> customHeaders;
-  private Map<String, TProcessor> processors = new HashMap<String, TProcessor>();
 
   @Autowired
   private ApplicationContext applicationContext;
+  private TMultiplexedProcessor processor = new TMultiplexedProcessor();
 
   @PostConstruct
-  public final void afterPropertiesSet() throws ServletException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+  public final void init() throws ServletException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
     this.customHeaders = new ArrayList<Map.Entry<String, String>>();
 
     if (inFactory == null) {
@@ -58,13 +58,12 @@ public class TController {
       throw new ServletException("outFactory must be set");
     }
 
-    Map<String, ?> beans = applicationContext.getBeansWithAnnotation(TService.class);
-    for (Object bean : beans.values()) {
-      TService serviceAnno = AnnotationUtils.findAnnotation(bean.getClass(), TService.class);
+    for (Object bean : applicationContext.getBeansWithAnnotation(TService.class).values()) {
+      TService tService = AnnotationUtils.findAnnotation(bean.getClass(), TService.class);
       Class<?> processorCls = null, ifaceCls = null;
       TProcessor processor = null;
 
-      for (Class<?> cls : serviceAnno.thrift().getDeclaredClasses()) {
+      for (Class<?> cls : tService.thrift().getDeclaredClasses()) {
         if ("Processor".equals(cls.getSimpleName())) {
           processorCls = cls;
         } else if ("Iface".equals(cls.getSimpleName())) {
@@ -74,14 +73,13 @@ public class TController {
 
       if (processorCls != null && ifaceCls != null) {
         processor = (TProcessor) processorCls.getConstructor(ifaceCls).newInstance(bean);
+        this.processor.registerProcessor(tService.name(), processor);
       }
-
-      this.processors.put(serviceAnno.name(), processor);
     }
   }
 
-  @RequestMapping(value = "/agent/{serviceName}", method = RequestMethod.POST)
-  protected void doPost(@PathVariable String serviceName, HttpServletRequest request, HttpServletResponse response)
+  @RequestMapping(value = "/api/thrift", method = RequestMethod.POST)
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, WebNotFoundException {
     TTransport inTransport = null;
     TTransport outTransport = null;
@@ -105,22 +103,12 @@ public class TController {
       TProtocol inProtocol = inFactory.getProtocol(inTransport);
       TProtocol outProtocol = outFactory.getProtocol(outTransport);
 
-      TProcessor processor = getProcessor(serviceName);
-
-      if (processor != null) {
-        processor.process(inProtocol, outProtocol);
-      } else {
-        throw new WebNotFoundException(serviceName + " isn`t found thrift");
-      }
+      processor.process(inProtocol, outProtocol);
 
       out.flush();
     } catch (TException te) {
       throw new ServletException(te);
     }
-  }
-
-  private TProcessor getProcessor(String serviceName) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-    return processors.get(serviceName);
   }
 
 //  protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -149,11 +137,4 @@ public class TController {
     this.customHeaders.addAll(headers);
   }
 
-  @ExceptionHandler(WebNotFoundException.class)
-  @ResponseStatus(HttpStatus.NOT_FOUND)
-  @ResponseBody
-  public String handleNotFoundException(WebNotFoundException e) {
-    logger.error(e.getMessage(), e);
-    return e.getMessage();
-  }
 }

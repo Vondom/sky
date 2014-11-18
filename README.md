@@ -6,3 +6,5 @@ Performance Analysis Tool [![Build Status](https://travis-ci.org/Vondom/sky.svg?
   * change file jsp to html
 * Sky-Profiler
   * ~~missing data as profiling log~~
+* New features
+  * Ruby performance analysis

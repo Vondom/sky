@@ -10,7 +10,3 @@
 	path = tools/jrat
 	url = https://github.com/vondom/jrat.git
 	branch = master
-[submodule "jrat"]
-	path = tools/jrat
-	url = https://github.com/vondom/jrat.git
-	branch = master

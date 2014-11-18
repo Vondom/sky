@@ -4,6 +4,7 @@ import com.sky.commons.*;
 import com.sky.profiler.api.SkyAPI;
 import com.sky.profiler.thrift.AgentControlServiceQueue;
 import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.transport.THttpClient;
 import org.apache.thrift.transport.TTransportException;
 import org.shiftone.jrat.core.MethodKey;
@@ -40,7 +41,7 @@ public class TreeMethodHandlerFactory extends AbstractMethodHandlerFactory imple
     THttpClient httpClient = new THttpClient(SkyAPI.SKY_SERVER_URL);
     httpClient.setConnectTimeout(Integer.MAX_VALUE);
     httpClient.setReadTimeout(Integer.MAX_VALUE);
-    collector = new AgentControlServiceQueue(new AgentControlService.Client(new TBinaryProtocol(httpClient)));
+    collector = new AgentControlServiceQueue(new AgentControlService.Client(new TMultiplexedProtocol(new TBinaryProtocol(httpClient), "agent-control")));
   }
 
   @Override

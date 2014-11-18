@@ -5,7 +5,8 @@ import com.sky.commons.MethodProfile;
 import com.sky.server.config.annotation.TService;
 import com.sky.server.test.SpringBasedTestSupport;
 import org.apache.thrift.TException;
-import org.apache.thrift.protocol.TCompactProtocol;
+import org.apache.thrift.protocol.TBinaryProtocol;
+import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.transport.THttpClient;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,7 @@ public class TControllerTest extends SpringBasedTestSupport {
     assertNotNull(ThriftTestService.mockService);
 //    doReturn(11L).when(ThriftTestService.mockService).put(any(MethodProfile.class));
 
-    AgentControlService.Iface collector = new AgentControlService.Client(new TCompactProtocol(new THttpClient("http://localhost:"+serverPort+"/agent/test")));
+    AgentControlService.Iface collector = new AgentControlService.Client(new TMultiplexedProtocol(new TBinaryProtocol(new THttpClient("http://localhost:"+serverPort+"/api/thrift")), "test"));
 
     collector.put(new MethodProfile());
 
