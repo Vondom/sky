@@ -82,7 +82,7 @@ public class UserControllerTest extends SpringBasedTestSupport {
     repos.get("test").add(new Repository().setId(2));
     repos.get("test").add(new Repository().setId(3));
 
-    when(userService.getRepositories()).thenReturn(repos);
+    when(userService.getGitHubRepositories()).thenReturn(repos);
 
     MockMvcBuilders.standaloneSetup(userController)
         .build()
@@ -94,6 +94,6 @@ public class UserControllerTest extends SpringBasedTestSupport {
         .andExpect(jsonPath("$.test[2].id", is(3)))
         .andDo(print());
 
-    verify(userService).getRepositories();
+    verify(userService).getGitHubRepositories();
   }
 }

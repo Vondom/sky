@@ -16,7 +16,7 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>sky-server</artifactId>
 			<version>${project.version}</version>
-			<type>war</type>
+			<type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -27,6 +27,7 @@
 	</dependencies>
 
 	<build>
+		<outputDirectory>${basedir}/target/dist</outputDirectory>
 		<plugins>
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
@@ -71,9 +72,9 @@
 								<artifactItem>
 									<groupId>${project.groupId}</groupId>
 									<artifactId>sky-server</artifactId>
-									<type>war</type>
+									<type>jar</type>
 									<outputDirectory>${project.build.outputDirectory}/bin</outputDirectory>
-									<destFileName>sky-server.war</destFileName>
+									<destFileName>sky-server.jar</destFileName>
 								</artifactItem>
 								<artifactItem>
 									<groupId>${project.groupId}</groupId>

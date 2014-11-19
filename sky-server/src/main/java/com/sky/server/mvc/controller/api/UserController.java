@@ -30,6 +30,6 @@ public class UserController {
 
   @RequestMapping("/{id}/github/repositories")
   public Map<String, List<Repository>> getRepositories(@PathVariable long id) throws IOException {
-    return userService.getRepositories();
+    return userService.getGitHubRepositories();
   }
 }

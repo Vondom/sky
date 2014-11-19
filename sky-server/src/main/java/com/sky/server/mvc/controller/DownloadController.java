@@ -22,7 +22,7 @@ public class DownloadController {
 //  private ServletContext servletContext;
 
     
-  @RequestMapping(value = "/config//{workId}", produces = "text/xml")
+  @RequestMapping(value = "/config/{workId}", produces = "text/xml")
   public String downloadConfig(@PathVariable long workId) throws IOException {
 
     String str = IOUtils.toString(applicationContext.getResource("classpath:jrat.xml").getInputStream());

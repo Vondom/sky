@@ -1,0 +1,72 @@
+@import url("../vendor/bootstrap/less/bootstrap");
+@import url("../vendor/bootstrap-social/bootstrap-social");
+
+body {
+
+}
+
+.table > tbody > tr > td {
+  vertical-align: middle;
+}
+
+#project-create {
+  textarea#inputArguments {
+    resize: vertical;
+  }
+}
+
+#projects {
+
+  #import-github.modal {
+    .modal-body {
+      overflow-style: panner;
+      overflow-y: scroll;
+      max-height: 450px;
+    }
+  }
+
+  .project-table {
+    .header {
+      border-top: black 1px solid;
+      border-bottom: black 1px solid;
+      margin-bottom: 10px;
+    }
+
+    .contents {
+      margin-top: 5px;
+
+      .toggle {
+        cursor: default;
+
+        &:hover {
+          padding: 10px 10px;
+          .box-shadow(@shadow: 0 1px 3px rgba(40, 88, 96, 0.31))
+        }
+      }
+    }
+
+    .details {
+
+      .contents {
+        margin-bottom: 5px;
+      }
+
+      .works {
+        .header {
+          border-top: black 1px solid;
+          border-bottom: black 1px solid;
+          margin-bottom: 15px;
+          margin-top: 15px;
+        }
+
+        .contents {
+          margin-bottom: 5px;
+        }
+      }
+    }
+  }
+
+  .details {
+    border-bottom: #26808a 1px solid;
+  }
+}

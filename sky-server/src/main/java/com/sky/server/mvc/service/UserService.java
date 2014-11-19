@@ -60,7 +60,7 @@ public class UserService {
     return userRepository.save(user);
   }
 
-  public Map<String, List<Repository>> getRepositories() throws IOException {
+  public Map<String, List<Repository>> getGitHubRepositories() throws IOException {
     Map<String, List<Repository>> repositories = new HashMap<String, List<Repository>>();
 
     org.eclipse.egit.github.core.service.UserService userService = new org.eclipse.egit.github.core.service.UserService(ghClient);

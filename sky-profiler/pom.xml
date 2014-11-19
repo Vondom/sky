@@ -63,7 +63,7 @@
 				<configuration>
 					<archive>
 						<manifestEntries>
-							<Premain-Class>com.sky.profiler.jvmti.Agent</Premain-Class>
+							<Premain-Class>com.sky.profiler.SkyProfiler</Premain-Class>
 							<Can-Redefine-Classes>true</Can-Redefine-Classes>
 						</manifestEntries>
 					</archive>

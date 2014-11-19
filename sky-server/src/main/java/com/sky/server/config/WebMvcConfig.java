@@ -18,9 +18,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 
-import javax.servlet.ServletContext;
 import java.util.List;
 
 /**
@@ -40,7 +38,7 @@ public class WebMvcConfig extends WebMvcAutoConfiguration.WebMvcAutoConfiguratio
 
       @Override
       public void customize(ConfigurableEmbeddedServletContainer factory) {
-        if(factory instanceof TomcatEmbeddedServletContainerFactory) {
+        if (factory instanceof TomcatEmbeddedServletContainerFactory) {
           customizeTomcat((TomcatEmbeddedServletContainerFactory) factory);
         }
       }
@@ -57,31 +55,14 @@ public class WebMvcConfig extends WebMvcAutoConfiguration.WebMvcAutoConfiguratio
     };
   }
 
-  @Bean
-  public TilesConfigurer tilesConfigurer(ServletContext servletContext) throws ClassNotFoundException {
-    Class.forName("org.apache.jasper.compiler.JspRuntimeContext");
-    TilesConfigurer tilesConfigurer = new TilesConfigurer();
-    tilesConfigurer.setServletContext(servletContext);
-    tilesConfigurer.setCompleteAutoload(true);
-
-    return tilesConfigurer;
-  }
-
-//  @Override
-//  public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//    registry.addResourceHandler("/**").addResourceLocations("/");
-//  }
-
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
     super.addInterceptors(registry);
 
     registry.addWebRequestInterceptor(attributeInterceptor)
-        .addPathPatterns("/**")
-        .excludePathPatterns("/resources/**");
+        .addPathPatterns("/**");
     registry.addInterceptor(userInterceptor)
         .addPathPatterns("/**")
-        .excludePathPatterns("/resources/**")
         .excludePathPatterns("/download/**", "/error/**")
         .excludePathPatterns("/api/thrift");
   }
@@ -101,9 +82,6 @@ public class WebMvcConfig extends WebMvcAutoConfiguration.WebMvcAutoConfiguratio
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
     super.addResourceHandlers(registry);
-
-    registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
-    registry.addResourceHandler("/**").addResourceLocations("/");
   }
 
   @Override

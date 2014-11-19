@@ -1,6 +1,6 @@
 package com.sky.server.test;
 
-import com.sky.server.MainApplication;
+import com.sky.server.SkyServer;
 import com.sky.server.mvc.model.ClassKey;
 import com.sky.server.mvc.model.MethodKey;
 import com.sky.server.mvc.repository.ClassKeyRepository;
@@ -9,7 +9,6 @@ import org.junit.Rule;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -25,7 +24,7 @@ import javax.persistence.EntityManager;
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration("sky-server/src/main/webapp")
-@SpringApplicationConfiguration(classes = MainApplication.class)
+@SpringApplicationConfiguration(classes = SkyServer.class)
 @IntegrationTest({"server.port=0", "management.port=0"})
 public abstract class SpringBasedTestSupport {
 

@@ -3,6 +3,7 @@ package com.sky.server.mvc.controller;
 import com.sky.server.test.SpringBasedTestSupport;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -16,9 +17,13 @@ import javax.xml.xpath.XPathFactory;
 import java.io.StringReader;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 public class DownloadControllerTest extends SpringBasedTestSupport {
+
+  @Value("${server.port}")
+  private int port;
 
   @Autowired
   private DownloadController controller;
@@ -40,4 +45,5 @@ public class DownloadControllerTest extends SpringBasedTestSupport {
 
     assertThat(str, is("4"));
   }
+
 }

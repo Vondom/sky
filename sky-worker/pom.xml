@@ -14,7 +14,7 @@
 	<artifactId>sky-worker</artifactId>
 
 	<properties>
-		<mainClass>com.sky.worker.Main</mainClass>
+		<mainClass>com.sky.worker.SkyWorker</mainClass>
 	</properties>
 
 	<dependencies>

@@ -1,10 +1,11 @@
 Performance Analysis Tool [![Build Status](https://travis-ci.org/Vondom/sky.svg?branch=master)](https://travis-ci.org/Vondom/sky)
 ===
 ## To-do
-* Sky-Server
+* Refactoring
   * service classes refactoring
-  * change file jsp to html
-* Sky-Profiler
+  * ~~change file jsp to freemarker~~
+  * sky pom detach from spring-boot-parent pom
+* Bug fixes
   * ~~missing data as profiling log~~
 * New features
   * Ruby performance analysis

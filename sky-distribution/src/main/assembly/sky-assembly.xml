@@ -6,7 +6,7 @@
 	</formats>
 	<fileSets>
 		<fileSet>
-			<directory>${build.outputDirectory}</directory>
+			<directory>${project.build.outputDirectory}</directory>
 			<outputDirectory></outputDirectory>
 			<includes>
 				<include>**</include>
