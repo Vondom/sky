@@ -1,4 +1,4 @@
-Performance Analysis Tool [![Build Status](https://travis-ci.org/Vondom/sky.svg?branch=master)](https://travis-ci.org/Vondom/sky)
+Performance Analysis Tool [![Build Status](https://travis-ci.org/Vondom/sky.svg?branch=master)](https://travis-ci.org/Vondom/sky)[![Coverage Status](https://img.shields.io/coveralls/Vondom/sky.svg)](https://coveralls.io/r/Vondom/sky?branch=master)
 ===
 ## To-do
 * Refactoring
