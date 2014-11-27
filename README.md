@@ -9,4 +9,4 @@ Performance Analysis Tool [![Build Status](https://travis-ci.org/Vondom/sky.svg?
 * Bug fixes
   * ~~missing data as profiling log~~
 * New features
-  * Ruby performance analysis
+  * add performance analysis for program written by Ruby language

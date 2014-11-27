@@ -18,7 +18,7 @@ public class Processor {
 
   public Process process(long workId, String path, String arguments) throws IOException {
     List<String> processes = Arrays.asList("java",
-        String.format("-Dsky.profiler.config=http://%s/download/config/%d", options.get(Options.Key.HOST), workId),
+        String.format("-Dsky.profiler.config=%s/download/config/%d", options.get(Options.Key.SERVER_URL), workId),
         "-javaagent:"+ SkyWorker.PROFILER_PATH,
         "-jar",
         path);
@@ -32,7 +32,7 @@ public class Processor {
 
   public Process process(long workId, String path, String mainClassName, String arguments) throws IOException {
     List<String> processes = Arrays.asList("java",
-        String.format("-Dsky.profiler.config=http://%s/download/config/%d", options.get(Options.Key.HOST), workId),
+        String.format("-Dsky.profiler.config=%s/download/config/%d", options.get(Options.Key.SERVER_URL), workId),
         "-javaagent:"+ SkyWorker.PROFILER_PATH,
         "-cp",
         path,

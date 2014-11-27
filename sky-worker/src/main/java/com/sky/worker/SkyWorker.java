@@ -47,60 +47,51 @@ public class SkyWorker implements CommandLineRunner {
 
   public void run(String[] args) throws ParseException, IOException, TException {
 
-    options.init(args);
-    if (!options.has(Options.Key.HELP)) {
-      int port = Integer.parseInt(options.get(Options.Key.PORT));
-      String host = options.get(Options.Key.HOST);
+    int port = Integer.parseInt(options.get(Options.Key.PORT));
+    String host = options.get(Options.Key.SERVER_URL);
 
-      this.downloadProfiler(host);
+    this.downloadProfiler(host);
 
-      WorkerControlService.Iface workerControlService = init(host);
-      worker.setId(workerControlService.add("0.0.0.0", port));
-      worker.setWorkerControlService(workerControlService);
+    WorkerControlService.Iface workerControlService = getWorkerControlService(host);
+    worker.setId(workerControlService.add(options.get(Options.Key.LOCAL_HOST), port));
+    worker.setWorkerControlService(workerControlService);
 
-      TNonblockingServerTransport transport = new TNonblockingServerSocket(new InetSocketAddress("0.0.0.0", port));
-      THsHaServer server = new THsHaServer(new THsHaServer.Args(transport)
-          .protocolFactory(new TCompactProtocol.Factory())
-          .processor(new com.sky.commons.Worker.Processor<Worker>(worker)));
-      server.serve();
+    TNonblockingServerTransport transport = new TNonblockingServerSocket(new InetSocketAddress("0.0.0.0", port));
+    THsHaServer server = new THsHaServer(new THsHaServer.Args(transport)
+        .protocolFactory(new TCompactProtocol.Factory())
+        .processor(new com.sky.commons.Worker.Processor<Worker>(worker)));
+    server.serve();
 
-      workerControlService.remove(worker.getId());
-    } else {
-      System.out.println();
-      options.printHelp();
-      System.out.println();
-    }
+    workerControlService.remove(worker.getId());
+
   }
 
-  public void downloadProfiler(String host) throws IOException {
+  public void downloadProfiler(String url) throws IOException {
     File profilerFile = new File(PROFILER_PATH);
-    URL profilerUrl = getProfilerUrl(host);
+    URL profilerUrl = getProfilerUrl(url);
+
     logger.trace("profilerUrl={}", profilerUrl);
     FileUtils.copyURLToFile(profilerUrl, profilerFile);
     logger.debug("FINISH Download profiler: {}", profilerFile.getAbsolutePath());
   }
 
-  private WorkerControlService.Iface init(String host) throws TTransportException {
-    if (!host.startsWith("http://"))
-      host = "http://" + host;
+  private WorkerControlService.Iface getWorkerControlService(String url) throws TTransportException {
 
-    THttpClient httpClient = new THttpClient(host + "/api/thrift");
+    THttpClient httpClient = new THttpClient(url + "/api/thrift");
 
     return new WorkerControlService.Client(new TMultiplexedProtocol(new TBinaryProtocol(httpClient), "worker-control"));
   }
 
-  public URL getProfilerUrl(String host) throws MalformedURLException {
-    return new URL("http://" + host + PROFILER_URL);
+  public URL getProfilerUrl(String url) throws MalformedURLException {
+    return new URL(url + PROFILER_URL);
   }
 
   public static void main(String[] args) throws Exception {
-    String location = System.getProperty("spring.config.location");
     new SpringApplicationBuilder()
         .showBanner(true)
         .web(false)
-        .addCommandLineProperties(false)
+        .addCommandLineProperties(true)
         .sources(SkyWorker.class)
-        .properties("spring.config.location=" + location)
         .listeners(new ApplicationPidListener("sky-worker.pid"))
         .run(args);
   }

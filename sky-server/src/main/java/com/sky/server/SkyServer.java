@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Configuration;
 public class SkyServer {
   public static void main(String[] args) {
     new SpringApplicationBuilder()
-        .profiles("dev")
         .sources(SkyServer.class)
         .showBanner(true)
         .addCommandLineProperties(true)

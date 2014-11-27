@@ -2,7 +2,6 @@ package com.sky.profiler.jrat.provider;
 
 import com.sky.commons.*;
 import com.sky.profiler.api.SkyAPI;
-import com.sky.profiler.thrift.AgentControlServiceQueue;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TMultiplexedProtocol;
 import org.apache.thrift.transport.THttpClient;
@@ -32,7 +31,7 @@ public class TreeMethodHandlerFactory extends AbstractMethodHandlerFactory imple
   private final DelegateThreadLocal delegateThreadLocal = new DelegateThreadLocal(this);
   private final List<TreeNode> treeNodes = new ArrayList<TreeNode>();
 
-  private AgentControlServiceQueue collector;
+  private AgentControlService.Iface collector;
   private long workId;
 
   public TreeMethodHandlerFactory() throws TTransportException, IOException {
@@ -41,7 +40,7 @@ public class TreeMethodHandlerFactory extends AbstractMethodHandlerFactory imple
     THttpClient httpClient = new THttpClient(SkyAPI.SKY_SERVER_URL);
     httpClient.setConnectTimeout(Integer.MAX_VALUE);
     httpClient.setReadTimeout(Integer.MAX_VALUE);
-    collector = new AgentControlServiceQueue(new AgentControlService.Client(new TMultiplexedProtocol(new TBinaryProtocol(httpClient), "agent-control")));
+    collector = new AgentControlService.Client(new TMultiplexedProtocol(new TBinaryProtocol(httpClient), "agent-control"));
   }
 
   @Override
@@ -49,12 +48,12 @@ public class TreeMethodHandlerFactory extends AbstractMethodHandlerFactory imple
     LOG.info("new");
     super.startup(context);
 
-    collector.start();
+//    collector.start();
   }
 
   @Override
   public void shutdown() {
-    collector.finish();
+//    collector.finish();
   }
 
   @Override
