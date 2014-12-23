@@ -5,7 +5,7 @@ Sky Engine is performance analysis tool based web service. This tool analyze you
 * integrate with GitHub and Travis-CI
 * automatically analyze performance for application when commit to repository
 * will be supported to ruby, python, javascript(node.js or phantom.js), java
-* show the result to analyzing performance within each functions
+* show the result to analyzing performance within each functions execution time
 
 ## To-do
 * Refactoring
