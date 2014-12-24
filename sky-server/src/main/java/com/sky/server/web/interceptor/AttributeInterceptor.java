@@ -1,5 +1,6 @@
 package com.sky.server.web.interceptor;
 
+import com.sky.server.social.user.SecurityContext;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,6 @@ public class AttributeInterceptor implements WebRequestInterceptor {
   @Override
   public void preHandle(WebRequest request) throws Exception {
     request.setAttribute("lang", request.getLocale().getLanguage(), RequestAttributes.SCOPE_REQUEST);
-    request.setAttribute("accessToken", defaultIfEmpty(String.valueOf(request.getAttribute("accessToken", RequestAttributes.SCOPE_REQUEST)), ""), RequestAttributes.SCOPE_REQUEST);
   }
 
   @Override

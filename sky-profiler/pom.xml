@@ -94,7 +94,7 @@
 						<configuration>
 							<target>
 								<copyfile src="${basedir}/target/${project.build.finalName}.jar"
-								          dest="${basedir}/../sky-server/src/main/webapp/${project.build.finalName}.jar"
+								          dest="${basedir}/../sky-server/src/main/resources/public/${project.build.finalName}.jar"
 								          forceoverwrite="true"/>
 							</target>
 						</configuration>

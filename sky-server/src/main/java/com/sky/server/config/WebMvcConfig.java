@@ -62,9 +62,7 @@ public class WebMvcConfig extends WebMvcAutoConfiguration.WebMvcAutoConfiguratio
     registry.addWebRequestInterceptor(attributeInterceptor)
         .addPathPatterns("/**");
     registry.addInterceptor(userInterceptor)
-        .addPathPatterns("/**")
-        .excludePathPatterns("/download/**", "/error/**")
-        .excludePathPatterns("/api/thrift");
+        .addPathPatterns("/**");
   }
 
   @Override
@@ -89,6 +87,6 @@ public class WebMvcConfig extends WebMvcAutoConfiguration.WebMvcAutoConfiguratio
     super.addViewControllers(registry);
 
     registry.addViewController("/signin").setViewName("/signin");
-    registry.addViewController("/signout");
+    registry.addRedirectViewController("/signout", "/");
   }
 }

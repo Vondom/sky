@@ -27,7 +27,7 @@ public class WorkRepositoryImpl implements WorkRepositoryCustom {
     return new JPAQuery(em)
         .from(work)
         .where(work.finished.eq(false))
-        .orderBy(work.ordering.desc())
+        .orderBy(work.createTime.asc())
         .singleResult(work);
   }
 
@@ -38,7 +38,7 @@ public class WorkRepositoryImpl implements WorkRepositoryCustom {
     return new JPAQuery(em)
         .from(work)
         .where(work.worker.isNotNull())
-        .orderBy(work.ordering.desc())
+        .orderBy(work.createTime.desc())
         .singleResult(work);
   }
 

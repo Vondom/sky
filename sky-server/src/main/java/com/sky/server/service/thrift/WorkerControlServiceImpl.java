@@ -1,11 +1,14 @@
-package com.sky.server.mvc.service;
+package com.sky.server.service.thrift;
 
 import com.sky.commons.Jar;
 import com.sky.commons.Status;
+import com.sky.commons.WorkerControlService;
+import com.sky.server.config.annotation.TService;
 import com.sky.server.mvc.model.Work;
 import com.sky.server.mvc.model.Worker;
 import com.sky.server.mvc.repository.WorkRepository;
 import com.sky.server.mvc.repository.WorkerRepository;
+import com.sky.server.service.WorkerService;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.transport.TFramedTransport;
@@ -16,26 +19,76 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.ServletRequest;
 import java.util.List;
 import java.util.concurrent.Future;
 
 /**
- * Created by jcooky on 2014. 9. 12..
+ * Created by jcooky on 2014. 8. 3..
  */
-@Service
-public class WorkerService {
-  private static final Logger logger = LoggerFactory.getLogger(WorkerService.class);
+@TService(name = "worker-control", thrift = WorkerControlService.class)
+public class WorkerControlServiceImpl implements WorkerControlService.Iface, WorkerService {
+  @Autowired
+  private ServletRequest request;
 
   @Autowired
   private WorkerRepository workerRepository;
+
   @Autowired
   private WorkRepository workRepository;
 
+  @Override
+  @Transactional
+  public long add(String address, int port) throws TException {
+    if ("0.0.0.0".equals(address)) {
+      address = request.getRemoteAddr();
+    }
+
+    Worker worker = workerRepository.findByAddressAndPort(address, port);
+    if (worker == null) {
+      worker = new Worker();
+      worker.setAddress(address);
+      worker.setPort(port);
+    }
+    worker.setState(Worker.State.IDLE);
+    return workerRepository.save(worker).getId();
+  }
+
+  @Override
+  @Transactional
+  public void done(long workerId, long workId) throws TException {
+    Work work = workRepository.findOne(workId);
+    work.setFinished(true);
+    work.setAverageTime(work.getAverageTime()/(double)(work.getMethodLogs().size()));
+    workRepository.save(work);
+
+    work = workRepository.findReadyWork();
+    if (work != null) {
+      Worker worker = workerRepository.findOne(workerId);
+
+      this.doWork(worker, work);
+    } else {
+      Worker worker = workerRepository.findOne(workerId);
+      worker.setState(Worker.State.IDLE);
+    }
+  }
+
+  @Override
+  @Transactional
+  public void remove(long id) throws TException {
+    Worker worker = workerRepository.findOne(id);
+
+    worker.setState(Worker.State.QUIT);
+    workerRepository.save(worker);
+  }
+
+  private static final Logger logger = LoggerFactory.getLogger(WorkerService.class);
+
+
   @Scheduled(fixedRate = 10 * 60 * 1000)
-  @Transactional(readOnly = true)
+  @Transactional
   public void checkWorkers() throws TException {
     for (Worker worker : workerRepository.findAll()) {
       final ThreadLocal<Worker.State> state = new ThreadLocal<Worker.State>();
@@ -64,25 +117,11 @@ public class WorkerService {
 
         if (!state.get().equals(worker.getState())) {
           worker.setState(state.get());
-          this.save(worker);
+          workerRepository.save(worker);
         }
       }
     }
   }
-
-  public com.sky.commons.Work toWork(Work work) {
-    com.sky.commons.Work work1 = new com.sky.commons.Work()
-        .setId(work.getId())
-        .setJar(new Jar()
-            .setFile(work.getExecutionUnit().getJarFile())
-            .setName(work.getExecutionUnit().getJarFileName()))
-        .setArguments(work.getExecutionUnit().getArguments());
-
-    logger.debug("Return Work: {}", work1);
-
-    return work1;
-  }
-
 
   @Async
   @Transactional(readOnly = true)
@@ -104,7 +143,7 @@ public class WorkerService {
   }
 
   @Transactional(readOnly = true)
-  public void doWork(final Worker worker_, final Work work) throws TException {
+  private void doWork(final Worker worker_, final Work work) throws TException {
 
     connect(worker_, new WorkerClientTemplateHandler() {
       private Worker worker = worker_;
@@ -122,7 +161,12 @@ public class WorkerService {
         }
 
         logger.trace(".handle(worker={}) - START", worker);
-        workerClient.doWork(toWork(work));
+        workerClient.doWork(new com.sky.commons.Work()
+            .setId(work.getId())
+            .setJar(new Jar()
+                .setFile(work.getExecutionUnit().getJarFile())
+                .setName(work.getExecutionUnit().getJarFileName()))
+            .setArguments(work.getExecutionUnit().getArguments()));
         logger.trace("END");
       }
     });
@@ -141,32 +185,7 @@ public class WorkerService {
     }
   }
 
-  @Transactional
-  public Worker save(Worker worker) {
-    return workerRepository.save(worker);
-  }
-
-  @Transactional
-  public void remove(Worker worker) {
-    workerRepository.delete(worker);
-  }
-
-  @Transactional(readOnly = true)
-  public Worker get(long id) {
-    return workerRepository.findOne(id);
-  }
-
-  @Transactional(readOnly = true)
-  public Worker get(String address, int port) {
-    return workerRepository.findByAddressAndPort(address, port);
-  }
-
-  public List<Worker> list() {
-    return workerRepository.findAll();
-  }
-
   private static interface WorkerClientTemplateHandler {
     void handle(com.sky.commons.Worker.Client worker) throws TException;
   }
-
 }

@@ -14,10 +14,8 @@ public class Work {
   @GeneratedValue
   private long id;
 
-  @Column(updatable = false, unique = true)
-  private Long ordering;
-
   private boolean finished = false;
+  private long createTime = System.currentTimeMillis();
   private long startTime = System.currentTimeMillis();
   private double averageTime;
   private long mostLongTime;
@@ -56,14 +54,6 @@ public class Work {
     this.id = id;
   }
 
-  public Long getOrdering() {
-    return ordering;
-  }
-
-  public void setOrdering(Long ordering) {
-    this.ordering = ordering;
-  }
-
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -72,7 +62,6 @@ public class Work {
     Work work = (Work) o;
 
     if (id != work.id) return false;
-    if (ordering != null ? !ordering.equals(work.ordering) : work.ordering != null) return false;
 
     return true;
   }
@@ -80,7 +69,6 @@ public class Work {
   @Override
   public int hashCode() {
     int result = (int) (id ^ (id >>> 32));
-    result = 31 * result + (ordering != null ? ordering.hashCode() : 0);
     return result;
   }
 
@@ -89,7 +77,6 @@ public class Work {
     return "Work{" +
         "mostLongTime=" + mostLongTime +
         ", averageTime=" + averageTime +
-        ", ordering=" + ordering +
         ", id=" + id +
         '}';
   }
@@ -132,5 +119,13 @@ public class Work {
 
   public void setFinished(boolean finished) {
     this.finished = finished;
+  }
+
+  public long getCreateTime() {
+    return createTime;
+  }
+
+  public void setCreateTime(long createTime) {
+    this.createTime = createTime;
   }
 }

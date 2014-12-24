@@ -159,7 +159,11 @@ sky.app.controller("ProjectCtrl", function ($scope, $http, $element) {
       inputExecutionUnit.jarFile = inputExecutionUnit.jarFile.data;
     }
 
-    $http.put(sky.API_PROJECT_URL + "/" + project.id + "/execution-units", inputExecutionUnit)
+    inputExecutionUnit.project = {
+      id: project.id
+    }
+
+    $http.post(sky.API_EXECUTION_UNIT_URL, inputExecutionUnit)
         .success(function (executionUnit) {
           project.executionUnits.push(executionUnit);
           $projects.find('#details-' + project.id + " form input").val('');

@@ -2,9 +2,8 @@ package com.sky.server.mvc.controller.api;
 
 import com.sky.server.mvc.model.Project;
 import com.sky.server.mvc.model.User;
-import com.sky.server.mvc.service.UserService;
+import com.sky.server.mvc.repository.UserRepository;
 import com.sky.server.test.SpringBasedTestSupport;
-import org.eclipse.egit.github.core.Repository;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -30,7 +29,7 @@ public class UserControllerTest extends SpringBasedTestSupport {
   private UserController userController;
 
   @Mock
-  private UserService userService;
+  private UserRepository userRepository;
 
 
 
@@ -59,7 +58,7 @@ public class UserControllerTest extends SpringBasedTestSupport {
     user.setEmail("bak723@gmail.com");
     user.setProjects(projects);
 
-    when(userService.get(eq(1L))).thenReturn(user);
+    when(userRepository.findOne(eq(1L))).thenReturn(user);
 
     MockMvcBuilders.standaloneSetup(userController)
         .build()
@@ -71,29 +70,6 @@ public class UserControllerTest extends SpringBasedTestSupport {
         .andExpect(jsonPath("$[2].id", is(4)))
         .andDo(print());
 
-    verify(userService).get(eq(1L));
-  }
-
-  @Test
-  public void testGetRepositories() throws Exception {
-    Map<String, List<Repository>> repos = new HashMap<String, List<Repository>>();
-    repos.put("test", new ArrayList<Repository>());
-    repos.get("test").add(new Repository().setId(1));
-    repos.get("test").add(new Repository().setId(2));
-    repos.get("test").add(new Repository().setId(3));
-
-    when(userService.getGitHubRepositories()).thenReturn(repos);
-
-    MockMvcBuilders.standaloneSetup(userController)
-        .build()
-        .perform(MockMvcRequestBuilders.get("/api/user/{id}/github/repositories", 1L))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.test", hasSize(3)))
-        .andExpect(jsonPath("$.test[0].id", is(1)))
-        .andExpect(jsonPath("$.test[1].id", is(2)))
-        .andExpect(jsonPath("$.test[2].id", is(3)))
-        .andDo(print());
-
-    verify(userService).getGitHubRepositories();
+    verify(userRepository).findOne(eq(1L));
   }
 }

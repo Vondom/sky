@@ -17,6 +17,8 @@ public class User {
 
   @Column(unique = true)
   private String email;
+  private String imageUrl;
+  private String name;
 
   @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
   @JsonIgnore
@@ -43,4 +45,20 @@ public class User {
   }
 
   public void setProjects(List<Project> projects) { this.projects = projects; }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
+  }
+
+  public String getImageUrl() {
+    return imageUrl;
+  }
 }

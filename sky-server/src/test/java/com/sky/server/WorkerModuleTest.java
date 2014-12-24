@@ -6,7 +6,7 @@ import com.sky.server.mvc.model.Project;
 import com.sky.server.mvc.model.Work;
 import com.sky.server.mvc.repository.WorkRepository;
 import com.sky.server.mvc.repository.WorkerRepository;
-import com.sky.server.mvc.service.WorkerService;
+import com.sky.server.service.WorkerService;
 import com.sky.server.test.SpringBasedTestSupport;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.server.THsHaServer;
@@ -77,7 +77,6 @@ public class WorkerModuleTest extends SpringBasedTestSupport {
 
       Work work = new Work();
       work.setId(11L);
-      work.setOrdering(1L);
       work.setExecutionUnit(eu);
 
       workerControlService.add("localhost", 9090);

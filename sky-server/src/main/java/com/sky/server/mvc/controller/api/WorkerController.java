@@ -1,6 +1,7 @@
 package com.sky.server.mvc.controller.api;
 
-import com.sky.server.mvc.service.WorkerService;
+import com.sky.server.mvc.repository.WorkerRepository;
+import com.sky.server.service.WorkerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,10 @@ public class WorkerController {
   private final static Logger logger = LoggerFactory.getLogger(WorkerController.class);
 
   @Autowired
-  private WorkerService workerService;
+  private WorkerRepository workerRepository;
 
   @RequestMapping(method = RequestMethod.GET)
   public List<?> list() {
-    return workerService.list();
+    return workerRepository.findAll();
   }
 }

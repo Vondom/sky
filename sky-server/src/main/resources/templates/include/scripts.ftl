@@ -9,5 +9,6 @@
 
 <script src="${rc.contextPath}/js/main.js"></script>
 <script src="${rc.contextPath}/js/reader.js"></script>
+<script src="${rc.contextPath}/js/nav/controllers.js"></script>
 <script src="${rc.contextPath}/js/project/controllers.js"></script>
 <script src="${rc.contextPath}/js/profile/controllers.js"></script>

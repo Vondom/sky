@@ -19,7 +19,7 @@ public class Project {
   private String description;
   private long createTime = System.currentTimeMillis();
 
-  @OneToMany(mappedBy = "project")
+  @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
   @JsonIgnore
   private List<ExecutionUnit> executionUnits = new ArrayList<ExecutionUnit>();
 

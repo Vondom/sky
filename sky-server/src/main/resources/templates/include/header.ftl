@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="${lang}" data-context-path="${rc.contextPath}" data-access-token="${accessToken}" ng-app="skyApp">
+<html lang="${lang}" data-context-path="${rc.contextPath}" data-user-id="${userId}" data-access-token="${accessToken}" ng-app="skyApp">
 <head>
   <title>Sky Engine</title>
   <meta charset="utf-8">

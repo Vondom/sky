@@ -1,5 +1,5 @@
 <#include "/include/header.ftl">
-    <div id="projects" data-user-id="${userId}" ng-controller="ProjectCtrl">
+    <div id="projects" data-user-id="${id}" ng-controller="ProjectCtrl">
       <div class="container">
         <div class="row pull-right" style="padding-bottom: 10px;">
           <button data-toggle="modal" data-target="#create-project.modal" class="btn btn-md btn-success">

@@ -18,14 +18,20 @@ package com.sky.server.web.interceptor;
 import com.sky.server.social.user.SecurityContext;
 import com.sky.server.social.user.UserConnection;
 import com.sky.server.social.user.UserCookieGenerator;
+import com.sky.server.utils.MappedRequestPathMatcher;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.social.github.api.GitHub;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -36,22 +42,32 @@ public final class UserInterceptor extends HandlerInterceptorAdapter {
 
 	private final UserCookieGenerator userCookieGenerator = new UserCookieGenerator();
 
-  @Autowired
+	@Autowired
 	public UserInterceptor(UsersConnectionRepository connectionRepository) {
 		this.connectionRepository = connectionRepository;
 	}
 
+	private MappedRequestPathMatcher pathMatcher = new MappedRequestPathMatcher(new AntPathMatcher(), (String[])ArrayUtils.toArray( // includes
+			"/project/**"
+	));
+
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		rememberUser(request, response);
 		handleSignOut(request, response);
-		if (SecurityContext.userSignedIn()) {
-      request.setAttribute("accessToken", SecurityContext.getCurrentUser().getAccessToken());
-			return true;
-		} else if (requestForSignIn(request)) {
-      return true;
-    } else {
+		if (!requestForSignIn(request) && isRequiredSignIn(request)) {
 			return requireSignIn(request, response);
 		}
+
+		request.setAttribute("accessToken",
+				SecurityContext.userSignedIn() ? SecurityContext.getCurrentUser().getAccessToken() : "");
+		request.setAttribute("userId",
+				SecurityContext.userSignedIn() ? SecurityContext.getCurrentUser().getId() : "");
+
+		return true;
+	}
+
+	private boolean isRequiredSignIn(HttpServletRequest request) {
+		return !SecurityContext.userSignedIn() && pathMatcher.matches(request);
 	}
 
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
@@ -84,6 +100,7 @@ public final class UserInterceptor extends HandlerInterceptorAdapter {
 	private boolean requestForSignIn(HttpServletRequest request) {
 		return request.getServletPath().startsWith("/signin");
 	}
+
 
 	private boolean requireSignIn(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		new RedirectView("/signin", true).render(null, request, response);

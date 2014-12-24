@@ -7,7 +7,8 @@ $.ajaxSetup({
 
 var sky = (function () {
   var contextPath = $("html").data('context-path'),
-      accessToken = $("html").data('access-token');;
+      accessToken = $("html").data('access-token'),
+      userId = $("html").data("user-id");
 
   return {
     utils: {},
@@ -16,6 +17,7 @@ var sky = (function () {
     // Constant Variables
     ACCESS_TOKEN: accessToken,
     REQUEST_CONTEXT_PATH: contextPath,
+    ME_ID: userId,
     API_EXECUTION_UNIT_URL: contextPath + "/api/execution-unit",
     API_PROJECT_URL: contextPath + "/api/project",
     API_USER_URL: contextPath + "/api/user",

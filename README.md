@@ -9,7 +9,7 @@ Sky Engine is performance analysis tool based web service. This tool analyze you
 
 ## To-do
 * Refactoring
-  * do refactoring service classes
+  * ~~do refactoring service classes~~
   * ~~change jsp files to freemarker~~
   * detach sky pom.xml from spring-boot-parent pom.xml
   * add sky-server unit-test for javascript files using angularjs

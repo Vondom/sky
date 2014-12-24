@@ -1,10 +1,12 @@
-package com.sky.server.mvc.service;
+package com.sky.server.service.thrift;
 
+import com.sky.commons.Jar;
 import com.sky.server.mvc.model.ExecutionUnit;
 import com.sky.server.mvc.model.Work;
 import com.sky.server.mvc.model.Worker;
 import com.sky.server.mvc.repository.WorkRepository;
 import com.sky.server.mvc.repository.WorkerRepository;
+import com.sky.server.test.SpringBasedTestSupport;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.server.TServer;
 import org.apache.thrift.server.TSimpleServer;
@@ -18,37 +20,46 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import javax.servlet.ServletRequest;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
-public class WorkerServiceTest {
-  private static final Logger logger = LoggerFactory.getLogger(WorkerServiceTest.class);
-
+public class WorkerControlServiceImplTest extends SpringBasedTestSupport {
   private static final int PORT = 53121;
 
-
   @InjectMocks
-  private WorkerService workerService;
+  private WorkerControlServiceImpl workerControlServiceImpl;
 
   @Mock
-  public WorkerRepository workerRepository;
+  private WorkerRepository workerRepository;
+
+  @Mock
+  private WorkRepository workRepository;
+
+  @Mock
+  private ServletRequest request;
 
   @Mock
   public com.sky.commons.Worker.Iface mockWorker;
 
-  @Mock
-  public WorkRepository workRepository;
-
   private TServer server;
+
+  private com.sky.commons.Work toWork(Work work) {
+    return new com.sky.commons.Work()
+        .setId(work.getId())
+        .setJar(new Jar()
+            .setFile(work.getExecutionUnit().getJarFile())
+            .setName(work.getExecutionUnit().getJarFileName()))
+        .setArguments(work.getExecutionUnit().getArguments());
+  }
 
   @Before
   public void setUp() throws Exception {
@@ -56,9 +67,9 @@ public class WorkerServiceTest {
 
     TServerSocket serverSocket = new TServerSocket(PORT);
     server = new TSimpleServer(new TServer.Args(serverSocket)
-                  .protocolFactory(new TCompactProtocol.Factory())
-                  .processor(new com.sky.commons.Worker.Processor(mockWorker))
-                  .transportFactory(new TFramedTransport.Factory()));
+        .protocolFactory(new TCompactProtocol.Factory())
+        .processor(new com.sky.commons.Worker.Processor(mockWorker))
+        .transportFactory(new TFramedTransport.Factory()));
     new Thread() {
       public void run() {
         server.serve();
@@ -73,6 +84,50 @@ public class WorkerServiceTest {
     assertThat(server.isServing(), is(true));
     server.stop();
   }
+
+  @Test
+  public void testAddWorker() throws Exception {
+    String address = "127.0.0.1";
+    int port = 9200;
+    Long id = 11L;
+
+    Worker verifyWorker = new Worker();
+    verifyWorker.setAddress(address);
+    verifyWorker.setPort(port);
+
+    Worker worker = new Worker();
+    worker.setId(id);
+    worker.setAddress(address);
+    worker.setPort(port);
+
+    // #1
+    when(workerRepository.findByAddressAndPort(eq(address), eq(port))).thenReturn(null);
+    when(workerRepository.save(any(Worker.class))).thenReturn(worker);
+    assertEquals(id, (Long) workerControlServiceImpl.add(address, port));
+    verify(workerRepository).findByAddressAndPort(eq(address), eq(port));
+    verify(workerRepository, times(1)).save(eq(verifyWorker));
+
+    reset(workerRepository);
+
+    // #2
+    when(workerRepository.findByAddressAndPort(eq(address), eq(port))).thenReturn(worker);
+    when(workerRepository.save(any(Worker.class))).thenReturn(worker);
+    assertEquals(id, (Long) workerControlServiceImpl.add(address, port));
+    verify(workerRepository).findByAddressAndPort(eq(address), eq(port));
+    verify(workerRepository, times(1)).save(eq(worker));
+
+    reset(workerRepository);
+
+    // #3
+    when(request.getRemoteAddr()).thenReturn(address);
+    when(workerRepository.findByAddressAndPort(eq(address), eq(port))).thenReturn(null);
+    when(workerRepository.save(any(Worker.class))).thenReturn(worker);
+    assertEquals(id, (Long) workerControlServiceImpl.add("0.0.0.0", port));
+    verify(request).getRemoteAddr();
+    verify(workerRepository).findByAddressAndPort(eq(address), eq(port));
+    verify(workerRepository, times(1)).save(eq(verifyWorker));
+  }
+
 
   @Test
   public void testDoWork() throws Exception {
@@ -100,10 +155,10 @@ public class WorkerServiceTest {
     when(workerRepository.findByState(eq(Worker.State.IDLE))).thenReturn(workers.get());
     when(workRepository.save(eq(work))).thenReturn(work);
 
-    assertThat(workerService.doWork(work).get(), is(true));
+    assertThat(workerControlServiceImpl.doWork(work).get(), is(true));
     assertThat(worker.getWorks().get(0), is(work));
 
-    verify(mockWorker).doWork(eq(workerService.toWork(work)));
+    verify(mockWorker).doWork(eq(toWork(work)));
 
     /* -------------------------------------------------------------------------------------------------- */
     reset(workRepository, workerRepository, mockWorker);
@@ -160,12 +215,13 @@ public class WorkerServiceTest {
     doReturn(work0).when(workRepository).save(eq(work0));
     doReturn(work1).when(workRepository).save(eq(work1));
 
-    assertThat(workerService.doWork(work0).get(), is(true));
+    assertThat(workerControlServiceImpl.doWork(work0).get(), is(true));
     assertThat(worker0.getWorks().get(0), is(work0));
-    assertThat(workerService.doWork(work1).get(), is(true));
+    assertThat(workerControlServiceImpl.doWork(work1).get(), is(true));
     assertThat(worker1.getWorks().get(0), is(work1));
 
-    verify(mockWorker).doWork(eq(workerService.toWork(work1)));
-    verify(mockWorker).doWork(eq(workerService.toWork(work0)));
+    verify(mockWorker).doWork(eq(toWork(work1)));
+    verify(mockWorker).doWork(eq(toWork(work0)));
   }
+
 }

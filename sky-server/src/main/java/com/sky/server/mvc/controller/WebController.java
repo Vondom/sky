@@ -1,6 +1,6 @@
 package com.sky.server.mvc.controller;
 
-import com.sky.server.mvc.service.UserService;
+import com.sky.server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +19,6 @@ public class WebController {
 
   @RequestMapping(value = "/", method = RequestMethod.GET)
   public String index() {
-    // TODO change view name for forwarding
     return "index";
   }
 
@@ -30,14 +29,14 @@ public class WebController {
   }
 
 
-  @RequestMapping("/project/{userId}")
-  public ModelAndView project(@PathVariable String userId) {
+  @RequestMapping("/project/{id}")
+  public ModelAndView project(@PathVariable String id) {
     return new ModelAndView("project")
-        .addObject("userId", userId);
+        .addObject("id", id);
   }
 
   @RequestMapping("/project")
   public ModelAndView project() {
-    return project(Long.toString(userService.getMe().getId()));
+    return project(Long.toString(userService.me().getId()));
   }
 }

@@ -30,7 +30,7 @@ public class ExecutionUnit {
   private Project project;
 
   @OneToMany(mappedBy = "executionUnit", cascade = CascadeType.ALL)
-  @OrderBy("ordering ASC")
+  @OrderBy("createTime ASC")
   @JsonIgnore
   private List<Work> works = new ArrayList<Work>();
 

@@ -3,15 +3,17 @@ package com.sky.server.mvc.controller.api;
 import com.sky.server.mvc.model.MethodLog;
 import com.sky.server.mvc.model.Work;
 import com.sky.server.mvc.repository.WorkRepository;
-import com.sky.server.mvc.service.WorkService;
+import com.sky.server.service.WorkerService;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 
@@ -24,14 +26,26 @@ public class WorkController {
 
   private final static Logger logger = LoggerFactory.getLogger(WorkController.class);
 
-  @Resource
-  private WorkService workService;
-  @Resource
+  @Autowired
+  private Environment env;
+
+  @Autowired
   private WorkRepository workRepository;
+  @Autowired
+  private WorkerService workerService;
 
   @RequestMapping(method = RequestMethod.POST)
+  @Transactional
   public Work create(@RequestBody Work work) throws TException, ExecutionException, InterruptedException {
-    return workService.create(work);
+
+    if (ArrayUtils.contains(env.getActiveProfiles(), "dev"))
+      workerService.checkWorkers();
+
+    logger.trace(".create(work={})", work);
+
+    workerService.doWork(workRepository.save(work));
+
+    return work;
   }
 
 
@@ -46,7 +60,7 @@ public class WorkController {
 
   @RequestMapping(value = "/{id}", method = RequestMethod.GET)
   public Work get(@PathVariable long id) {
-    return workService.get(id);
+    return workRepository.findOne(id);
   }
 
   @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

@@ -1,5 +1,6 @@
 package com.sky.server;
 
+import org.springframework.boot.actuate.system.ApplicationPidFileWriter;
 import org.springframework.boot.actuate.system.ApplicationPidListener;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -18,7 +19,7 @@ public class SkyServer {
         .sources(SkyServer.class)
         .showBanner(true)
         .addCommandLineProperties(true)
-        .listeners(new ApplicationPidListener("sky-server.pid"))
+        .listeners(new ApplicationPidFileWriter("sky-server.pid"))
         .run(args);
 
   }

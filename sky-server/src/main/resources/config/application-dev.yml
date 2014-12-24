@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    driverClassName: org.hsqldb.jdbc.JDBCDriver
+    url: jdbc:hsqldb:mem:sky
+  jpa:
+    database-platform: org.hibernate.dialect.HSQLDialect
+
+logging.level:
+  com.sky: TRACE

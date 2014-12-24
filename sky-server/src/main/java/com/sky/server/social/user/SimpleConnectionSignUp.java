@@ -15,20 +15,46 @@
  */
 package com.sky.server.social.user;
 
-import com.sky.server.mvc.service.UserService;
+import com.sky.server.mvc.model.User;
+import com.sky.server.mvc.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionSignUp;
+import org.springframework.social.connect.UserProfile;
+import org.springframework.social.github.api.GitHub;
+import org.springframework.social.github.api.GitHubUserProfile;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public final class SimpleConnectionSignUp implements ConnectionSignUp {
+	private static Logger logger = LoggerFactory.getLogger(SimpleConnectionSignUp.class);
 
   @Autowired
-  private UserService userService;
+  private UserRepository userRepository;
 
 	public String execute(Connection<?> connection) {
-		return Long.toString(userService.createNotExists(connection).getId());
+		GitHub github = (GitHub)connection.getApi();
+		GitHubUserProfile userProfile = github.userOperations().getUserProfile();
+
+		User user = userRepository.findByEmail(userProfile.getEmail());
+		logger.debug("findByEmail: {}", user);
+		if (user == null)
+			user = this.create(userProfile);
+
+		return Long.toString(user.getId());
+	}
+
+	@Transactional
+	private User create(GitHubUserProfile userProfile) {
+		User user = new User();
+		user.setEmail(userProfile.getEmail());
+		user.setName(userProfile.getName());
+		user.setImageUrl(userProfile.getAvatarUrl());
+
+		return userRepository.save(user);
 	}
 
 }

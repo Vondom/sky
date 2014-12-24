@@ -10,3 +10,7 @@
 	path = tools/jrat
 	url = https://github.com/vondom/jrat.git
 	branch = master
+[submodule "spring-social-github"]
+	path = tools/spring-social-github
+	url = https://github.com/vondom/spring-social-github.git
+	branch = master
