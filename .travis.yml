@@ -9,6 +9,7 @@ install: /bin/true
   
 before_script:
   - "cd tools/jrat; ./gradlew install; cd -"
+  - "cd tools/spring-social-github; ./gradlew install; cd -"
   - "export PATH=`pwd`/tools/travis:$PATH"
 
 script: mvn test
