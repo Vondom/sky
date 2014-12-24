@@ -13,6 +13,7 @@ Sky Engine is performance analysis tool based web service. This tool analyze you
   * ~~change jsp files to freemarker~~
   * detach sky pom.xml from spring-boot-parent pom.xml
   * add sky-server unit-test for javascript files using angularjs
+  * create distributed sky-worker servers using zookeeper or message queueing
 * Bug fixes
   * ~~missing data as profiling log~~
 * New features
