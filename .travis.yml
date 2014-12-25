@@ -12,7 +12,7 @@ before_script:
   - "cd tools/spring-social-github; ./gradlew install; cd -"
   - "export PATH=`pwd`/tools/travis:$PATH"
 
-script: mvn test
+script: mvn clean test
 
 after_success:
   - mvn -Pwith-covers clean test jacoco:report coveralls:report
