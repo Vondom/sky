@@ -6,6 +6,7 @@ import com.sky.commons.WorkerControlService;
 import com.sky.server.config.annotation.TService;
 import com.sky.server.mvc.model.Work;
 import com.sky.server.mvc.model.Worker;
+import com.sky.server.mvc.repository.ExecutionUnitRepository;
 import com.sky.server.mvc.repository.WorkRepository;
 import com.sky.server.mvc.repository.WorkerRepository;
 import com.sky.server.service.WorkerService;
@@ -38,6 +39,9 @@ public class WorkerControlServiceImpl implements WorkerControlService.Iface, Wor
 
   @Autowired
   private WorkRepository workRepository;
+
+  @Autowired
+  private ExecutionUnitRepository executionUnitRepository;
 
   @Override
   @Transactional
@@ -95,24 +99,25 @@ public class WorkerControlServiceImpl implements WorkerControlService.Iface, Wor
       state.set(worker.getState());
 
       if (!Worker.State.QUIT.equals(state.get())) {
+        TSocket socket = null;
         try {
-          connect(worker, new WorkerClientTemplateHandler() {
-            @Override
-            public void handle(com.sky.commons.Worker.Client worker) throws TException {
-
-              Status status = worker.status();
-              switch (status.getState()) {
-                case IDLE:
-                  state.set(Worker.State.IDLE);
-                  break;
-                case WORKING:
-                  state.set(Worker.State.WORKING);
-                  break;
-              }
-            }
-          });
+          socket = new TSocket(worker.getAddress(), worker.getPort());
+          socket.open();
+          com.sky.commons.Worker.Client worker1 = new com.sky.commons.Worker.Client(new TCompactProtocol(new TFramedTransport(socket)));
+          Status status = worker1.status();
+          switch (status.getState()) {
+            case IDLE:
+              state.set(Worker.State.IDLE);
+              break;
+            case WORKING:
+              state.set(Worker.State.WORKING);
+              break;
+          }
         } catch (TException e) {
           state.set(Worker.State.QUIT);
+        } finally {
+          if (socket != null && socket.isOpen())
+            socket.close();
         }
 
         if (!state.get().equals(worker.getState())) {
@@ -124,7 +129,7 @@ public class WorkerControlServiceImpl implements WorkerControlService.Iface, Wor
   }
 
   @Async
-  @Transactional(readOnly = true)
+  @Transactional
   public Future<Boolean> doWork(Work work) throws TException {
     logger.trace(".doWork(work={})", work);
     List<Worker> workers = workerRepository.findByState(Worker.State.IDLE);
@@ -133,7 +138,8 @@ public class WorkerControlServiceImpl implements WorkerControlService.Iface, Wor
       return new AsyncResult<Boolean>(false);
 
     try {
-      doWork(workers.get(0), work);
+      Worker worker = workers.get(0);
+      this.doWork(worker, work);
     } catch (TException e) {
       logger.error(e.getMessage(), e);
       throw e;
@@ -142,48 +148,40 @@ public class WorkerControlServiceImpl implements WorkerControlService.Iface, Wor
     return new AsyncResult<Boolean>(true);
   }
 
-  @Transactional(readOnly = true)
-  private void doWork(final Worker worker_, final Work work) throws TException {
-
-    connect(worker_, new WorkerClientTemplateHandler() {
-      private Worker worker = worker_;
-
-      @Override
-      public void handle(com.sky.commons.Worker.Client workerClient) throws TException {
-
-        if (Worker.State.IDLE.equals(worker.getState())) {
-          worker.setState(Worker.State.WORKING);
-          worker.getWorks().add(work);
-
-          worker = workerRepository.save(worker);
-
-          logger.trace("worker0={}", worker);
-        }
-
-        logger.trace(".handle(worker={}) - START", worker);
-        workerClient.doWork(new com.sky.commons.Work()
-            .setId(work.getId())
-            .setJar(new Jar()
-                .setFile(work.getExecutionUnit().getJarFile())
-                .setName(work.getExecutionUnit().getJarFileName()))
-            .setArguments(work.getExecutionUnit().getArguments()));
-        logger.trace("END");
-      }
-    });
-  }
-
   @Transactional
-  private void connect(Worker worker, WorkerClientTemplateHandler handler) throws TException {
+  private void doWork(Worker worker, Work work) throws TException {
+
     TSocket socket = null;
     try {
       socket = new TSocket(worker.getAddress(), worker.getPort());
       socket.open();
-      handler.handle(new com.sky.commons.Worker.Client(new TCompactProtocol(new TFramedTransport(socket))));
+      com.sky.commons.Worker.Client workerClient = new com.sky.commons.Worker.Client(new TCompactProtocol(new TFramedTransport(socket)));
+
+      if (Worker.State.IDLE.equals(worker.getState())) {
+        worker.setState(Worker.State.WORKING);
+        worker = workerRepository.save(worker);
+
+        work.setWorker(worker);
+        work = workRepository.save(work);
+        executionUnitRepository.save(work.getExecutionUnit());
+
+        logger.trace("worker0={}", worker);
+      }
+
+      logger.trace(".handle(worker={}) - START", worker);
+      workerClient.doWork(new com.sky.commons.Work()
+          .setId(work.getId())
+          .setJar(new Jar()
+              .setFile(work.getExecutionUnit().getJarFile())
+              .setName(work.getExecutionUnit().getJarFileName()))
+          .setArguments(work.getExecutionUnit().getArguments()));
+      logger.trace("END");
     } finally {
       if (socket != null && socket.isOpen())
         socket.close();
     }
   }
+
 
   private static interface WorkerClientTemplateHandler {
     void handle(com.sky.commons.Worker.Client worker) throws TException;

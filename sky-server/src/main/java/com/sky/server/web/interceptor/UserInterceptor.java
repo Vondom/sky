@@ -21,7 +21,6 @@ import com.sky.server.social.user.UserCookieGenerator;
 import com.sky.server.utils.MappedRequestPathMatcher;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.social.github.api.GitHub;

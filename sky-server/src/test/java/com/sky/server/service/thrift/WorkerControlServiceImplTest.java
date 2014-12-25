@@ -4,6 +4,7 @@ import com.sky.commons.Jar;
 import com.sky.server.mvc.model.ExecutionUnit;
 import com.sky.server.mvc.model.Work;
 import com.sky.server.mvc.model.Worker;
+import com.sky.server.mvc.repository.ExecutionUnitRepository;
 import com.sky.server.mvc.repository.WorkRepository;
 import com.sky.server.mvc.repository.WorkerRepository;
 import com.sky.server.test.SpringBasedTestSupport;
@@ -51,6 +52,8 @@ public class WorkerControlServiceImplTest extends SpringBasedTestSupport {
   public com.sky.commons.Worker.Iface mockWorker;
 
   private TServer server;
+  @Mock
+  private ExecutionUnitRepository executionUnitRepository;
 
   private com.sky.commons.Work toWork(Work work) {
     return new com.sky.commons.Work()
@@ -147,16 +150,17 @@ public class WorkerControlServiceImplTest extends SpringBasedTestSupport {
     worker.setPort(PORT);
     worker.setAddress("localhost");
 
-    final ThreadLocal<List<Worker>> workers = new ThreadLocal<List<Worker>>();
-    workers.set(Arrays.asList(worker));
+    final List<Worker> workers = Arrays.asList(worker);
 
 
     when(mockWorker.doWork(any(com.sky.commons.Work.class))).thenReturn("test123123");
-    when(workerRepository.findByState(eq(Worker.State.IDLE))).thenReturn(workers.get());
+    when(workerRepository.findByState(eq(Worker.State.IDLE))).thenReturn(workers);
+    when(workerRepository.save(eq(worker))).thenReturn(worker);
     when(workRepository.save(eq(work))).thenReturn(work);
+    when(executionUnitRepository.save(eq(eu))).thenReturn(eu);
 
     assertThat(workerControlServiceImpl.doWork(work).get(), is(true));
-    assertThat(worker.getWorks().get(0), is(work));
+    assertThat(work.getWorker(), is(worker));
 
     verify(mockWorker).doWork(eq(toWork(work)));
 
@@ -184,27 +188,28 @@ public class WorkerControlServiceImplTest extends SpringBasedTestSupport {
     eu.setMainClassName("");
     work1.setExecutionUnit(eu);
 
-    Worker worker0 = new Worker();
+    final Worker worker0 = new Worker();
     worker0.setId(13L);
     worker0.setPort(PORT);
     worker0.setAddress("localhost");
     worker0.setState(Worker.State.IDLE);
 
-    Worker worker1 = new Worker();
+    final Worker worker1 = new Worker();
     worker1.setId(14L);
     worker1.setPort(PORT);
     worker1.setAddress("localhost");
     worker1.setState(Worker.State.IDLE);
 
-    workers.set(Arrays.asList(worker0, worker1));
-
     when(mockWorker.doWork(any(com.sky.commons.Work.class))).thenReturn("test123123");
     doAnswer(new Answer<List<Worker>>() {
+
+      List<Worker> workers = Arrays.asList(worker0, worker1);
+
       @Override
       public List<Worker> answer(InvocationOnMock invocation) throws Throwable {
         Worker.State state = (Worker.State) invocation.getArguments()[0];
 
-        for (Worker worker : workers.get()) {
+        for (Worker worker : workers) {
           if (state.equals(worker.getState()))
             return Arrays.asList(worker);
         }
@@ -212,13 +217,16 @@ public class WorkerControlServiceImplTest extends SpringBasedTestSupport {
         return new LinkedList<Worker>();
       }
     }).when(workerRepository).findByState(eq(Worker.State.IDLE));
+    when(workerRepository.save(eq(worker1))).thenReturn(worker1);
+    when(workerRepository.save(eq(worker0))).thenReturn(worker0);
+    when(executionUnitRepository.save(eq(eu))).thenReturn(eu);
     doReturn(work0).when(workRepository).save(eq(work0));
     doReturn(work1).when(workRepository).save(eq(work1));
 
     assertThat(workerControlServiceImpl.doWork(work0).get(), is(true));
-    assertThat(worker0.getWorks().get(0), is(work0));
+    assertThat(work0.getWorker(), is(worker0));
     assertThat(workerControlServiceImpl.doWork(work1).get(), is(true));
-    assertThat(worker1.getWorks().get(0), is(work1));
+    assertThat(work1.getWorker(), is(worker1));
 
     verify(mockWorker).doWork(eq(toWork(work1)));
     verify(mockWorker).doWork(eq(toWork(work0)));

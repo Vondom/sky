@@ -29,6 +29,7 @@ import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -58,6 +59,7 @@ public class TController {
       throw new ServletException("outFactory must be set");
     }
 
+    Map<String, TProcessor> processors = new HashMap<String, TProcessor>();
     for (Object bean : applicationContext.getBeansWithAnnotation(TService.class).values()) {
       TService tService = AnnotationUtils.findAnnotation(bean.getClass(), TService.class);
       Class<?> processorCls = null, ifaceCls = null;
@@ -73,12 +75,16 @@ public class TController {
 
       if (processorCls != null && ifaceCls != null) {
         processor = (TProcessor) processorCls.getConstructor(ifaceCls).newInstance(bean);
-        this.processor.registerProcessor(tService.name(), processor);
+        processors.put(tService.name(), processor);
       }
+    }
+
+    for (String name : processors.keySet()) {
+      this.processor.registerProcessor(name, processors.get(name));
     }
   }
 
-  @RequestMapping(value = "/api/thrift", method = RequestMethod.POST)
+  @RequestMapping(value = "/api/thrift", method = RequestMethod.POST, consumes = "application/x-thrift", produces = "application/x-thrift")
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, WebNotFoundException {
     TTransport inTransport = null;
