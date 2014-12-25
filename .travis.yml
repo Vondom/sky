@@ -15,7 +15,7 @@ before_script:
 script: mvn test
 
 after_success:
-  - mvn clean test jacoco:report coveralls:report
+  - mvn -Pwith-covers clean test jacoco:report coveralls:report
 
 branch:
   only:
