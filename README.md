@@ -7,6 +7,12 @@ Sky Engine is performance analysis tool based web service. This tool analyze you
 * will be supported to ruby, python, javascript(node.js or phantom.js), java
 * show the result to analyzing performance within each functions execution time
 
+## How To Build
+1. require Maven: [https://maven.apache.org]
+2. Build 3rd-party library: Move the directory <code>tools/jrat</code> and <code>tools/spring-social-github</code> then execute command <code>install</code>. For example, <code>tools/jrat# ./gradlew install</code>
+3. Build Sky Engine: <code># mvn test package</code>
+4. Enjoy!
+
 ## To-do
 * Refactoring
   * ~~do refactoring service classes~~
