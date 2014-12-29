@@ -7,7 +7,7 @@
 	<parent>
 		<groupId>sky</groupId>
 		<artifactId>sky</artifactId>
-		<version>0.1-SNAPSHOT</version>
+		<version>${sky-version}</version>
 	</parent>
 
 	<groupId>sky</groupId>

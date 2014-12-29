@@ -18,13 +18,14 @@
 	</parent>
 	<groupId>sky</groupId>
 	<artifactId>sky</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<version>${sky-version}</version>
 	<packaging>pom</packaging>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<curator-version>2.7.0</curator-version>
 		<querydsl-version>3.4.0</querydsl-version>
+		<sky-version>0.2-SNAPSHOT</sky-version>
 	</properties>
 
 	<dependencyManagement>

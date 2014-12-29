@@ -6,8 +6,7 @@
 	<parent>
 		<groupId>sky</groupId>
 		<artifactId>sky</artifactId>
-		<version>0.1-SNAPSHOT</version>
-		<relativePath>..</relativePath>
+		<version>${sky-version}</version>
 	</parent>
 	<artifactId>sky-distribution</artifactId>
 	<packaging>pom</packaging>
