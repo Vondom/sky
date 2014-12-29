@@ -19,6 +19,10 @@ spring:
 security:
   ignored: true
   basic.enabled: false
+sky:
+  curator:
+    namespace: SkyEngine
+    retryTime: 100
 
 # Logging
 logging.level.com.sky: TRACE

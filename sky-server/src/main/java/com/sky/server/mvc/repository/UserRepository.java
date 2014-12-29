@@ -1,6 +1,6 @@
 package com.sky.server.mvc.repository;
 
-import com.sky.server.mvc.model.User;
+import com.sky.commons.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

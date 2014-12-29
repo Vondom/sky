@@ -1,0 +1,7 @@
+sky:
+  worker:
+    server-connection: http://localhost:8080
+  curator:
+    connections: localhost:32181
+
+logging.level.com.sky: TRACE

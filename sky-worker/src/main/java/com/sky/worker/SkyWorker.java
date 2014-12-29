@@ -1,17 +1,13 @@
 package com.sky.worker;
 
-import com.sky.commons.WorkerControlService;
-import org.apache.commons.cli.ParseException;
+import com.sky.commons.model.Work;
+import com.sky.worker.config.SkyWorkerConfigProperties;
+import com.sky.worker.domain.WorkRepository;
+import com.sky.worker.domain.WorkerRepository;
+import com.sky.worker.service.TaskDistributedQueue;
+import com.sky.worker.service.Worker;
 import org.apache.commons.io.FileUtils;
-import org.apache.thrift.TException;
-import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.protocol.TCompactProtocol;
-import org.apache.thrift.protocol.TMultiplexedProtocol;
-import org.apache.thrift.server.THsHaServer;
-import org.apache.thrift.transport.THttpClient;
-import org.apache.thrift.transport.TNonblockingServerSocket;
-import org.apache.thrift.transport.TNonblockingServerTransport;
-import org.apache.thrift.transport.TTransportException;
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,76 +17,88 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Created by jcooky on 2014. 7. 30..
  */
 @Configuration
 @EnableAutoConfiguration
-@ComponentScan
+@ComponentScan({"com.sky.worker"})
 public class SkyWorker implements CommandLineRunner {
   private static final Logger logger = LoggerFactory.getLogger(SkyWorker.class);
   public static final String PROFILER_PATH = FileUtils.getTempDirectoryPath() + "/sky-profiler.jar";
-  private static final String PROFILER_URL = "/sky-profiler.jar";
 
   @Autowired
-  private com.sky.worker.Options options;
+  private Environment env;
 
   @Autowired
   private Worker worker;
 
-  public void run(String[] args) throws ParseException, IOException, TException {
+  @Autowired
+  private WorkerRepository workerRepository;
 
-    int port = Integer.parseInt(options.get(Options.Key.PORT));
-    String host = options.get(Options.Key.SERVER_URL);
+  @Autowired
+  private TaskDistributedQueue taskDistributedQueue;
 
-    this.downloadProfiler(host);
 
-    WorkerControlService.Iface workerControlService = getWorkerControlService(host);
-    worker.setId(workerControlService.add(options.get(Options.Key.LOCAL_HOST), port));
-    worker.setWorkerControlService(workerControlService);
+  private boolean startLoop = false;
 
-    TNonblockingServerTransport transport = new TNonblockingServerSocket(new InetSocketAddress("0.0.0.0", port));
-    THsHaServer server = new THsHaServer(new THsHaServer.Args(transport)
-        .protocolFactory(new TCompactProtocol.Factory())
-        .processor(new com.sky.commons.Worker.Processor<Worker>(worker)));
-    server.serve();
+  public void run(String[] args) throws Exception {
 
-    workerControlService.remove(worker.getId());
+    if (!ArrayUtils.contains(env.getActiveProfiles(), "test")) {
+      // setup
+      this.setUpProfiler();
 
+      // Register self worker
+      this.startWorker();
+
+      try {
+        // Run worker
+        this.runWorker();
+      } finally {
+        // Remove self from database
+        this.shutdownWorker();
+      }
+    }
   }
 
-  public void downloadProfiler(String url) throws IOException {
+  private void shutdownWorker() {
+    workerRepository.delete(this.worker.getId());
+    this.startLoop = false;
+  }
+
+  private void runWorker() throws Exception {
+    while (this.startLoop) {
+      long workId = taskDistributedQueue.take();
+
+      this.worker.doWork(workId);
+    }
+  }
+
+  private void startWorker() {
+    com.sky.commons.model.Worker worker = new com.sky.commons.model.Worker();
+    worker = workerRepository.save(worker);
+    this.worker.setId(worker.getId());
+    this.startLoop = true;
+  }
+
+  public void setUpProfiler() throws IOException {
     File profilerFile = new File(PROFILER_PATH);
-    URL profilerUrl = getProfilerUrl(url);
 
-    logger.trace("profilerUrl={}", profilerUrl);
-    FileUtils.copyURLToFile(profilerUrl, profilerFile);
+    FileUtils.copyInputStreamToFile(new ClassPathResource("/sky-profiler.jar").getInputStream(), profilerFile);
     logger.debug("FINISH Download profiler: {}", profilerFile.getAbsolutePath());
-  }
-
-  private WorkerControlService.Iface getWorkerControlService(String url) throws TTransportException {
-
-    THttpClient httpClient = new THttpClient(url + "/api/thrift");
-
-    return new WorkerControlService.Client(new TMultiplexedProtocol(new TBinaryProtocol(httpClient), "worker-control"));
-  }
-
-  public URL getProfilerUrl(String url) throws MalformedURLException {
-    return new URL(url + PROFILER_URL);
   }
 
   public static void main(String[] args) throws Exception {
     new SpringApplicationBuilder()
         .showBanner(true)
         .web(false)
-        .addCommandLineProperties(true)
+        .addCommandLineProperties(false)
         .sources(SkyWorker.class)
         .listeners(new ApplicationPidListener("sky-worker.pid"))
         .run(args);

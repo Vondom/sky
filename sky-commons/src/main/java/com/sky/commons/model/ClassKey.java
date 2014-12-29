@@ -1,6 +1,8 @@
-package com.sky.server.mvc.model;
+package com.sky.commons.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 /**
  * Created by jcooky on 2014. 6. 25..

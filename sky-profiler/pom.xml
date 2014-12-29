@@ -38,6 +38,17 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>com.squareup.okhttp</groupId>
 			<artifactId>mockwebserver</artifactId>
@@ -94,7 +105,7 @@
 						<configuration>
 							<target>
 								<copyfile src="${basedir}/target/${project.build.finalName}.jar"
-								          dest="${basedir}/../sky-server/src/main/resources/public/${project.build.finalName}.jar"
+								          dest="${basedir}/../sky-worker/src/main/resources/${project.build.finalName}.jar"
 								          forceoverwrite="true"/>
 							</target>
 						</configuration>

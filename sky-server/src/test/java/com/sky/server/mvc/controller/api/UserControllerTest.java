@@ -1,7 +1,7 @@
 package com.sky.server.mvc.controller.api;
 
-import com.sky.server.mvc.model.Project;
-import com.sky.server.mvc.model.User;
+import com.sky.commons.model.Project;
+import com.sky.commons.model.User;
 import com.sky.server.mvc.repository.UserRepository;
 import com.sky.server.test.SpringBasedTestSupport;
 import org.junit.Before;

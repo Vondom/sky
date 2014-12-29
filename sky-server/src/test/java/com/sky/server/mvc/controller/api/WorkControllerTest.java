@@ -1,7 +1,7 @@
 package com.sky.server.mvc.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sky.server.mvc.model.Work;
+import com.sky.commons.model.Work;
 import com.sky.server.test.SpringBasedTestSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 

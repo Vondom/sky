@@ -34,7 +34,7 @@ module.exports = function (grunt) {
             ' */\n',
     jqueryCheck: 'if (typeof jQuery === \'undefined\') { throw new Error(\'Bootstrap\\\'s JavaScript requires jQuery\') }\n\n',
 
-    // Task configuration.
+    // com.sky.commons.Task configuration.
     clean: {
       dist: ['dist', 'docs/dist']
     },
@@ -415,7 +415,7 @@ module.exports = function (grunt) {
     generateRawFilesJs(banner);
   });
 
-  // Task for updating the npm packages used by the Travis build.
+  // com.sky.commons.Task for updating the npm packages used by the Travis build.
   grunt.registerTask('update-shrinkwrap', ['exec:npmUpdate', 'exec:npmShrinkWrap', '_update-shrinkwrap']);
   grunt.registerTask('_update-shrinkwrap', function () { updateShrinkwrap.call(this, grunt); });
 };

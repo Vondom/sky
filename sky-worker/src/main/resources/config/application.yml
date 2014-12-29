@@ -1,0 +1,6 @@
+sky:
+  curator:
+    namespace: SkyEngine
+    retryTime: 100
+
+logging.level.com.sky: INFO

@@ -1,10 +1,10 @@
 package com.sky.server.mvc.repository.custom.impl;
 
 import com.mysema.query.jpa.impl.JPAQuery;
-import com.sky.server.mvc.model.ClassKey;
-import com.sky.server.mvc.model.MethodKey;
-import com.sky.server.mvc.model.QClassKey;
-import com.sky.server.mvc.model.QMethodKey;
+import com.sky.commons.model.ClassKey;
+import com.sky.commons.model.MethodKey;
+import com.sky.commons.model.QClassKey;
+import com.sky.commons.model.QMethodKey;
 import com.sky.server.mvc.repository.custom.MethodKeyRepositoryCustom;
 import org.springframework.beans.factory.annotation.Autowired;
 

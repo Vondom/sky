@@ -1,9 +1,8 @@
 package com.sky.server.mvc.controller.api;
 
-import com.sky.server.mvc.model.ExecutionUnit;
-import com.sky.server.mvc.model.Work;
+import com.sky.commons.model.ExecutionUnit;
+import com.sky.commons.model.Work;
 import com.sky.server.mvc.repository.ExecutionUnitRepository;
-import com.sky.server.mvc.repository.ProjectRepository;
 import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

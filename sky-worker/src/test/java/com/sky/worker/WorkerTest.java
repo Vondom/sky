@@ -1,8 +1,12 @@
 package com.sky.worker;
 
-import com.sky.commons.Jar;
-import com.sky.commons.Work;
 import com.sky.commons.WorkerControlService;
+import com.sky.commons.model.ExecutionUnit;
+import com.sky.commons.model.Work;
+import com.sky.worker.domain.WorkRepository;
+import com.sky.worker.domain.WorkerRepository;
+import com.sky.worker.service.Processor;
+import com.sky.worker.service.Worker;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -29,7 +33,10 @@ public class WorkerTest {
   private Processor processor;
 
   @Mock
-  private WorkerControlService.Iface workerControlService;
+  private WorkRepository workRepository;
+
+  @Mock
+  private WorkerRepository workerRepository;
 
   @Before
   public void setUp() throws Exception {
@@ -51,24 +58,34 @@ public class WorkerTest {
   public void testDoWork() throws Exception {
     String error = "error test\n", stdout = "input test\n";
 
-    Work work = new Work()
-        .setId(10L)
-        .setArguments("test_arguments")
-        .setJar(new Jar()
-            .setName("test.jar")
-            .setFile("test".getBytes()));
+    ExecutionUnit eu = new ExecutionUnit();
+    eu.setArguments("test_arguments");
+    eu.setJarFile("test".getBytes());
+    eu.setJarFileName("test.jar");
+
+    Work work = new Work();
+    work.setId(10L);
+    work.setExecutionUnit(eu);
+
+    com.sky.commons.model.Worker worker = new com.sky.commons.model.Worker();
+    worker.setId(11L);
+
     Process process = mock(Process.class);
 
-    doReturn(process).when(processor).process(eq(work.id), anyString(), eq(work.arguments));
+    doReturn(work).when(workRepository).findOne(eq(10L));
+    doReturn(eu).when(workRepository).findExecutionUnitById(eq(10L));
+    doReturn(worker).when(workerRepository).findOne(anyLong());
+    doReturn(process).when(processor).process(eq(work.getId()), anyString(), eq(eu.getArguments()));
     doReturn(0).when(process).waitFor();
     doReturn(new ByteArrayInputStream(error.getBytes())).when(process).getErrorStream();
     doReturn(new ByteArrayInputStream(stdout.getBytes())).when(process).getInputStream();
 
-    worker.doWork(work);
+    this.worker.doWork(10L);
 
-    verify(processor).process(eq(work.id), anyString(), eq(work.arguments));
+    verify(workerRepository, times(2)).save(any(com.sky.commons.model.Worker.class));
+    verify(workRepository).findOne(eq(10L));
+    verify(processor).process(eq(work.getId()), anyString(), eq(eu.getArguments()));
     verify(process).getErrorStream();
     verify(process).getInputStream();
-    verify(workerControlService).done(eq(worker.getId()), eq(work.id));
   }
 }

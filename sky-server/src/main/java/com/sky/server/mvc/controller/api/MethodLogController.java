@@ -1,6 +1,6 @@
 package com.sky.server.mvc.controller.api;
 
-import com.sky.server.mvc.model.MethodLog;
+import com.sky.commons.model.MethodLog;
 import com.sky.server.mvc.repository.MethodLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;

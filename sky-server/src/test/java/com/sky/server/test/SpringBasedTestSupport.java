@@ -1,8 +1,8 @@
 package com.sky.server.test;
 
 import com.sky.server.SkyServer;
-import com.sky.server.mvc.model.ClassKey;
-import com.sky.server.mvc.model.MethodKey;
+import com.sky.commons.model.ClassKey;
+import com.sky.commons.model.MethodKey;
 import com.sky.server.mvc.repository.ClassKeyRepository;
 import com.sky.server.mvc.repository.MethodKeyRepository;
 import org.junit.Rule;
@@ -23,7 +23,7 @@ import javax.persistence.EntityManager;
  */
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration("sky-server/src/main/webapp")
+@WebAppConfiguration
 @SpringApplicationConfiguration(classes = SkyServer.class)
 @IntegrationTest({"server.port=0", "management.port=0"})
 public abstract class SpringBasedTestSupport {

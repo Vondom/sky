@@ -1,6 +1,6 @@
 package com.sky.server.service;
 
-import com.sky.server.mvc.model.Work;
+import com.sky.commons.model.Work;
 import org.apache.thrift.TException;
 
 import java.util.concurrent.Future;

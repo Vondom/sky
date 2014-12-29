@@ -1,4 +1,4 @@
-package com.sky.server.mvc.model;
+package com.sky.commons.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

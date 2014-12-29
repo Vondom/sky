@@ -17,17 +17,11 @@ public class WebController {
   @Autowired
   private UserService userService;
 
-  @RequestMapping(value = "/", method = RequestMethod.GET)
-  public String index() {
-    return "index";
-  }
-
   @RequestMapping("/profile/{id}")
   public ModelAndView profile(@PathVariable long id) {
     return new ModelAndView("profile")
         .addObject("id", id);
   }
-
 
   @RequestMapping("/project/{id}")
   public ModelAndView project(@PathVariable String id) {

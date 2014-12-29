@@ -1,4 +1,4 @@
-package com.sky.server.mvc.model;
+package com.sky.commons.model;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -14,8 +14,6 @@ public class Worker {
   @GeneratedValue
   private long id;
 
-  private String address;
-  private int port;
   private Date updateTime = new Date(System.currentTimeMillis());
 
   @Enumerated
@@ -56,22 +54,6 @@ public class Worker {
     this.works = works;
   }
 
-  public String getAddress() {
-    return address;
-  }
-
-  public void setAddress(String address) {
-    this.address = address;
-  }
-
-  public int getPort() {
-    return port;
-  }
-
-  public void setPort(int port) {
-    this.port = port;
-  }
-
   public static enum State {
     IDLE,
     WORKING,
@@ -83,8 +65,6 @@ public class Worker {
     return "Worker{" +
         "state=" + state +
         ", updateTime=" + updateTime +
-        ", port=" + port +
-        ", address='" + address + '\'' +
         ", id=" + id +
         '}';
   }
@@ -97,8 +77,6 @@ public class Worker {
     Worker worker = (Worker) o;
 
     if (id != worker.id) return false;
-    if (port != worker.port) return false;
-    if (address != null ? !address.equals(worker.address) : worker.address != null) return false;
     if (state != worker.state) return false;
     if (works != null ? !works.equals(worker.works) : worker.works != null) return false;
 
@@ -108,8 +86,6 @@ public class Worker {
   @Override
   public int hashCode() {
     int result = (int) (id ^ (id >>> 32));
-    result = 31 * result + (address != null ? address.hashCode() : 0);
-    result = 31 * result + port;
     result = 31 * result + (state != null ? state.hashCode() : 0);
     result = 31 * result + (works != null ? works.hashCode() : 0);
     return result;

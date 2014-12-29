@@ -1,6 +1,6 @@
 package com.sky.server.mvc.repository;
 
-import com.sky.server.mvc.model.Worker;
+import com.sky.commons.model.Worker;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,6 +11,5 @@ import java.util.List;
  */
 @Repository
 public interface WorkerRepository extends JpaRepository<Worker, Long> {
-  Worker findByAddressAndPort(String address, int port);
-  List<Worker> findByState(Worker.State state);
+
 }

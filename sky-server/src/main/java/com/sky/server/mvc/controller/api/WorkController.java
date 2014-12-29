@@ -1,10 +1,11 @@
 package com.sky.server.mvc.controller.api;
 
-import com.sky.server.mvc.model.MethodLog;
-import com.sky.server.mvc.model.Work;
+import com.sky.commons.model.ExecutionUnit;
+import com.sky.commons.model.MethodLog;
+import com.sky.commons.model.Work;
 import com.sky.server.mvc.repository.WorkRepository;
+import com.sky.server.service.TaskDistributedQueue;
 import com.sky.server.service.WorkerService;
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by jcooky on 2014. 8. 6..
@@ -31,19 +31,23 @@ public class WorkController {
 
   @Autowired
   private WorkRepository workRepository;
+
   @Autowired
-  private WorkerService workerService;
+  private TaskDistributedQueue taskQueue;
 
   @RequestMapping(method = RequestMethod.POST)
   @Transactional
-  public Work create(@RequestBody Work work) throws TException, ExecutionException, InterruptedException {
+  public Work create(@RequestBody Work work) throws Exception {
 
-    if (ArrayUtils.contains(env.getActiveProfiles(), "dev"))
-      workerService.checkWorkers();
+//    if (ArrayUtils.contains(env.getActiveProfiles(), "dev"))
+//      workerService.checkWorkers();
 
     logger.trace(".create(work={})", work);
+    work = workRepository.save(work);
 
-    workerService.doWork(workRepository.save(work));
+//    workerService.doWork(work);
+
+    taskQueue.put(work.getId());
 
     return work;
   }
@@ -67,6 +71,11 @@ public class WorkController {
   public boolean delete(@PathVariable long id) {
     workRepository.delete(id);
     return true;
+  }
+
+  @RequestMapping(value = "/{id}/execution-unit", method = RequestMethod.GET)
+  public ExecutionUnit getExecutionUnit(@PathVariable long id) {
+    return workRepository.findOne(id).getExecutionUnit();
   }
 
   @ExceptionHandler({TException.class})

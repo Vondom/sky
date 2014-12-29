@@ -1,7 +1,7 @@
 package com.sky.server.mvc.controller.api;
 
-import com.sky.server.mvc.model.ExecutionUnit;
-import com.sky.server.mvc.model.Project;
+import com.sky.commons.model.ExecutionUnit;
+import com.sky.commons.model.Project;
 import com.sky.server.mvc.repository.ProjectRepository;
 import com.sky.server.service.GitHubHelper;
 import com.sky.server.service.UserService;

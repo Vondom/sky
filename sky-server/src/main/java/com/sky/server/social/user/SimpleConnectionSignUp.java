@@ -15,14 +15,13 @@
  */
 package com.sky.server.social.user;
 
-import com.sky.server.mvc.model.User;
+import com.sky.commons.model.User;
 import com.sky.server.mvc.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionSignUp;
-import org.springframework.social.connect.UserProfile;
 import org.springframework.social.github.api.GitHub;
 import org.springframework.social.github.api.GitHubUserProfile;
 import org.springframework.stereotype.Component;

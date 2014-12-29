@@ -1,7 +1,11 @@
-package com.sky.worker;
+package com.sky.worker.service;
 
+import com.sky.worker.SkyWorker;
+import com.sky.worker.config.SkyWorkerConfigProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -10,15 +14,14 @@ import java.util.List;
 /**
  * Created by jcooky on 2014. 9. 6..
  */
-@Component
+@Service
 public class Processor {
-
   @Autowired
-  private Options options;
+  private SkyWorkerConfigProperties properties;
 
   public Process process(long workId, String path, String arguments) throws IOException {
     List<String> processes = Arrays.asList("java",
-        String.format("-Dsky.profiler.config=%s/download/config/%d", options.get(Options.Key.SERVER_URL), workId),
+        String.format("-Dsky.profiler.config=%s/download/config/%d", properties.getServerConnection(), workId),
         "-javaagent:"+ SkyWorker.PROFILER_PATH,
         "-jar",
         path);
@@ -32,7 +35,7 @@ public class Processor {
 
   public Process process(long workId, String path, String mainClassName, String arguments) throws IOException {
     List<String> processes = Arrays.asList("java",
-        String.format("-Dsky.profiler.config=%s/download/config/%d", options.get(Options.Key.SERVER_URL), workId),
+        String.format("-Dsky.profiler.config=%s/download/config/%d", properties.getServerConnection(), workId),
         "-javaagent:"+ SkyWorker.PROFILER_PATH,
         "-cp",
         path,

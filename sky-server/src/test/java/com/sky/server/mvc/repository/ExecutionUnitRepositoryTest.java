@@ -1,14 +1,13 @@
 package com.sky.server.mvc.repository;
 
-import com.sky.server.mvc.model.ExecutionUnit;
-import com.sky.server.mvc.model.Project;
+import com.sky.commons.model.ExecutionUnit;
+import com.sky.commons.model.Project;
 import com.sky.server.test.SpringBasedTestSupport;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static com.google.common.base.CharMatcher.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;

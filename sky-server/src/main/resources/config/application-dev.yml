@@ -4,6 +4,9 @@ spring:
     url: jdbc:hsqldb:mem:sky
   jpa:
     database-platform: org.hibernate.dialect.HSQLDialect
+sky:
+  curator:
+    connections: localhost:32181
 
 logging.level:
   com.sky: TRACE

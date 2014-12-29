@@ -1,6 +1,6 @@
 package com.sky.server.service;
 
-import com.sky.server.mvc.model.Project;
+import com.sky.commons.model.Project;
 import com.sky.server.mvc.repository.ProjectRepository;
 import org.eclipse.egit.github.core.Repository;
 import org.springframework.beans.factory.annotation.Autowired;

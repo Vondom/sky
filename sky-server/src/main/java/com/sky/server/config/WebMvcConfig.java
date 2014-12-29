@@ -26,6 +26,7 @@ import java.util.List;
  */
 @Configuration
 public class WebMvcConfig extends WebMvcAutoConfiguration.WebMvcAutoConfigurationAdapter {
+
   @Autowired
   private AttributeInterceptor attributeInterceptor;
 
@@ -86,7 +87,8 @@ public class WebMvcConfig extends WebMvcAutoConfiguration.WebMvcAutoConfiguratio
   public void addViewControllers(ViewControllerRegistry registry) {
     super.addViewControllers(registry);
 
-    registry.addViewController("/signin").setViewName("/signin");
+    registry.addViewController("/").setViewName("index");
+    registry.addViewController("/signin").setViewName("signin");
     registry.addRedirectViewController("/signout", "/");
   }
 }
