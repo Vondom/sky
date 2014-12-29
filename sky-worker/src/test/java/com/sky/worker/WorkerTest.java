@@ -1,6 +1,5 @@
 package com.sky.worker;
 
-import com.sky.commons.WorkerControlService;
 import com.sky.commons.model.ExecutionUnit;
 import com.sky.commons.model.Work;
 import com.sky.worker.domain.WorkRepository;

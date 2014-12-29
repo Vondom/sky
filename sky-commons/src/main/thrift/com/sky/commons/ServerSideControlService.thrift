@@ -31,9 +31,3 @@ struct MethodProfile {
 service AgentControlService {
   oneway void put(1:MethodProfile methodProfile)
 }
-
-service WorkerControlService {
-  i64 add(1: string address, 2: i32 port),
-  void done(1: i64 workerId, 2: i64 workId),
-  void remove(1: i64 id)
-}
