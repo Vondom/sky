@@ -5,8 +5,6 @@ import com.sky.commons.model.MethodLog;
 import com.sky.commons.model.Work;
 import com.sky.server.mvc.repository.WorkRepository;
 import com.sky.server.service.TaskDistributedQueue;
-import com.sky.server.service.WorkerService;
-import org.apache.thrift.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,8 +50,7 @@ public class WorkController {
     return work;
   }
 
-
-  @RequestMapping(value = "/{id}/methodLogs", method = RequestMethod.GET)
+  @RequestMapping(value = "/{id}/method-logs", method = RequestMethod.GET)
   @Transactional(readOnly = true)
   public Collection<MethodLog> getMethodLogs(@PathVariable long id) {
     Collection<MethodLog> methodLogs = get(id).getMethodLogs();
@@ -76,11 +73,5 @@ public class WorkController {
   @RequestMapping(value = "/{id}/execution-unit", method = RequestMethod.GET)
   public ExecutionUnit getExecutionUnit(@PathVariable long id) {
     return workRepository.findOne(id).getExecutionUnit();
-  }
-
-  @ExceptionHandler({TException.class})
-  @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-  public void handleTException(TException e) {
-    logger.error(e.getMessage(), e);
   }
 }

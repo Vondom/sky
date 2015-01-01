@@ -26,8 +26,8 @@ public class Work {
   @ManyToOne
   private Worker worker;
 
-  @OneToMany
-  @OrderBy("ordering ASC")
+  @OneToMany(mappedBy = "work", cascade = CascadeType.ALL)
+  @OrderBy("startTime ASC")
   private List<MethodLog> methodLogs = new ArrayList<MethodLog>();
 
   public Worker getWorker() {

@@ -18,7 +18,7 @@ sky.app.controller("ProfileCtrl", function ($scope, $http, $element, $sce) {
         return result;
       };
 
-  $http.get(sky.API_WORK_URL + "/" + workId + "/methodLogs")
+  $http.get(sky.API_WORK_URL + "/" + workId + "/method-logs")
       .success(function (methodLogs) {
         $scope.methodLogs = methodLogs;
         console.debug(methodLogs);

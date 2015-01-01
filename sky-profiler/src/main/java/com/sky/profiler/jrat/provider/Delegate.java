@@ -1,6 +1,5 @@
 package com.sky.profiler.jrat.provider;
 
-import org.apache.thrift.TException;
 import org.shiftone.jrat.core.MethodKey;
 import org.shiftone.jrat.util.Assert;
 
@@ -18,6 +17,7 @@ public class Delegate {
 
   private final TreeMethodHandlerFactory factory;
   private TreeNode currentNode;
+  private long startTime;
 
   public Delegate(TreeMethodHandlerFactory factory) {
     Assert.assertNotNull(factory);
@@ -26,16 +26,13 @@ public class Delegate {
   }
 
   public final void onMethodStart(MethodKey methodKey) {
+    this.startTime = System.currentTimeMillis();
     currentNode = currentNode.getChild(factory, methodKey);
     currentNode.getAccumulator().onMethodStart();
   }
 
   public final void onMethodFinish(MethodKey methodKey, long duration, boolean success) {
-    try {
-      factory.getCollector().put(factory.createMethodProfile(currentNode, duration, Thread.currentThread().getName(), System.currentTimeMillis()));
-    } catch (TException e) {
-      e.printStackTrace();
-    }
+    factory.putMethodLog(factory.createMethodProfile(currentNode, duration, Thread.currentThread().getName(), this.startTime));
 
     currentNode.getAccumulator().onMethodFinish(duration, success);
     currentNode = currentNode.getParentNode();

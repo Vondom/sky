@@ -1,11 +1,10 @@
 package com.sky.profiler.jrat.provider;
 
-import com.sky.commons.*;
-import com.sky.profiler.api.SkyAPI;
-import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.protocol.TMultiplexedProtocol;
-import org.apache.thrift.transport.THttpClient;
-import org.apache.thrift.transport.TTransportException;
+import com.sky.commons.model.ClassKey;
+import com.sky.commons.model.MethodLog;
+import com.sky.commons.model.Work;
+import com.sky.profiler.Keys;
+import com.sky.profiler.rest.MethodLogSender;
 import org.shiftone.jrat.core.MethodKey;
 import org.shiftone.jrat.core.spi.AbstractMethodHandlerFactory;
 import org.shiftone.jrat.core.spi.MethodHandler;
@@ -31,16 +30,14 @@ public class TreeMethodHandlerFactory extends AbstractMethodHandlerFactory imple
   private final DelegateThreadLocal delegateThreadLocal = new DelegateThreadLocal(this);
   private final List<TreeNode> treeNodes = new ArrayList<TreeNode>();
 
-  private AgentControlService.Iface collector;
+  private final MethodLogSender sender;
+
   private long workId;
 
-  public TreeMethodHandlerFactory() throws TTransportException, IOException {
+  public TreeMethodHandlerFactory() throws IOException {
     super();
 
-    THttpClient httpClient = new THttpClient(SkyAPI.SKY_SERVER_URL);
-    httpClient.setConnectTimeout(Integer.MAX_VALUE);
-    httpClient.setReadTimeout(Integer.MAX_VALUE);
-    collector = new AgentControlService.Client(new TMultiplexedProtocol(new TBinaryProtocol(httpClient), "agent-control"));
+    sender = new MethodLogSender();
   }
 
   @Override
@@ -48,12 +45,12 @@ public class TreeMethodHandlerFactory extends AbstractMethodHandlerFactory imple
     LOG.info("new");
     super.startup(context);
 
-//    collector.start();
+    sender.start();
   }
 
   @Override
   public void shutdown() {
-//    collector.finish();
+    sender.finish();
   }
 
   @Override
@@ -71,19 +68,17 @@ public class TreeMethodHandlerFactory extends AbstractMethodHandlerFactory imple
     return newNode;
   }
 
-  public KThrowable createKThrowable(Throwable throwable) {
-    return new KThrowable()
-        .setClassKey(createKClass(throwable.getClass().getPackage().getName(), throwable.getClass().getSimpleName()))
-        .setMessage(throwable.getMessage());
+  public com.sky.commons.model.MethodKey createKMethod(MethodKey methodKey) {
+    com.sky.commons.model.MethodKey mk = new com.sky.commons.model.MethodKey();
+    mk.setClassKey(createKClass(methodKey.getClassName(), methodKey.getPackageName()));
+    mk.setName(methodKey.getMethodName());
+    mk.setSignature(methodKey.getSignature());
+
+    return mk;
   }
 
-  public KMethod createKMethod(MethodKey methodKey) {
-    return new KMethod(createKClass(methodKey.getPackageName(), methodKey.getClassName()),
-        methodKey.getMethodName(), methodKey.getSignature());
-  }
-
-  public KClass createKClass(String packageName, String className) {
-    return new KClass(packageName, className);
+  public ClassKey createKClass(String packageName, String className) {
+    return new ClassKey(packageName, className);
   }
 
 
@@ -123,18 +118,26 @@ public class TreeMethodHandlerFactory extends AbstractMethodHandlerFactory imple
     return workId;
   }
 
-  public AgentControlService.Iface getCollector() {
-    return collector;
+  public synchronized MethodLog createMethodProfile(TreeNode currentNode, long duration, String threadName, long startTime) {
+    Work work = new Work();
+    work.setId(workId);
+
+    int ordering = 0;
+    for (TreeNode node = currentNode; !node.isRootNode(); node = node.getParentNode(), ++ordering);
+
+    MethodLog methodLog = new MethodLog();
+    methodLog.setOrdering(ordering);
+    methodLog.setCaller(currentNode.getParentNode().getMethodKey() == null ? null : this.createKMethod(currentNode.getParentNode().getMethodKey()));
+    methodLog.setMethodKey(this.createKMethod(currentNode.getMethodKey()));
+    methodLog.setElapsedTime(duration);
+    methodLog.setThreadName(threadName);
+    methodLog.setStartTime(startTime);
+    methodLog.setWork(work);
+
+    return methodLog;
   }
 
-  public synchronized MethodProfile createMethodProfile(TreeNode currentNode, long duration, String threadName, long time) {
-    return new MethodProfile().setWorkId(this.getWorkId())
-        .setIndex(this.getTreeNodes().indexOf(currentNode))
-        .setCaller(currentNode.getParentNode().getMethodKey() == null ? null : this.createKMethod(currentNode.getParentNode().getMethodKey()))
-        .setCallee(this.createKMethod(currentNode.getMethodKey()))
-        .setElapsedTime(duration)
-        .setThreadName(threadName)
-        .setThrowable(null)
-        .setTimestamp(time);
+  public void putMethodLog(MethodLog methodLog) {
+    this.sender.send(System.getProperty(Keys.SERVER_CONNECTION_KEY) + "/api/method-log", methodLog);
   }
 }

@@ -21,6 +21,7 @@ public class Processor {
 
   public Process process(long workId, String path, String arguments) throws IOException {
     List<String> processes = Arrays.asList("java",
+        "-Dsky.profiler.server-connection="+properties.getServerConnection(),
         String.format("-Dsky.profiler.config=%s/download/config/%d", properties.getServerConnection(), workId),
         "-javaagent:"+ SkyWorker.PROFILER_PATH,
         "-jar",
@@ -35,6 +36,7 @@ public class Processor {
 
   public Process process(long workId, String path, String mainClassName, String arguments) throws IOException {
     List<String> processes = Arrays.asList("java",
+        "-Dsky.profiler.server-connection="+properties.getServerConnection(),
         String.format("-Dsky.profiler.config=%s/download/config/%d", properties.getServerConnection(), workId),
         "-javaagent:"+ SkyWorker.PROFILER_PATH,
         "-cp",

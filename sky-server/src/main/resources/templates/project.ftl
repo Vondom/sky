@@ -154,12 +154,12 @@
               <div class="modal-body">
                 <div class="form-group">
                   <label for="inputName">Name</label>
-                  <input ng-model="tempProject.name" name="name" type="text" class="form-control" id="inputName"
+                  <input ng-model="tempProject.name" name="name" type="text" class="form-control floating-label" id="inputName"
                          placeholder="Name">
                 </div>
                 <div class="form-group">
                   <label for="inputDescription">Description</label>
-                  <input ng-model="tempProject.description" name="description" type="text" class="form-control" id="inputDescription"
+                  <input ng-model="tempProject.description" name="description" type="text" class="form-control floating-label" id="inputDescription"
                          placeholder="Description">
                 </div>
               </div>

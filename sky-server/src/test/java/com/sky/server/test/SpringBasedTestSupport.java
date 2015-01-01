@@ -31,43 +31,4 @@ public abstract class SpringBasedTestSupport {
   @Autowired
   protected EntityManager em;
 
-  @Autowired
-  protected ClassKeyRepository classKeyRepository;
-
-  @Autowired
-  protected MethodKeyRepository methodKeyRepository;
-
-  protected ClassKey mockClassKey;
-  protected MethodKey mockMethodKey;
-
-  @Rule
-  public TestWatcher dbRule = new TestWatcher() {
-
-    @Override
-    protected void starting(Description description) {
-
-      ClassKey classKey = new ClassKey();
-      classKey.setPackageName("org.test");
-      classKey.setName("TesterClass");
-      classKey = classKeyRepository.save(classKey);
-
-      MethodKey methodKey = new MethodKey();
-      methodKey.setSignature("V(Ljava/lang/Object;)");
-      methodKey.setName("test");
-      methodKey.setClassKey(classKey);
-      methodKey = methodKeyRepository.save(methodKey);
-
-      mockClassKey = classKey;
-      mockMethodKey = methodKey;
-    }
-
-    @Override
-    protected void finished(Description description) {
-      methodKeyRepository.deleteAll();
-      classKeyRepository.deleteAll();
-
-      mockClassKey = null;
-      mockMethodKey = null;
-    }
-  };
 }

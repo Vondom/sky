@@ -20,7 +20,7 @@ Sky Engine is performance analysis tool based web service. This tool analyze you
   * detach sky pom.xml from spring-boot-parent pom.xml
   * add sky-server unit-test for javascript files using angularjs
   * ~~create distributed sky-worker servers using zookeeper or message queueing (use apache curator framework)~~
-  * network communication using thrift replace with pure RESTFul protocol
+  * ~~network communication using thrift replace with pure RESTFul protocol~~
 * Bug fixes
   * ~~missing data as profiling log~~
 * New features

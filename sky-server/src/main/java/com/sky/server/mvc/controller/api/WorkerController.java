@@ -2,7 +2,6 @@ package com.sky.server.mvc.controller.api;
 
 import com.sky.commons.model.Worker;
 import com.sky.server.mvc.repository.WorkerRepository;
-import com.sky.server.service.WorkerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

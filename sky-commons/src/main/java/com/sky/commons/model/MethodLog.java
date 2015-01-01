@@ -1,9 +1,8 @@
 package com.sky.commons.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 
 /**
  * Created by jcooky on 2014. 7. 4..
@@ -26,6 +25,9 @@ public class MethodLog {
   @ManyToOne
   private MethodKey caller;
   private long totalElapsedTime;
+
+  @ManyToOne
+  private Work work;
 
   public Long getId() {
     return id;
@@ -89,5 +91,13 @@ public class MethodLog {
 
   public long getTotalElapsedTime() {
     return totalElapsedTime;
+  }
+
+  public Work getWork() {
+    return work;
+  }
+
+  public void setWork(Work work) {
+    this.work = work;
   }
 }
