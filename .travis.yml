@@ -1,16 +1,17 @@
 language: java
+
 jdk:
   - oraclejdk7
+  - oraclejdk8
   
 os:
   - linux
-  
-install: /bin/true
-  
-before_script:
+
+sudo: false
+
+install:
   - "cd tools/jrat; ./gradlew install; cd -"
   - "cd tools/spring-social-github; ./gradlew install; cd -"
-  - "export PATH=`pwd`/tools/travis:$PATH"
 
 script: mvn clean test
 
