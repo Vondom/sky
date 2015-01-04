@@ -1,7 +1,9 @@
 package com.sky.server.mvc.repository;
 
-import com.sky.commons.model.Project;
-import com.sky.commons.model.User;
+import com.sky.commons.domain.Project;
+import com.sky.commons.domain.User;
+import com.sky.server.domain.ProjectRepository;
+import com.sky.server.domain.UserRepository;
 import com.sky.server.test.SpringBasedTestSupport;
 import org.junit.After;
 import org.junit.Test;

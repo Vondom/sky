@@ -1,9 +1,10 @@
 package com.sky.server.mvc.controller.api;
 
-import com.sky.commons.model.Project;
-import com.sky.commons.model.User;
-import com.sky.server.mvc.repository.UserRepository;
+import com.sky.commons.domain.Project;
+import com.sky.commons.domain.User;
+import com.sky.server.domain.UserRepository;
 import com.sky.server.test.SpringBasedTestSupport;
+import com.sky.server.web.rest.UserController;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;

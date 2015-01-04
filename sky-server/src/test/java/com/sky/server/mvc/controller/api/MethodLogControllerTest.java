@@ -1,32 +1,22 @@
 package com.sky.server.mvc.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sky.commons.model.ClassKey;
-import com.sky.commons.model.MethodKey;
-import com.sky.commons.model.MethodLog;
-import com.sky.commons.model.Work;
-import com.sky.server.mvc.repository.WorkRepository;
+import com.sky.commons.domain.ClassKey;
+import com.sky.commons.domain.MethodKey;
+import com.sky.commons.domain.MethodLog;
+import com.sky.commons.domain.Work;
+import com.sky.server.domain.WorkRepository;
 import com.sky.server.test.SpringBasedTestSupport;
-import org.junit.Before;
+import com.sky.server.web.rest.MethodLogController;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.json.JacksonJsonParser;
-import org.springframework.boot.json.JsonParser;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.test.context.TestContext;
-import org.springframework.test.context.transaction.TestContextTransactionUtils;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.interceptor.TransactionAttribute;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;

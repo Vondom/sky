@@ -18,7 +18,7 @@
           <a href="${rc.contextPath}/worker">Worker</a>
         </li>
       </ul>
-      <ul ng-controller="NavSigninCtrl" class="nav navbar-nav navbar-right">
+      <ul id="nav-right" ng-controller="NavSigninCtrl" class="nav navbar-nav navbar-right">
         <li class="{{isSigned ? 'hide' : 'show'}}">
           <form id="form-signin" action="${rc.contextPath}/signin/github" method="POST">
             <button type="submit" class="navbar-btn btn btn-social btn-github">
@@ -27,8 +27,12 @@
             <input type="hidden" name="scope" value="user,read:org,repo"/>
           </form>
         </li>
-        <li class="{{isSigned ? 'show' : 'hide'}}">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{user.name}} <span class="caret"></span></a>
+        <li id="signed" class="{{isSigned ? 'show' : 'hide'}}">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            {{user.name}}
+            <img src="{{user.imageUrl}}">
+            <span class="caret"></span>
+          </a>
           <ul class="dropdown-menu" role="menu">
             <li><a href="/signout">SignOut</a></li>
           </ul>

@@ -4,6 +4,8 @@ spring:
     url: jdbc:hsqldb:mem:sky
   jpa:
     database-platform: org.hibernate.dialect.HSQLDialect
+  hibernate:
+      ddl-auto: create-drop
 sky:
   curator:
     connections: localhost:32181

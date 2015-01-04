@@ -1,7 +1,7 @@
 package com.sky.worker;
 
-import com.sky.commons.model.ExecutionUnit;
-import com.sky.commons.model.Work;
+import com.sky.commons.domain.ExecutionUnit;
+import com.sky.commons.domain.Work;
 import com.sky.worker.domain.WorkRepository;
 import com.sky.worker.domain.WorkerRepository;
 import com.sky.worker.service.Processor;
@@ -66,7 +66,7 @@ public class WorkerTest {
     work.setId(10L);
     work.setExecutionUnit(eu);
 
-    com.sky.commons.model.Worker worker = new com.sky.commons.model.Worker();
+    com.sky.commons.domain.Worker worker = new com.sky.commons.domain.Worker();
     worker.setId(11L);
 
     Process process = mock(Process.class);
@@ -81,7 +81,7 @@ public class WorkerTest {
 
     this.worker.doWork(10L);
 
-    verify(workerRepository, times(2)).save(any(com.sky.commons.model.Worker.class));
+    verify(workerRepository, times(2)).save(any(com.sky.commons.domain.Worker.class));
     verify(workRepository).findOne(eq(10L));
     verify(processor).process(eq(work.getId()), anyString(), eq(eu.getArguments()));
     verify(process).getErrorStream();

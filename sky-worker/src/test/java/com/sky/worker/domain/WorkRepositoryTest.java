@@ -1,16 +1,13 @@
 package com.sky.worker.domain;
 
-import com.sky.commons.model.ExecutionUnit;
-import com.sky.commons.model.Work;
-import com.sky.commons.model.Worker;
+import com.sky.commons.domain.ExecutionUnit;
+import com.sky.commons.domain.Work;
 import com.sky.worker.config.SkyWorkerConfigProperties;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.core.env.Environment;
 import org.springframework.web.client.RestTemplate;
 
 import static org.hamcrest.CoreMatchers.is;

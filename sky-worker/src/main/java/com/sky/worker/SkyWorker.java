@@ -1,8 +1,5 @@
 package com.sky.worker;
 
-import com.sky.commons.model.Work;
-import com.sky.worker.config.SkyWorkerConfigProperties;
-import com.sky.worker.domain.WorkRepository;
 import com.sky.worker.domain.WorkerRepository;
 import com.sky.worker.service.TaskDistributedQueue;
 import com.sky.worker.service.Worker;
@@ -12,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.actuate.system.ApplicationPidListener;
+import org.springframework.boot.actuate.system.ApplicationPidFileWriter;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.ComponentScan;
@@ -81,7 +78,7 @@ public class SkyWorker implements CommandLineRunner {
   }
 
   private void startWorker() {
-    com.sky.commons.model.Worker worker = new com.sky.commons.model.Worker();
+    com.sky.commons.domain.Worker worker = new com.sky.commons.domain.Worker();
     worker = workerRepository.save(worker);
     this.worker.setId(worker.getId());
     this.startLoop = true;
@@ -100,7 +97,7 @@ public class SkyWorker implements CommandLineRunner {
         .web(false)
         .addCommandLineProperties(false)
         .sources(SkyWorker.class)
-        .listeners(new ApplicationPidListener("sky-worker.pid"))
+        .listeners(new ApplicationPidFileWriter("sky-worker.pid"))
         .run(args);
   }
 }

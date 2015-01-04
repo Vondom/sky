@@ -1,6 +1,7 @@
 package com.sky.server.mvc.controller;
 
 import com.sky.server.test.SpringBasedTestSupport;
+import com.sky.server.web.DownloadController;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

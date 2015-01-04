@@ -1,9 +1,7 @@
 package com.sky.worker.domain;
 
-import com.sky.commons.model.Worker;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.sky.commons.domain.Worker;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * Created by JCooky on 14. 12. 29..

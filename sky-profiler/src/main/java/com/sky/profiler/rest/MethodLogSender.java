@@ -1,6 +1,6 @@
 package com.sky.profiler.rest;
 
-import com.sky.commons.model.MethodLog;
+import com.sky.commons.domain.MethodLog;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.BlockingQueue;

@@ -12,7 +12,6 @@ spring:
     generate-ddl: true
   hibernate:
     ddl-auto: update
-    naming_strategy: com.sky.server.config.hibernate.PrefixedNamingStrategy
   social.github:
     appId: dd1c3e0040b33db36c35
     appSecret: 87fc2c47acdd073908fc1c1a76cee50d23877c0e

@@ -1,8 +1,8 @@
 package com.sky.server.config;
 
-import com.sky.server.social.user.SecurityContext;
-import com.sky.server.social.user.SimpleConnectionSignUp;
-import com.sky.server.social.user.SimpleSignInAdapter;
+import com.sky.server.config.social.user.SecurityContext;
+import com.sky.server.config.social.user.SimpleConnectionSignUp;
+import com.sky.server.config.social.user.SimpleSignInAdapter;
 import org.eclipse.egit.github.core.client.GitHubClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

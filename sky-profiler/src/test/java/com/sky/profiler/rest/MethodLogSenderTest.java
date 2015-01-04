@@ -1,7 +1,6 @@
 package com.sky.profiler.rest;
 
-import com.sky.commons.model.MethodLog;
-import com.sky.profiler.rest.MethodLogSender;
+import com.sky.commons.domain.MethodLog;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;

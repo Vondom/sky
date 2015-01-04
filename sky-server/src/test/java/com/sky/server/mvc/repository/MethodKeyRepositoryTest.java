@@ -1,7 +1,9 @@
 package com.sky.server.mvc.repository;
 
-import com.sky.commons.model.ClassKey;
-import com.sky.commons.model.MethodKey;
+import com.sky.commons.domain.ClassKey;
+import com.sky.commons.domain.MethodKey;
+import com.sky.server.domain.ClassKeyRepository;
+import com.sky.server.domain.MethodKeyRepository;
 import com.sky.server.test.SpringBasedTestSupport;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

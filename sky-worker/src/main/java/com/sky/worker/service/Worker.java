@@ -1,7 +1,7 @@
 package com.sky.worker.service;
 
-import com.sky.commons.model.ExecutionUnit;
-import com.sky.commons.model.Work;
+import com.sky.commons.domain.ExecutionUnit;
+import com.sky.commons.domain.Work;
 import com.sky.worker.domain.WorkRepository;
 import com.sky.worker.domain.WorkerRepository;
 import com.sky.worker.exception.WorkingException;
@@ -38,8 +38,8 @@ public class Worker {
     return id;
   }
 
-  private void changeStatus(com.sky.commons.model.Worker.State state) {
-    com.sky.commons.model.Worker worker = workerRepository.findOne(id);
+  private void changeStatus(com.sky.commons.domain.Worker.State state) {
+    com.sky.commons.domain.Worker worker = workerRepository.findOne(id);
     worker.setState(state);
     workerRepository.save(worker);
   }
@@ -52,7 +52,7 @@ public class Worker {
     try {
 
       file = setup(eu.getJarFile(), eu.getJarFileName());
-      changeStatus(com.sky.commons.model.Worker.State.WORKING);
+      changeStatus(com.sky.commons.domain.Worker.State.WORKING);
 
       Process process = processor.process(work.getId(), file.getAbsolutePath(), eu.getArguments());
       IOUtils.copy(process.getInputStream(), System.out);
@@ -71,7 +71,7 @@ public class Worker {
         String path = file != null ? file.getAbsolutePath() : "";
         logger.error("FAILED file deletion: {}", path);
       }
-      changeStatus(com.sky.commons.model.Worker.State.IDLE);
+      changeStatus(com.sky.commons.domain.Worker.State.IDLE);
     }
   }
 

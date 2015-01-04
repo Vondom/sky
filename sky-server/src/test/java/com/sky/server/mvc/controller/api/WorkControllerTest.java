@@ -1,8 +1,9 @@
 package com.sky.server.mvc.controller.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sky.commons.model.Work;
+import com.sky.commons.domain.Work;
 import com.sky.server.test.SpringBasedTestSupport;
+import com.sky.server.web.rest.WorkController;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;

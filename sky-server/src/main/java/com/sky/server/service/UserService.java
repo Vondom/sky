@@ -1,7 +1,7 @@
 package com.sky.server.service;
 
-import com.sky.commons.model.User;
-import com.sky.server.mvc.repository.UserRepository;
+import com.sky.commons.domain.User;
+import com.sky.server.domain.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,13 +1,6 @@
 package com.sky.server.test;
 
 import com.sky.server.SkyServer;
-import com.sky.commons.model.ClassKey;
-import com.sky.commons.model.MethodKey;
-import com.sky.server.mvc.repository.ClassKeyRepository;
-import com.sky.server.mvc.repository.MethodKeyRepository;
-import org.junit.Rule;
-import org.junit.rules.TestWatcher;
-import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.IntegrationTest;

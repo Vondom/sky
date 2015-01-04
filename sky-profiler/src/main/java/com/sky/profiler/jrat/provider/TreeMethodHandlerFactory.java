@@ -1,8 +1,8 @@
 package com.sky.profiler.jrat.provider;
 
-import com.sky.commons.model.ClassKey;
-import com.sky.commons.model.MethodLog;
-import com.sky.commons.model.Work;
+import com.sky.commons.domain.ClassKey;
+import com.sky.commons.domain.MethodLog;
+import com.sky.commons.domain.Work;
 import com.sky.profiler.Keys;
 import com.sky.profiler.rest.MethodLogSender;
 import org.shiftone.jrat.core.MethodKey;
@@ -68,8 +68,8 @@ public class TreeMethodHandlerFactory extends AbstractMethodHandlerFactory imple
     return newNode;
   }
 
-  public com.sky.commons.model.MethodKey createKMethod(MethodKey methodKey) {
-    com.sky.commons.model.MethodKey mk = new com.sky.commons.model.MethodKey();
+  public com.sky.commons.domain.MethodKey createKMethod(MethodKey methodKey) {
+    com.sky.commons.domain.MethodKey mk = new com.sky.commons.domain.MethodKey();
     mk.setClassKey(createKClass(methodKey.getClassName(), methodKey.getPackageName()));
     mk.setName(methodKey.getMethodName());
     mk.setSignature(methodKey.getSignature());

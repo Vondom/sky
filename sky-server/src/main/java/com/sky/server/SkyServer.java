@@ -10,6 +10,8 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * Created by jcooky on 2014. 6. 16..
@@ -18,6 +20,8 @@ import org.springframework.core.env.Environment;
 @EnableAutoConfiguration
 @ComponentScan({"com.sky.server", "com.sky.commons"})
 @EntityScan({"com.sky.server", "com.sky.commons"})
+@EnableScheduling
+@EnableAsync
 public class SkyServer {
 
   @Bean(destroyMethod = "close", initMethod = "start")

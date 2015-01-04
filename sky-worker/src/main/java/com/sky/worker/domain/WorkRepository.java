@@ -1,11 +1,8 @@
 package com.sky.worker.domain;
 
-import com.sky.commons.model.ExecutionUnit;
-import com.sky.commons.model.Work;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
+import com.sky.commons.domain.ExecutionUnit;
+import com.sky.commons.domain.Work;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.client.RestTemplate;
 
 /**
  * Created by JCooky on 14. 12. 29..
