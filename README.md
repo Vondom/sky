@@ -21,6 +21,7 @@ Sky Engine is performance analysis tool based web service. This tool analyze you
   * add sky-server unit-test for javascript files using angularjs
   * ~~create distributed sky-worker servers using zookeeper or message queueing (use apache curator framework)~~
   * ~~network communication using thrift replace with pure RESTFul protocol~~
+  * change build script from maven to gradle
 * Bug fixes
   * ~~missing data as profiling log~~
 * New features
