@@ -5,7 +5,8 @@
 	<parent>
 		<artifactId>sky</artifactId>
 		<groupId>sky</groupId>
-		<version>${sky-version}</version>
+		<version>0.2-SNAPSHOT</version>
+		<relativePath>..</relativePath>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
