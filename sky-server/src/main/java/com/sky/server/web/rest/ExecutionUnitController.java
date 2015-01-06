@@ -35,7 +35,7 @@ public class ExecutionUnitController {
   }
 
   @RequestMapping(method = RequestMethod.GET)
-  public List<ExecutionUnit> list() {
+  public List<ExecutionUnit> get() {
     return executionUnitRepository.findAll();
   }
 
