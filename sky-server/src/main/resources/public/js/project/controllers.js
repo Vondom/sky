@@ -2,44 +2,64 @@ sky.app.controller("ProjectCtrl", function ($scope, $http, $element) {
   var $projects = $element,
       userId = $projects.data('user-id'),
       generateFunkyName = sky.utils.haiku,
-      removeDuplicate = function (projects, repos) {
-        _.forEach(repos, function (repo, i) {
-          if(_.find(projects, function (prj) { return prj.name == repo.name; })) {
-            repos.slice(i, 1);
-          }
-        });
-      };
+      gh = new Octokit({
+        token: sky.ACCESS_TOKEN
+      }),
+      trx = new sky.Transaction(2, function () {
+        if (!_.isUndefined($scope.githubProjects)) {
+          _.forEach($scope.githubProjects, function (org) {
+            _.forEach(org.repos, function (repo, i) {
+              if(_.find($scope.projects, function (prj) { return prj.name == repo.name; })) {
+                org.repos.slice(i, 1);
+              }
+            });
+          });
+        }
+
+        $scope.$apply();
+      });
+
+  $http.get(sky.API_USER_URL + "/" + userId)
+      .success(function (user) {
+        var _trx = new sky.Transaction(2, trx),
+            ghUser = gh.getUser(user.name);
+
+        $scope.githubProjects = [];
+
+        ghUser.getRepos()
+            .then(function (repos) {
+              $scope.githubProjects.push({
+                name: user.name,
+                repos: repos
+              });
+              _trx.commit();
+            });
+
+        ghUser.getOrgs()
+            .then(function (orgs) {
+              var __trx = new sky.Transaction(orgs.length, _trx);
+              _.forEach(orgs, function (org) {
+                gh.getOrgRepos(org.login)
+                    .then(function (repos) {
+                      $scope.githubProjects.push({
+                        name: org.login,
+                        repos: repos
+                      });
+                      __trx.commit();
+                    });
+              });
+            });
+      });
 
   $http.get(sky.API_USER_URL + "/" + userId + "/projects")
       .success(function (data) {
         $scope.projects = data;
 
-       if (!_.isUndefined($scope.githubProjects)) {
-         _.forEach($scope.githubProjects, function (collection, i) {
-           removeDuplicate(data, collection.repos);
-         });
-       }
-      })
-      .error(function (data, status) {
-        console.error(status + ": " + data);
-      });
 
-  $http.get(sky.API_USER_URL + "/" + userId + "/github/repositories")
-      .success(function (data) {
-        $scope.githubProjects = [];
-        _.forEach(data, function (repos, org) {
-          if (!_.isUndefined($scope.projects)) {
-            removeDuplicate($scope.projects, repos);
-          }
-
-          $scope.githubProjects.push({
-            name: org,
-            repos: repos
-          });
-        });
+        trx.commit();
       })
-      .error(function (message, status) {
-        console.error(status + ": " + message);
+      .error(function (message) {
+        console.error(message);
       });
 
   $scope.tempProject = {

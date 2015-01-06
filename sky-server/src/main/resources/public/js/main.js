@@ -64,7 +64,3 @@ sky.utils.haiku = function() {
   rnd = Math.floor(Math.random() * Math.pow(2, 12));
   return "" + adjs[rnd >> 6 % 64] + "-" + nouns[rnd % 64] + "-" + Math.floor(Math.random() * 10000);
 };
-
-$(function () {
-  $.material.init();
-});
