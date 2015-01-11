@@ -117,6 +117,39 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.gmaven</groupId>
+				<artifactId>groovy-maven-plugin</artifactId>
+				<dependencies>
+					<dependency>
+						<groupId>org.codehaus.groovy</groupId>
+						<artifactId>groovy-all</artifactId>
+						<version>2.3.9</version>
+					</dependency>
+					<dependency>
+						<groupId>commons-io</groupId>
+						<artifactId>commons-io</artifactId>
+						<version>2.4</version>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<goals>
+							<goal>execute</goal>
+						</goals>
+						<phase>package</phase>
+						<configuration>
+							<source>
+								import org.apache.commons.io.FileUtils;
+
+
+								FileUtils.copyFile(new File("${basedir}/target/${project.build.finalName}.jar"),
+										new File("${basedir}/../sky-worker/src/main/resources/${project.build.finalName}.jar"));
+							</source>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 
