@@ -39,11 +39,6 @@ public class ExecutionUnitController {
     return executionUnitRepository.findAll();
   }
 
-  @RequestMapping(value = "/account/{account}/project/{projectName}/branch/{branchName}", method = RequestMethod.GET)
-  public List<ExecutionUnit> get(@PathVariable String account, @PathVariable String projectName, @PathVariable String branchName) {
-    return executionUnitRepository.findByAccountAndProjectNameAndBranchName(account, projectName, branchName);
-  }
-
   @RequestMapping(value = "/{id}", method = RequestMethod.GET)
   public ExecutionUnit get(@PathVariable long id) {
     return executionUnitRepository.findOne(id);
