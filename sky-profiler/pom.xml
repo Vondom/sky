@@ -100,24 +100,6 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<phase>package</phase>
-						<configuration>
-							<target>
-								<copyfile src="${basedir}/target/${project.build.finalName}.jar"
-								          dest="${basedir}/../sky-worker/src/main/resources/${project.build.finalName}.jar"
-								          forceoverwrite="true"/>
-							</target>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>org.codehaus.gmaven</groupId>
 				<artifactId>groovy-maven-plugin</artifactId>
 				<dependencies>
