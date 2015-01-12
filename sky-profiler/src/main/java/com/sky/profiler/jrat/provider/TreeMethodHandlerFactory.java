@@ -122,11 +122,9 @@ public class TreeMethodHandlerFactory extends AbstractMethodHandlerFactory imple
     Work work = new Work();
     work.setId(workId);
 
-    int ordering = 0;
-    for (TreeNode node = currentNode; !node.isRootNode(); node = node.getParentNode(), ++ordering);
 
     MethodLog methodLog = new MethodLog();
-    methodLog.setOrdering(ordering);
+    methodLog.setOrdering(currentNode.getDepth());
     methodLog.setCaller(currentNode.getParentNode().getMethodKey() == null ? null : this.createKMethod(currentNode.getParentNode().getMethodKey()));
     methodLog.setMethodKey(this.createKMethod(currentNode.getMethodKey()));
     methodLog.setElapsedTime(duration);

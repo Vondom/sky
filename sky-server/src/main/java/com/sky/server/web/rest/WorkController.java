@@ -4,11 +4,13 @@ import com.sky.commons.domain.ExecutionUnit;
 import com.sky.commons.domain.MethodLog;
 import com.sky.commons.domain.Work;
 import com.sky.server.domain.WorkRepository;
+import com.sky.server.exception.NotFoundException;
 import com.sky.server.service.TaskDistributedQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +36,7 @@ public class WorkController {
 
   @RequestMapping(method = RequestMethod.POST)
   @Transactional
+  @ResponseStatus(HttpStatus.CREATED)
   public Work create(@RequestBody Work work) throws Exception {
 
 //    if (ArrayUtils.contains(env.getActiveProfiles(), "dev"))
@@ -48,6 +51,17 @@ public class WorkController {
 
     return work;
   }
+
+  @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+  @Transactional
+  @ResponseStatus(HttpStatus.OK)
+  public void update(@PathVariable long id, @RequestBody Work work) throws Exception {
+    if (!workRepository.exists(id))
+      throw new NotFoundException();
+    work.setId(id);
+    workRepository.save(work);
+  }
+
 
   @RequestMapping(value = "/{id}/method-logs", method = RequestMethod.GET)
   @Transactional(readOnly = true)

@@ -1,5 +1,7 @@
 package com.sky.commons.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,6 +22,7 @@ public class Worker {
   private State state = State.IDLE;
 
   @OneToMany(mappedBy = "worker", cascade = CascadeType.ALL)
+  @JsonIgnore
   private List<Work> works = new ArrayList<Work>();
 
   public long getId() {

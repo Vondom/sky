@@ -1,6 +1,7 @@
 package com.sky.worker.service;
 
 import com.sky.commons.domain.ExecutionUnit;
+import com.sky.commons.domain.MethodLog;
 import com.sky.commons.domain.Work;
 import com.sky.worker.domain.WorkRepository;
 import com.sky.worker.domain.WorkerRepository;
@@ -44,6 +45,29 @@ public class Worker {
     workerRepository.save(worker);
   }
 
+  private void start() {
+    changeStatus(com.sky.commons.domain.Worker.State.WORKING);
+  }
+
+  private void finish(Work work) {
+    changeStatus(com.sky.commons.domain.Worker.State.IDLE);
+
+    MethodLog[] methodLogs = workRepository.findMethodLogs(work.getId());
+
+    long sum = 0, mostLongTime = Long.MIN_VALUE;
+    for (MethodLog methodLog : methodLogs) {
+      long t = methodLog.getElapsedTime();
+      sum += t;
+      if (mostLongTime < t)
+        mostLongTime = t;
+    }
+    work.setAverageTime((double)sum/(double)methodLogs.length);
+    work.setMostLongTime(mostLongTime);
+    work.setFinished(true);
+
+    workRepository.update(work);
+  }
+
   public void doWork(long workId) throws WorkingException {
     Work work = workRepository.findOne(workId);
     ExecutionUnit eu = workRepository.findExecutionUnitById(workId);
@@ -52,7 +76,7 @@ public class Worker {
     try {
 
       file = setup(eu.getJarFile(), eu.getJarFileName());
-      changeStatus(com.sky.commons.domain.Worker.State.WORKING);
+      start();
 
       Process process = processor.process(work.getId(), file.getAbsolutePath(), eu.getArguments());
       IOUtils.copy(process.getInputStream(), System.out);
@@ -71,7 +95,7 @@ public class Worker {
         String path = file != null ? file.getAbsolutePath() : "";
         logger.error("FAILED file deletion: {}", path);
       }
-      changeStatus(com.sky.commons.domain.Worker.State.IDLE);
+      finish(work);
     }
   }
 

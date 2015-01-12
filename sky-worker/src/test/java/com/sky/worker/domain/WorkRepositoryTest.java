@@ -37,18 +37,17 @@ public class WorkRepositoryTest {
   }
 
   @Test
-  public void testSave() throws Exception {
+  public void testUpdate() throws Exception {
     Work work = new Work();
     work.setId(11L);
 
-    doReturn(work).when(restTemplate).postForObject(eq(path + "/api/work"), eq(work), eq(Work.class));
+    doReturn(work).when(restTemplate).put(eq(path + "/api/work/{id}"), eq(work), work.getId());
 
-    Work returnedWork = workRepository.save(work);
+    workRepository.update(work);
 
     assertThat(work, is(notNullValue()));
-    assertThat(returnedWork, is(work));
 
-    verify(restTemplate).postForObject(eq(path + "/api/work"), eq(work), eq(Work.class));
+    verify(restTemplate).put(eq(path + "/api/work/{id}"), eq(work), work.getId());
   }
 
 

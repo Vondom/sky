@@ -26,7 +26,7 @@ public class Delegate {
   }
 
   public final void onMethodStart(MethodKey methodKey) {
-    this.startTime = System.currentTimeMillis();
+    this.startTime = System.nanoTime();
     currentNode = currentNode.getChild(factory, methodKey);
     currentNode.getAccumulator().onMethodStart();
   }

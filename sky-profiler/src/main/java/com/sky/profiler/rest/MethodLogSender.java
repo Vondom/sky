@@ -20,7 +20,7 @@ public class MethodLogSender {
     this.thread = new Thread("sender-thread") {
       public void run() {
         try {
-          while (!stop) {
+          while (!stop || !q.isEmpty()) {
             QueueData data = q.take();
             restTemplate.postForObject(data.getUri(), data.getMethodLog(), MethodLog.class, data.getUriVariables());
           }

@@ -26,6 +26,7 @@ public class TreeNode implements Externalizable {
   protected TreeNode parent;
   private Accumulator accumulator;
   protected final Map<MethodKey, TreeNode> children = new HashMap<MethodKey, TreeNode>(5);
+  private int depth;
 //  private MethodProfile methodProfile = new MethodProfile();
 
   @Override
@@ -43,6 +44,7 @@ public class TreeNode implements Externalizable {
     for (TreeNode child : children) {
       child.writeExternal(out);
     }
+    out.writeInt(depth);
   }
 
   @Override
@@ -57,6 +59,7 @@ public class TreeNode implements Externalizable {
       children.put(child.getMethodKey(), child);
       child.parent = this;
     }
+    depth = in.readInt();
   }
 
   public TreeNode() {
@@ -64,12 +67,14 @@ public class TreeNode implements Externalizable {
     this.methodKey = null;
     this.parent = null;
     this.accumulator = new Accumulator();
+    this.depth = 0;
   }
 
   public TreeNode(MethodKey methodKey, TreeNode treeNode) {
     this.methodKey = methodKey;
     this.parent = treeNode;
     this.accumulator = new Accumulator();
+    this.depth = this.parent.depth + 1;
   }
 
   public List<? extends TreeNode> getChildren() {
@@ -133,4 +138,7 @@ public class TreeNode implements Externalizable {
     return getClass().getSimpleName() + ": " + getMethodKey() + " -> " + getAccumulator();
   }
 
+  public int getDepth() {
+    return depth;
+  }
 }

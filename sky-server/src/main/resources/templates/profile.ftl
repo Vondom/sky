@@ -14,7 +14,7 @@
             <td ng-bind-html="getNameWithTabs(log)">
             </td>
             <td>{{log.methodKey.signature}}</td>
-            <td>{{log.elapsedTime}}ms</td>
+            <td>{{log.elapsedTime}}ns</td>
           </tr>
         </table>
       </div>

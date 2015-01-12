@@ -79,15 +79,15 @@
                           <div class="header row">
                               <#--<h5 class="col-md-5">Id</h5>-->
                             <h5 class="col-md-3">Start Time</h5>
-                            <h5 class="col-md-3">Average Time(ms)</h5>
-                            <h5 class="col-md-3">Most Long Time(ms)</h5>
+                            <h5 class="col-md-3">Average Time(ns)</h5>
+                            <h5 class="col-md-3">Most Long Time(ns)</h5>
                             <h5 class="col-md-3"></h5>
                           </div>
                           <div class="contents row" ng-repeat="work in executionUnit.works">
                               <#--<span class="col-md-5">{{work.id}}</span>-->
                             <div class="col-md-3">{{toDate(work.startTime)}}</div>
-                            <div class="col-md-3">{{work.averageTime}} ms</div>
-                            <div class="col-md-3">{{work.mostLongTime}} ms</div>
+                            <div class="col-md-3">{{work.averageTime}} ns</div>
+                            <div class="col-md-3">{{work.mostLongTime}} ns</div>
                             <div class="col-md-3">
                               <button class="btn btn-primary" ng-click="openWork(work)">Show</button>
                               <button class="btn btn-danger" ng-click="deleteWork(executionUnit, $index)"><span

@@ -23,7 +23,7 @@ Sky Engine is performance analysis tool based web service. This tool analyze you
   * ~~network communication using thrift replace with pure RESTFul protocol~~
 * Bug fixes
   * ~~missing data as profiling log~~
-  * don't show profile result with error while running sky-worker
+  * ~~don't show profile result with error while running sky-worker~~
 * New features
   * add performance analysis for program written by Ruby language
   * add feature to manage sky-worker server clusters (add, remove, information, etc...)

@@ -1,8 +1,11 @@
 package com.sky.worker.domain;
 
 import com.sky.commons.domain.ExecutionUnit;
+import com.sky.commons.domain.MethodLog;
 import com.sky.commons.domain.Work;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Created by JCooky on 14. 12. 29..
@@ -15,8 +18,8 @@ public class WorkRepository extends AbstractRestResourceRepository {
     return "/api/work";
   }
 
-  public Work save(Work work) {
-    return restTemplate.postForObject(path(""), work, Work.class);
+  public void update(Work work) {
+    restTemplate.put(path("/{id}"), work, work.getId());
   }
 
   public Work findOne(long id) {
@@ -25,5 +28,9 @@ public class WorkRepository extends AbstractRestResourceRepository {
 
   public ExecutionUnit findExecutionUnitById(long id) {
     return restTemplate.getForObject(path("/{id}/execution-unit"), ExecutionUnit.class, id);
+  }
+
+  public MethodLog[] findMethodLogs(long id) {
+    return restTemplate.getForObject(path("/{id}/method-logs"), MethodLog[].class, id);
   }
 }
