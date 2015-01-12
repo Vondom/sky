@@ -2,9 +2,6 @@
     <div id="projects" data-user-id="${id}" ng-controller="ProjectCtrl">
       <div class="container">
         <div class="row pull-right" style="padding-bottom: 10px;">
-          <button data-toggle="modal" data-target="#create-project.modal" class="btn btn-md btn-success">
-            Create
-          </button>
           <button data-toggle="modal" data-target="#import-github.modal" class="btn btn-md btn-default">
             Import from Github
           </button>

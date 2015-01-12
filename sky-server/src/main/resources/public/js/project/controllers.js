@@ -9,7 +9,7 @@ sky.app.controller("ProjectCtrl", function ($scope, $http, $element) {
         if (!_.isUndefined($scope.githubProjects)) {
           _.forEach($scope.githubProjects, function (org) {
             _.forEach(org.repos, function (repo, i) {
-              if(_.find($scope.projects, function (prj) { return prj.name == repo.name; })) {
+              if(_.find($scope.projects, function (prj) { return prj.name == repo.name + "/" + org.name; })) {
                 org.repos.slice(i, 1);
               }
             });
@@ -79,7 +79,10 @@ sky.app.controller("ProjectCtrl", function ($scope, $http, $element) {
       _.forEach(org.repos, function (repo, i) {
         if (true === repo.checkToProject) {
           delete repo.checkToProject;
-          $http.post(sky.API_PROJECT_URL + "/github", repo)
+          $http.post(sky.API_PROJECT_URL, {
+            name: org.name + "/" + repo.name,
+            description: repo.description
+          })
               .success(function (project) {
                 console.debug(project);
                 $scope.projects.push(project);

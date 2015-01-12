@@ -12,7 +12,7 @@ var sky = (function () {
 
   return {
     utils: {},
-    app: angular.module("skyApp", ['googlechart']),
+    app: angular.module("skyApp", []),
 
     // Constant Variables
     ACCESS_TOKEN: accessToken,
