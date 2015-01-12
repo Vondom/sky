@@ -9,18 +9,18 @@
   ],
   "dependencies": {
     "bootstrap": "~3",
-    "font-awesome": "~4"
+    "font-awesome": "~4.2"
   },
   "homepage": "https://github.com/lipis/bootstrap-social",
-  "version": "4.5.1",
-  "_release": "4.5.1",
+  "version": "4.8.0",
+  "_release": "4.8.0",
   "_resolution": {
     "type": "version",
-    "tag": "4.5.1",
-    "commit": "85ad30bd5435600b21065dd6b7457f11cc5bc4f5"
+    "tag": "4.8.0",
+    "commit": "918fc55c3c938377a7618ec0f115846e50d4b883"
   },
   "_source": "git://github.com/lipis/bootstrap-social.git",
-  "_target": "~4.5.1",
+  "_target": "~4.8.0",
   "_originalSource": "bootstrap-social",
   "_direct": true
 }

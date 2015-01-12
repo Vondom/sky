@@ -3,11 +3,6 @@
 <head>
   <title>Sky Engine</title>
   <meta charset="utf-8">
-  <script src="${rc.contextPath}/vendor/lodash/dist/lodash.min.js"></script>
-  <script type="text/javascript" src="${rc.contextPath}/vendor/jquery/dist/jquery.min.js"></script>
-  <script type="text/javascript"
-          src='https://www.google.com/jsapi?autoload={"modules":[{"name":"visualization","version":"1","packages":["corechart","table"]}]}'>
-  </script>
   <#include "scripts.ftl">
   <#include "styles.ftl">
 </head>
