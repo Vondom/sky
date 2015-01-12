@@ -121,12 +121,15 @@
 						</goals>
 						<phase>package</phase>
 						<configuration>
+							<properties>
+								<basedir>${basedir}</basedir>
+							</properties>
 							<source>
 								import org.apache.commons.io.FileUtils;
 
-
-								FileUtils.copyFile(new File("${basedir}/target/${project.build.finalName}.jar"),
-										new File("${basedir}/../sky-worker/src/main/resources/${project.build.finalName}.jar"));
+								String basedir = properties['basedir'].replace('\\', '/');
+								FileUtils.copyFile(new File(basedir+"/target/${project.build.finalName}.jar"),
+										new File(basedir+"/../sky-worker/src/main/resources/${project.build.finalName}.jar"));
 							</source>
 						</configuration>
 					</execution>
