@@ -8,5 +8,5 @@
 	branch = master
 [submodule "spring-social-github"]
 	path = tools/spring-social-github
-	url = https://github.com/vondom/spring-social-github.git
+	url = https://github.com/spring-projects/spring-social-github.git
 	branch = master
