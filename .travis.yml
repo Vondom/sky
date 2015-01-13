@@ -21,8 +21,8 @@ deploy:
     - sky-distribution/target/*.zip
   skip_cleanup: true
   on:
-    tags: true
     all_branches: true
 notifications:
   email:
     - bak723@gmail.com
+    - syjsmk@gmail.com
