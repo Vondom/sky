@@ -34,6 +34,6 @@ public class WorkControllerTest extends SpringBasedTestSupport {
     MockMvcBuilders.standaloneSetup(workController)
         .build().perform(MockMvcRequestBuilders.post("/api/work").content(objectMapper.writeValueAsString(work)).contentType(MediaType.APPLICATION_JSON))
         .andDo(print())
-        .andExpect(status().isOk());
+        .andExpect(status().isCreated());
   }
 }

@@ -1,6 +1,7 @@
 package com.sky.worker;
 
 import com.sky.commons.domain.ExecutionUnit;
+import com.sky.commons.domain.MethodLog;
 import com.sky.commons.domain.Work;
 import com.sky.worker.domain.WorkRepository;
 import com.sky.worker.domain.WorkerRepository;
@@ -74,10 +75,12 @@ public class WorkerTest {
     doReturn(work).when(workRepository).findOne(eq(10L));
     doReturn(eu).when(workRepository).findExecutionUnitById(eq(10L));
     doReturn(worker).when(workerRepository).findOne(anyLong());
+    doReturn(new MethodLog[]{}).when(workRepository).findMethodLogs(eq(10L));
     doReturn(process).when(processor).process(eq(work.getId()), anyString(), eq(eu.getArguments()));
     doReturn(0).when(process).waitFor();
     doReturn(new ByteArrayInputStream(error.getBytes())).when(process).getErrorStream();
     doReturn(new ByteArrayInputStream(stdout.getBytes())).when(process).getInputStream();
+
 
     this.worker.doWork(10L);
 

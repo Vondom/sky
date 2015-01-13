@@ -16,6 +16,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class WorkRepositoryTest {
 
@@ -41,13 +42,11 @@ public class WorkRepositoryTest {
     Work work = new Work();
     work.setId(11L);
 
-    doReturn(work).when(restTemplate).put(eq(path + "/api/work/{id}"), eq(work), work.getId());
-
     workRepository.update(work);
 
     assertThat(work, is(notNullValue()));
 
-    verify(restTemplate).put(eq(path + "/api/work/{id}"), eq(work), work.getId());
+    verify(restTemplate).put(eq(path + "/api/work/{id}"), eq(work), eq(work.getId()));
   }
 
 
