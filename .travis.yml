@@ -1,26 +1,28 @@
 language: java
-
 jdk:
   - oraclejdk7
-#  - oraclejdk8
-  
 os:
   - linux
-
 sudo: false
-
 install: true
-
 script: mvn clean test
-
 after_success:
   - mvn -Pwith-covers clean test jacoco:report coveralls:report
-
 branch:
   only:
     - master
-
+deploy:
+  provider: releases
+  user: jcooky
+  password:
+    secure: FEe5Jhc+Vn7lIaiAepC2+0TGwcVmI17vuIA5y87aB5fSnozBFFNvtHQxhEOhOHie2cSzJoRkihCUYZhabFYIw3ZfzlfdNJJg1sgL2avZ1J3OQ3VslUoFolWuHYrwkzp2mk3zLAQ2cSJIPlAQHUiwp+HPxeW7CGj0+x3yLnHujM0=
+  file:
+    - sky-distribution/target/*.tar.gz
+    - sky-distribution/target/*.zip
+  skip_cleanup: true
+  on:
+    tags: true
+    all_branches: true
 notifications:
   email:
     - bak723@gmail.com
-

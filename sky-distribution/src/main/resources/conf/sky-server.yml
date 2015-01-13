@@ -1,0 +1,24 @@
+# DataSource
+spring:
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost/sky?useUnicode=true&characterEncoding=utf8&autoReconnect=true
+    username: sky
+    password: sky
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+  social.github:
+    # GitHub OAuth2 app key and secret
+    appId:
+    appSecret:
+# reverse proxy options
+#server.tomcat:
+#  remote_ip_header: x-forwarded-for
+#  protocol_header: x-forwarded-proto
+logging:
+  level.com.sky: INFO
+  file: logs/sky-server.log
+sky:
+  curator:
+    # Zookeeper connections
+    connections: localhost:2181

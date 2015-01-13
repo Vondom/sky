@@ -1,0 +1,9 @@
+sky:
+  worker:
+    # Sky Server connection(only one)
+    server-connection: http://localhost:8080
+  curator:
+    # Zookeeper connections
+    connections: localhost:2181
+
+logging.level.com.sky: TRACE

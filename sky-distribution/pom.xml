@@ -46,6 +46,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
 				<executions>
 					<execution>
 						<phase>process-resources</phase>
@@ -62,6 +63,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.9</version>
 				<executions>
 					<execution>
 						<phase>prepare-package</phase>
@@ -74,14 +76,14 @@
 									<groupId>${project.groupId}</groupId>
 									<artifactId>sky-server</artifactId>
 									<type>jar</type>
-									<outputDirectory>${project.build.outputDirectory}/bin</outputDirectory>
+									<outputDirectory>${project.build.outputDirectory}</outputDirectory>
 									<destFileName>sky-server.jar</destFileName>
 								</artifactItem>
 								<artifactItem>
 									<groupId>${project.groupId}</groupId>
 									<artifactId>sky-worker</artifactId>
 									<type>jar</type>
-									<outputDirectory>${project.build.outputDirectory}/bin</outputDirectory>
+									<outputDirectory>${project.build.outputDirectory}</outputDirectory>
 									<destFileName>sky-worker.jar</destFileName>
 								</artifactItem>
 							</artifactItems>
@@ -91,6 +93,7 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.5.3</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
