@@ -68,6 +68,16 @@
 		</dependency>
 	</dependencies>
 
+	<repositories>
+		<repository>
+			<id>my-local-repo</id>
+			<name>My Local Repository</name>
+			<url>file://${parent.basedir}/../lib</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
 	<build>
 		<finalName>sky-profiler</finalName>

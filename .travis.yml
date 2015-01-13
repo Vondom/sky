@@ -9,9 +9,7 @@ os:
 
 sudo: false
 
-install:
-  - "cd tools/jrat; ./gradlew install; cd -"
-  - "cd tools/spring-social-github; ./gradlew install; cd -"
+install: true
 
 script: mvn clean test
 
