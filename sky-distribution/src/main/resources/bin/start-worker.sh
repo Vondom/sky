@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ -z "${SKY_HOME}" ]; then
   SKY_HOME=$(dirname $BASH_SOURCE)/..
