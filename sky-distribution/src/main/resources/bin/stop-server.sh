@@ -5,7 +5,7 @@ if [ -z "${SKY_HOME}" ]; then
 fi
 
 cd ${SKY_HOME}
-if [ -d "sky-server.pid" ]; then
+if [ -f "sky-server.pid" ]; then
   kill $(cat sky-server.pid)
 else
   echo "sky-server is not started"

@@ -5,7 +5,7 @@ if [ -z "${SKY_HOME}" ]; then
 fi
 
 cd ${SKY_HOME}
-if [ -d "sky-worker.pid" ]; then
+if [ -f "sky-worker.pid" ]; then
   kill $(cat sky-worker.pid)
 else
   echo "sky-worker is not started"
