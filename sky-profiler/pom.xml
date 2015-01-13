@@ -72,7 +72,7 @@
 		<repository>
 			<id>my-local-repo</id>
 			<name>My Local Repository</name>
-			<url>file://${project.parent.basedir}/lib</url>
+			<url>file://${basedir}/../lib</url>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
@@ -86,6 +86,7 @@
 				<inherited>false</inherited>
 				<extensions>false</extensions>
 				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.5</version>
 				<configuration>
 					<archive>
 						<manifestEntries>

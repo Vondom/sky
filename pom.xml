@@ -20,6 +20,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<curator-version>2.7.0</curator-version>
 		<querydsl-version>3.5.1</querydsl-version>
+		<spring.boot-version>1.2.1.RELEASE</spring.boot-version>
 	</properties>
 
 	<dependencyManagement>
@@ -27,7 +28,7 @@
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
-				<version>1.2.0.RELEASE</version>
+				<version>${spring.boot-version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -71,6 +72,18 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+					<version>${spring.boot-version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 
 	<profiles>
 		<profile>
