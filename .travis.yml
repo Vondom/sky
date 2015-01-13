@@ -19,16 +19,6 @@ branch:
   only:
     - master
 
-deploy:
-  provider: releases
-  api-key: "45a5816bc8670a4956ca95518f1cb39ce4aed3d0"
-  file:
-    - sky-distribution/target/*.tar.gz
-    - sky-distribution/target/*.zip
-  skip_cleanup: true
-  on:
-    all_branches: true
-
 notifications:
   email:
     - bak723@gmail.com
