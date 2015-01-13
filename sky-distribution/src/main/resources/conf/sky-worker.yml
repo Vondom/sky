@@ -6,4 +6,6 @@ sky:
     # Zookeeper connections
     connections: localhost:2181
 
-logging.level.com.sky: TRACE
+logging:
+  level.com.sky: TRACE
+  file: logs/sky-worker.log
