@@ -8,10 +8,8 @@ Sky Engine is performance analysis tool based web service. This tool analyze you
 * show the result to analyzing performance within each functions execution time
 
 ## How To Build
-1. Pre-Requires
- - Maven: https://maven.apache.org
-2. Build: execute <code># mvn test package</code> in SkyEngine source root directory
-3. Enjoy!
+1. Build: execute <code># mvn test package</code> if maven is installed or <code># ./mvnw test package</code> in SkyEngine source root directory
+2. Enjoy!
 
 ## To-do
 * Refactoring
