@@ -9,8 +9,7 @@ Sky Engine is performance analysis tool based web service. This tool analyze you
 
 ## How To Build
 1. require Maven: https://maven.apache.org
-2. Build 3rd-party library: move the directory <code>tools/jrat</code> and <code>tools/spring-social-github</code> then execute command <code>install</code>. For example, <code># ./gradlew install</code>
-3. Build Sky Engine: execute <code># mvn test package</code> in SkyEngine source root directory
+2. Build Sky Engine: execute <code># mvn test package</code> in SkyEngine source root directory
 4. Enjoy!
 
 ## To-do
