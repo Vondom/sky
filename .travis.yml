@@ -10,10 +10,10 @@ sudo: false
 
 install: true
 
-script: mvn clean test
+script: ./mvnw clean test
 
 after_success:
-  - mvn -Pwith-covers clean test jacoco:report coveralls:report
+  - ./mvnw -Pwith-covers clean test jacoco:report coveralls:report
 
 branch:
   only:
