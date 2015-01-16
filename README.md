@@ -1,4 +1,4 @@
-Performance Analysis Tool ![GPLv3](https://www.gnu.org/graphics/gplv3-88x31.png) [![Build Status](https://travis-ci.org/Vondom/sky.svg?branch=master)](https://travis-ci.org/Vondom/sky) [![Coverage Status](https://img.shields.io/coveralls/Vondom/sky.svg)](https://coveralls.io/r/Vondom/sky?branch=master)
+Performance Analysis Tool [![GPLv3](https://www.gnu.org/graphics/gplv3-88x31.png)](LICENSE) [![Build Status](https://travis-ci.org/Vondom/sky.svg?branch=master)](https://travis-ci.org/Vondom/sky) [![Coverage Status](https://img.shields.io/coveralls/Vondom/sky.svg)](https://coveralls.io/r/Vondom/sky?branch=master)
 ===
 Sky Engine is performance analysis tool based web service. This tool analyze your application performance for GitHub open source developer.
 ## Key Features
