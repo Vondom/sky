@@ -1,15 +1,9 @@
 spring:
-  mvc:
-    locale: ko_KR
   freemarker:
     requestContextAttribute: rc
   datasource:
     schema: classpath:/org/springframework/social/connect/jdbc/JdbcUsersConnectionRepository.sql
     continueOnError: true
-  jpa:
-    openInView: true
-    show-sql: true
-    generate-ddl: true
   hibernate:
     ddl-auto: update
 security:
