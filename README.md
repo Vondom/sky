@@ -23,6 +23,10 @@ Sky Engine is performance analysis tool based web service. This tool analyze you
   * ~~missing data as profiling log~~
   * ~~don't show profile result with error while running sky-worker~~
 * New features
+  * Dashboard
+    * create comparison chart between profiled commits
+    * create chart with each Profile and Method
+  * add line number and filename in profiled Method of database
   * add performance analysis for program written by Ruby language
   * add feature to manage sky-worker server clusters (add, remove, information, etc...)
   * create  bash script for running analysis to sky engine in travis ci servers
