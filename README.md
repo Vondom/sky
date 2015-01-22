@@ -30,4 +30,6 @@ Sky Engine is performance analysis tool based web service. This tool analyze you
   * add performance analysis for program written by Ruby language
   * add feature to manage sky-worker server clusters (add, remove, information, etc...)
   * create  bash script for running analysis to sky engine in travis ci servers
-  
+* Backlogs
+  * how to profile hadoop mapreduce
+  * think about simplfy for worker
