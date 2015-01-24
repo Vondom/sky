@@ -28,7 +28,7 @@
     <dependency>
       <groupId>org.springframework.social</groupId>
       <artifactId>spring-social-github</artifactId>
-      <version>1.0.0.BUILD-20150112.091532-861</version>
+      <version>1.0.0.BUILD-20150124.091522-873</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.social</groupId>
