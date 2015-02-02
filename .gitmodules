@@ -5,4 +5,4 @@
 [submodule "sky-sample"]
 	path = sky-sample
 	url = https://github.com/Vondom/sky-sample.git
-	branch = master
+	branch = 0.1-SNAPSHOT
