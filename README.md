@@ -33,3 +33,4 @@ Sky Engine is performance analysis tool based web service. This tool analyze you
 * Backlogs
   * how to profile hadoop mapreduce
   * think about simplfy for worker
+  * attach module to encryption with jaspt (http://www.jasypt.com)
