@@ -10,6 +10,7 @@
 		<module>sky-worker</module>
 		<module>sky-server</module>
 		<module>sky-distribution</module>
+		<module>sky-travis</module>
 	</modules>
 	<groupId>sky</groupId>
 	<artifactId>sky</artifactId>
