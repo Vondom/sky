@@ -1,11 +1,11 @@
 Performance Analysis Tool [![GPLv3](https://www.gnu.org/graphics/gplv3-88x31.png)](LICENSE) [![Build Status](https://travis-ci.org/Vondom/sky.svg?branch=master)](https://travis-ci.org/Vondom/sky) [![Coverage Status](https://img.shields.io/coveralls/Vondom/sky.svg)](https://coveralls.io/r/Vondom/sky?branch=master)
 ===
-Sky Engine is performance analysis tool based web service. This tool analyze your application performance for GitHub open source developer.
+Sky Engine is performance analysis tool based on web services. This tool analyzes your application performance and provide hint performance improvement for opensource developer using at GitHub.
 ## Key Features
-* integrate with GitHub and Travis-CI
-* automatically analyze performance for application when commit to repository
-* will be supported to ruby, python, javascript(node.js or phantom.js), java
-* show the result to analyzing performance within each functions execution time
+* integrates with GitHub and Travis-CI
+* automatically analyze performance and key point with improvement for application when commit to repository
+* will be supported to ruby, python, javascript(node.js or phantom.js), java, and another languages
+* shows the result to analyzing performance improvement within each functions at runtime
 
 ## How To Build
 1. Build: execute <code># mvn test package</code> if maven is installed or <code># ./mvnw test package</code> in SkyEngine source root directory
